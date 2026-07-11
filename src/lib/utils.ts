@@ -18,7 +18,7 @@ export function formatPrice(num: number): string {
     const l = num / 100000;
     return `₹${l % 1 === 0 ? l.toFixed(0) : l.toFixed(1).replace(/\.0$/, '')} L`;
   }
-  return `₹${num.toLocaleString('en-IN')}`;
+  return `₹${formatIndianNumber(num)}`;
 }
 
 /**
@@ -26,7 +26,23 @@ export function formatPrice(num: number): string {
  * Example: 48000000 → "₹4,80,00,000"
  */
 export function formatPriceFull(num: number): string {
-  return `₹${num.toLocaleString('en-IN')}`;
+  return `₹${formatIndianNumber(num)}`;
+}
+
+/**
+ * Format a number using the Indian numbering system (e.g., 4,80,00,000).
+ * Pure JS implementation — avoids toLocaleString which differs between Node.js and browser ICU data.
+ */
+function formatIndianNumber(num: number): string {
+  const str = Math.floor(Math.abs(num)).toString();
+  if (str.length <= 3) return str;
+
+  // Indian system: first 3 from right, then groups of 2
+  const lastThree = str.slice(-3);
+  const rest = str.slice(0, -3);
+  const formatted = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+
+  return (num < 0 ? '-' : '') + formatted + ',' + lastThree;
 }
 
 /**

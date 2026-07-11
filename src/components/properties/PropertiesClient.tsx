@@ -6,7 +6,6 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
 } from 'react';
 import {
   Search,
@@ -31,39 +30,38 @@ interface PropertiesClientProps {
 
 const FAVORITES_KEY = 'casa-aurelia-favorites';
 
-function readFavorites(): string[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(FAVORITES_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-const emptyFavorites: string[] = [];
-
-function subscribeToFavorites(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
-}
-
 function useFavorites() {
-  return useSyncExternalStore(subscribeToFavorites, readFavorites, () => emptyFavorites);
-}
+  const [favorites, setFavorites] = useState<string[]>([]);
 
-function toggleFavorite(slug: string) {
-  const current = readFavorites();
-  const next = current.includes(slug)
-    ? current.filter((s) => s !== slug)
-    : [...current, slug];
-  try {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
-    window.dispatchEvent(new StorageEvent('storage', { key: FAVORITES_KEY }));
-  } catch {
-    /* storage unavailable */
-  }
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(FAVORITES_KEY);
+      if (raw) setFavorites(JSON.parse(raw));
+    } catch { /* ignore */ }
+
+    const onStorage = () => {
+      try {
+        const raw = localStorage.getItem(FAVORITES_KEY);
+        setFavorites(raw ? JSON.parse(raw) : []);
+      } catch { /* ignore */ }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  const toggle = useCallback((slug: string) => {
+    setFavorites((prev) => {
+      const next = prev.includes(slug)
+        ? prev.filter((s) => s !== slug)
+        : [...prev, slug];
+      try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+      } catch { /* storage unavailable */ }
+      return next;
+    });
+  }, []);
+
+  return { favorites, toggleFavorite: toggle };
 }
 
 /* ------------------------------------------------------------------ */
@@ -196,7 +194,7 @@ export function PropertiesClient({ initialSearchParams }: PropertiesClientProps)
   const drawerRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  const favorites = useFavorites();
+  const { favorites, toggleFavorite } = useFavorites();
   const allProperties = useMemo(() => getAllProperties(), []);
 
   /* Sync state → URL on filter change */

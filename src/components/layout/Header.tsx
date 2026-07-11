@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+// AnimatePresence replaced with CSS transitions for SSR safety
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/shared/Button';
 import { cn } from '@/lib/utils';
@@ -183,19 +183,14 @@ export function Header() {
       </header>
 
       {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMobileOpen && (
-          <motion.div
+      {isMobileOpen && (
+          <div
             id="mobile-menu"
             ref={menuRef}
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"
-            className="fixed inset-0 z-[60] bg-ivory"
-            initial={{ x: '100%' }}
-            animate={{ x: '0%' }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-[60] bg-ivory [animation:slideIn_0.3s_cubic-bezier(0.22,1,0.36,1)_forwards]"
           >
             <div className="flex flex-col h-full max-w-[1360px] mx-auto px-5 sm:px-6 lg:px-16">
               {/* Top bar */}
@@ -256,9 +251,8 @@ export function Header() {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </>
   );
 }
