@@ -1,39 +1,35 @@
-'use client';
-
+import Link from 'next/link';
 import { Container } from '@/components/shared/Container';
 import { Reveal } from '@/components/shared/Reveal';
-import { AnimatedText } from '@/components/shared/AnimatedText';
-import { Button } from '@/components/shared/Button';
 
 export function FinalCTA() {
   return (
-    <section className="py-20 md:py-28 bg-charcoal text-offwhite">
-      <Container className="text-center">
+    <section className="py-20 lg:py-28 bg-espresso text-offwhite" aria-label="Get started">
+      <Container variant="editorial">
         <Reveal>
-          <AnimatedText
-            text="Find the address that fits the next version of your life."
-            as="h2"
-            className="font-display text-3xl md:text-5xl text-offwhite max-w-3xl mx-auto mb-10 md:mb-12"
-          />
-        </Reveal>
-        <Reveal delay={0.2}>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
+          <div className="text-center">
+            <h2 className="font-display text-[clamp(1.5rem,3vw,2.5rem)] text-offwhite mb-4">
+              Ready to Find Your Next Home?
+            </h2>
+            <p className="text-offwhite/60 body-text mb-8">
+              Schedule a private consultation to discuss your requirements, or
+              browse our collection at your own pace.
+            </p>
+            <Link
               href="/contact"
-              variant="primary"
-              size="lg"
-              className="bg-gold text-espresso hover:bg-gold/90"
+              className="inline-block bg-gold text-espresso font-mono text-sm tracking-wider uppercase px-8 py-4 hover:bg-gold/90 transition-colors rounded-sm"
             >
-              Book a Private Viewing
-            </Button>
-            <Button
-              href="/contact"
-              variant="secondary"
-              size="lg"
-              className="border-offwhite/20 text-offwhite hover:border-offwhite/50 hover:text-offwhite"
-            >
-              Contact the Studio
-            </Button>
+              Book a Private Consultation
+            </Link>
+            <p className="text-sm text-offwhite/40 mt-4">
+              or{' '}
+              <Link
+                href="/properties"
+                className="text-gold hover:text-offwhite underline transition-colors"
+              >
+                browse all properties
+              </Link>
+            </p>
           </div>
         </Reveal>
       </Container>

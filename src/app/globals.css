@@ -90,64 +90,112 @@ body {
   background: #A45F3D;
 }
 
-/* Custom utilities */
-.section-padding {
-  @apply px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24;
-}
-
-.container-narrow {
-  @apply max-w-7xl mx-auto;
-}
-
-.text-balance {
-  text-wrap: balance;
-}
-
-/* Lenis smooth scroll */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-/* Image hover zoom */
-.img-zoom {
-  overflow: hidden;
-}
-.img-zoom img {
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.img-zoom:hover img {
-  transform: scale(1.05);
-}
-
-/* Editorial line */
-.editorial-line {
-  @apply border-t border-espresso/10;
-}
-
 /* Focus styles */
 :focus-visible {
   outline: 2px solid #B9905A;
   outline-offset: 2px;
 }
 
-/* Mono label style */
-.mono-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #B9905A;
+/* Container utilities */
+.container-main {
+  max-width: 1360px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 640px) {
+  .container-main {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .container-main {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+.container-editorial {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 640px) {
+  .container-editorial {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .container-editorial {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+.container-form {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 640px) {
+  .container-form {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .container-form {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* Section spacing */
+.section-py {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+@media (min-width: 640px) {
+  .section-py {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+@media (min-width: 1024px) {
+  .section-py {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+@media (min-width: 1280px) {
+  .section-py {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+/* Border utility */
+.border-warm {
+  border-color: rgba(42, 33, 29, 0.1);
+}
+
+/* Text utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+.editorial-line {
+  @apply border-t border-espresso/10;
+}
+
+.body-text {
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.65;
 }

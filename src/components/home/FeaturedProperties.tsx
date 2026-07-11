@@ -1,128 +1,159 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useCallback, useSyncExternalStore } from 'react';
 import Image from 'next/image';
-import { Heart } from 'lucide-react';
+import Link from 'next/link';
+import { Heart, ArrowRight } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
 import { SectionLabel } from '@/components/shared/SectionLabel';
+import { Button } from '@/components/shared/Button';
 import { Reveal } from '@/components/shared/Reveal';
-import { AnimatedText } from '@/components/shared/AnimatedText';
-import { getFeaturedProperties } from '@/data/properties';
-import type { Property } from '@/data/properties';
+import { getFeaturedProperties, type Property } from '@/data/properties';
 
-function PropertyCard({ property, index }: { property: Property; index: number }) {
-  const [isSaved, setIsSaved] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    try {
-      const stored = localStorage.getItem('casaaurelia_favorites');
-      if (stored) {
-        const favorites: string[] = JSON.parse(stored);
-        return favorites.includes(property.slug);
-      }
-    } catch {
-      // ignore
-    }
-    return false;
-  });
+const FAVORITES_KEY = 'casaaurelia_favorites';
 
-  const toggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    try {
-      const stored = localStorage.getItem('casaaurelia_favorites');
-      const favorites: string[] = stored ? JSON.parse(stored) : [];
-      if (isSaved) {
-        const updated = favorites.filter((s) => s !== property.slug);
-        localStorage.setItem('casaaurelia_favorites', JSON.stringify(updated));
-        setIsSaved(false);
-      } else {
-        favorites.push(property.slug);
-        localStorage.setItem('casaaurelia_favorites', JSON.stringify(favorites));
-        setIsSaved(true);
-      }
-    } catch {
-      // ignore
-    }
-  };
+function readFavorites(): string[] {
+  try {
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
 
+const emptyFavorites: string[] = [];
+
+function subscribeToFavorites(callback: () => void) {
+  window.addEventListener('storage', callback);
+  return () => window.removeEventListener('storage', callback);
+}
+
+function useFavorites() {
+  return useSyncExternalStore(
+    subscribeToFavorites,
+    readFavorites,
+    () => emptyFavorites
+  );
+}
+
+function PropertyCard({ property, isFav, onToggle }: {
+  property: Property;
+  isFav: boolean;
+  onToggle: (slug: string) => void;
+}) {
   return (
-    <Reveal delay={index * 0.1}>
-      <Link href={`/properties/${property.slug}`} className="group block">
-        <article className="bg-offwhite border border-espresso/5 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-espresso/5">
-          {/* Image */}
-          <div className="relative aspect-[4/3] img-zoom">
-            <Image
-              src={property.heroImage}
-              alt={property.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            />
-            <button
-              onClick={toggleFavorite}
-              className="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center bg-offwhite/80 backdrop-blur-sm rounded-full transition-all duration-300 hover:bg-offwhite hover:scale-110"
-              aria-label={isSaved ? 'Remove from favorites' : 'Add to favorites'}
-            >
-              <Heart
-                size={16}
-                className={isSaved ? 'fill-terracotta text-terracotta' : 'text-espresso/60'}
+    <Reveal>
+      <div className="relative">
+        {/* Favorite button — outside the Link, positioned over image */}
+        <button
+          type="button"
+          aria-label={`Save ${property.title} to favorites`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onToggle(property.slug);
+          }}
+          className={
+            isFav
+              ? 'absolute top-3 right-3 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full p-2'
+              : 'absolute top-3 right-3 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-charcoal/30 backdrop-blur-sm p-2'
+          }
+        >
+          <Heart
+            size={18}
+            className={
+              isFav
+                ? 'fill-gold stroke-gold'
+                : 'fill-none stroke-offwhite'
+            }
+            strokeWidth={isFav ? 0 : 2}
+          />
+        </button>
+
+        {/* Card link */}
+        <Link href={`/properties/${property.slug}`} className="group block">
+          <article>
+            <div className="relative aspect-[4/3] overflow-hidden rounded-sm mb-4">
+              <Image
+                src={property.heroImage}
+                alt={property.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-            </button>
-          </div>
-
-          {/* Content */}
-          <div className="p-5 md:p-6">
-            <h3 className="font-display text-xl text-espresso mb-1 group-hover:text-gold transition-colors duration-300">
-              {property.title}
-            </h3>
-            <p className="font-mono text-xs text-gold mb-3 tracking-wider">
-              {property.location}
-            </p>
-            <p className="font-body text-lg font-medium text-espresso mb-4">
-              {property.price}
-            </p>
-
-            {/* Specs */}
-            <div className="flex items-center gap-3 text-espresso/60 mb-4">
-              <span className="font-body text-sm">{property.bedrooms} Bed</span>
-              <span className="w-px h-3 bg-espresso/15" />
-              <span className="font-body text-sm">{property.bathrooms} Bath</span>
-              <span className="w-px h-3 bg-espresso/15" />
-              <span className="font-body text-sm">{property.area}</span>
             </div>
-
-            <span className="font-mono text-xs text-gold tracking-wider group-hover:text-terracotta transition-colors duration-300">
-              View Residence →
-            </span>
-          </div>
-        </article>
-      </Link>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="font-display text-lg mb-1 group-hover:text-gold transition-colors">
+                  {property.title}
+                </h3>
+                <p className="text-sm text-espresso/60">{property.location}</p>
+              </div>
+              <p className="font-mono text-sm text-espresso whitespace-nowrap">
+                {property.price}
+              </p>
+            </div>
+            <div className="flex items-center gap-3 mt-2 text-xs text-espresso/50 font-mono">
+              <span>{property.bedrooms} Bed</span>
+              <span className="text-espresso/20">·</span>
+              <span>{property.area}</span>
+              <span className="text-espresso/20">·</span>
+              <span>{property.type}</span>
+            </div>
+          </article>
+        </Link>
+      </div>
     </Reveal>
   );
 }
 
 export function FeaturedProperties() {
-  const featured = getFeaturedProperties();
+  const favorites = useFavorites();
+
+  const toggleFavorite = useCallback((slug: string) => {
+    const current = readFavorites();
+    const next = current.includes(slug)
+      ? current.filter((s) => s !== slug)
+      : [...current, slug];
+    try {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+      window.dispatchEvent(new StorageEvent('storage', { key: FAVORITES_KEY }));
+    } catch {
+      // Storage full or unavailable
+    }
+  }, []);
+
+  const properties = getFeaturedProperties().slice(0, 6);
 
   return (
-    <section className="py-20 md:py-28 bg-ivory">
-      <Container>
+    <section className="section-py" aria-label="Featured properties">
+      <Container variant="main">
         <Reveal>
-          <SectionLabel label="/ FEATURED PROPERTIES" />
-        </Reveal>
-        <Reveal delay={0.1}>
-          <AnimatedText
-            text="Homes we've curated for you."
-            as="h2"
-            className="font-display text-4xl md:text-5xl text-espresso mb-12 md:mb-16"
-          />
+          <SectionLabel>Featured Properties</SectionLabel>
+          <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] mb-3">
+            Curated Residences
+          </h2>
+          <p className="text-espresso/60 body-text mb-10">
+            A selection of homes chosen for their design, location, and character.
+          </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {featured.map((property, index) => (
-            <PropertyCard key={property.id} property={property} index={index} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {properties.map((property) => (
+            <PropertyCard
+              key={property.id}
+              property={property}
+              isFav={favorites.includes(property.slug)}
+              onToggle={toggleFavorite}
+            />
           ))}
+        </div>
+
+        <div className="flex justify-center mt-12">
+          <Button variant="ghost" href="/properties">
+            View All Properties
+            <ArrowRight size={14} className="ml-2" />
+          </Button>
         </div>
       </Container>
     </section>

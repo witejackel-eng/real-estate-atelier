@@ -1,53 +1,63 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
-interface ButtonProps {
-  variant?: 'primary' | 'secondary';
-  href?: string;
-  onClick?: () => void;
+interface ButtonBaseProps {
+  variant?: 'primary' | 'secondary' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
+  children: ReactNode;
   className?: string;
-  children: React.ReactNode;
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
 }
 
-export function Button({
-  variant = 'primary',
-  href,
-  onClick,
-  size = 'md',
-  className,
-  children,
-  type = 'button',
-  disabled = false,
-}: ButtonProps) {
-  const baseStyles =
-    'inline-flex items-center justify-center font-mono text-xs uppercase tracking-[0.15em] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]';
-
-  const sizeStyles = {
-    sm: 'px-4 py-2.5 text-[0.65rem]',
-    md: 'px-6 py-3 text-xs',
-    lg: 'px-8 py-4 text-sm',
+type ButtonAsButton = ButtonBaseProps &
+  Omit<ComponentPropsWithoutRef<'button'>, keyof ButtonBaseProps> & {
+    href?: undefined;
   };
 
-  const variantStyles = {
-    primary: 'bg-espresso text-offwhite hover:bg-charcoal',
-    secondary: 'border border-espresso/20 text-espresso hover:border-gold/50 hover:text-gold',
+type ButtonAsLink = ButtonBaseProps &
+  Omit<ComponentPropsWithoutRef<typeof Link>, keyof ButtonBaseProps> & {
+    href: string;
   };
 
-  const styles = cn(baseStyles, sizeStyles[size], variantStyles[variant], className);
+type ButtonProps = ButtonAsButton | ButtonAsLink;
 
-  if (href) {
+const sizeStyles = {
+  sm: 'text-xs px-4 py-2',
+  md: 'text-sm px-6 py-3',
+  lg: 'text-sm px-8 py-4',
+};
+
+const variantStyles = {
+  primary: 'bg-espresso text-offwhite hover:bg-charcoal',
+  secondary: 'border border-espresso/20 text-espresso hover:bg-espresso/5',
+  ghost: 'text-espresso underline decoration-gold/40 underline-offset-4 hover:decoration-gold',
+};
+
+const focusRing = 'focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ivory';
+
+export function Button(props: ButtonProps) {
+  const { variant = 'primary', size = 'md', children, className } = props;
+
+  const baseStyles = cn(
+    'inline-flex items-center justify-center font-mono text-xs uppercase tracking-[0.15em] transition-colors duration-200',
+    sizeStyles[size],
+    variantStyles[variant],
+    focusRing,
+    className
+  );
+
+  if (props.href) {
+    const { href, ...rest } = props;
     return (
-      <Link href={href} className={styles}>
+      <Link href={href} className={baseStyles} {...rest}>
         {children}
       </Link>
     );
   }
 
+  const { type = 'button', disabled = false, ...rest } = props;
   return (
-    <button type={type} onClick={onClick} className={styles} disabled={disabled}>
+    <button type={type} disabled={disabled} className={baseStyles} {...rest}>
       {children}
     </button>
   );

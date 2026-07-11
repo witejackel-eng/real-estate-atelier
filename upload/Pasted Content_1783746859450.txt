@@ -1,0 +1,1884 @@
+# CASA AURELIA — COMPLETE UX, LAYOUT, DESIGN AND CONVERSION REBUILD
+
+You are working inside the existing **Casa Aurelia real-estate website repository** currently deployed at:
+
+https://real-estate-atelier.vercel.app/
+
+This is an existing Next.js application. Do not create a second application, replacement repository, disconnected prototype, or separate redesign folder.
+
+Your task is to audit and rebuild the current interface into a polished, high-end, conversion-focused luxury real-estate website.
+
+This is not a request for superficial styling.
+
+You must fix:
+
+* Page architecture
+* Layout hierarchy
+* Responsive behaviour
+* Repetition
+* Excessive page length
+* Weak conversion paths
+* Accessibility
+* Animation reliability
+* Forms
+* Property discovery
+* Property-detail usability
+* Trust and credibility
+* SEO
+* Performance
+* Mobile usability
+* Component consistency
+* Invalid interactive markup
+* Visual polish
+
+The completed website should feel like a professionally art-directed luxury-property platform, not an AI-generated template.
+
+---
+
+# 1. OPERATING RULES
+
+Follow these rules throughout the task.
+
+## Do not ask me questions
+
+Inspect the existing repository, components, routes, data structures, assets, styles, dependencies, and configuration. Make sensible implementation decisions from the existing project.
+
+## Do not merely report problems
+
+Implement the improvements directly.
+
+Do not stop after creating:
+
+* An audit
+* A plan
+* A design document
+* A list of suggestions
+* Wireframes without code
+* Placeholder components
+* TODO comments
+
+The final result must be working code.
+
+## Preserve the existing application
+
+Retain and improve the current:
+
+* Next.js application
+* App Router structure
+* Property data
+* Dynamic property routes
+* Existing useful images
+* Existing working filters
+* Existing SEO foundations
+* Existing legal pages
+* Existing brand name
+* Existing quiet-luxury colour direction
+
+Do not unnecessarily replace the framework or rewrite the entire application using another stack.
+
+## Do not invent credibility
+
+Never add fake:
+
+* Client names
+* Sales statistics
+* Awards
+* Transactions
+* Testimonials
+* Reviews
+* Team members
+* Office addresses
+* Partnerships
+* Press mentions
+* Years of experience
+* Property verification claims
+* RERA numbers
+* Licensing details
+* Buyer networks
+* Market-performance figures
+
+If credible information does not exist in the repository, omit it or label it clearly as demo data in a discreet development-only manner.
+
+Do not display “Demo Client A,” “Demo Client B,” or similar fake testimonials on the public homepage.
+
+## Do not leave fake functionality
+
+A form must either:
+
+1. Submit successfully through a real server-side handler, or
+2. Clearly state that submission is unavailable.
+
+Never display a fake success message after doing nothing.
+
+## Do not damage existing routes
+
+All current routes must continue working unless a route is intentionally consolidated and redirected.
+
+Check at minimum:
+
+* `/`
+* `/properties`
+* `/properties/[slug]`
+* `/sell`
+* `/neighborhoods`
+* `/about`
+* `/contact`
+* `/privacy`
+* `/terms`
+
+---
+
+# 2. CURRENT PROBLEMS THAT MUST BE FIXED
+
+The following problems have already been identified on the live website. Do not ignore them.
+
+## Homepage problems
+
+The homepage currently:
+
+* Displays featured property cards and then repeats nearly the same inventory in a separate Property Index.
+* Shows too many properties before giving users a meaningful reason to trust the agency.
+* Contains eight large service cards with equal visual importance.
+* Uses a very long sequence of similarly spaced sections.
+* Contains too many headings using the same reveal treatment.
+* Includes demo testimonials that weaken trust.
+* Repeats seller and contact calls to action.
+* Makes the hero background image almost invisible.
+* Does not establish a strong visual focal point.
+* Feels like multiple page concepts stacked vertically rather than one directed experience.
+* Has several hover-dependent effects that provide no equivalent experience on touch devices.
+* Uses service cards that appear clickable but are not proper links or buttons.
+* Shows seven featured properties in a three-column desktop grid, creating an unbalanced final row.
+
+## Header problems
+
+The current header:
+
+* Starts transparent.
+* Can lack sufficient contrast over different backgrounds.
+* Is hidden through an initial transform and depends on JavaScript animation.
+* Does not provide a clear active-page state.
+* Needs a more polished mobile navigation experience.
+* Contains a primary action but does not visually adapt enough between the homepage and internal pages.
+
+## Animation problems
+
+Many elements are rendered initially with:
+
+* `opacity: 0`
+* Translated positions
+* A hidden header
+* A full-screen preloader
+
+This makes core content dependent on client-side animation and hydration.
+
+If JavaScript loads slowly or an animation fails, important content may remain invisible.
+
+This must be corrected.
+
+## Property catalogue problems
+
+The catalogue currently has:
+
+* A crowded sticky filter row.
+* Several dropdowns competing for limited mobile width.
+* Placeholder-only controls without proper visible labels.
+* No polished mobile filter sheet.
+* No obvious applied-filter chips.
+* No clear reset action.
+* No strong empty-results state.
+* No URL-synchronised filter state.
+* No pagination or intentional load-more behaviour.
+* Nested interactive elements where a favourite button sits inside a linked property card.
+* No clear persistence strategy for favourites.
+* Duplicate metadata title formatting.
+
+## Property-detail problems
+
+The property page currently has:
+
+* Too many separate vertical sections.
+* A layout mismatch between the EMI calculator and inquiry form.
+* A full-width EMI section nested inside half of a two-column grid.
+* Excessive nested container padding.
+* A calculator starting at ₹50 lakh even for a ₹4.8 crore property.
+* An inquiry form that lacks strong visual priority.
+* No proper sticky desktop inquiry panel.
+* A clickable gallery region without correct button semantics.
+* Six equal fact cards that take too much room.
+* Only two related-property cards inside a three-column layout.
+* Duplicate brand text in the document title.
+* Open Graph URLs pointing at a potentially incorrect production hostname.
+* Relative URLs inside structured data.
+* Several sections that can be consolidated without losing information.
+
+## Sell page problems
+
+The page currently includes:
+
+* A long six-step process.
+* A lengthy editorial explanation.
+* A separate staging checklist.
+* A large valuation form.
+* A full FAQ section.
+* Unsupported marketing statistics and generalised claims.
+* Too many similarly styled sections.
+* Too much scrolling before the conversion form.
+
+## Contact page problems
+
+The contact page currently contains:
+
+* Fictional contact information.
+* A form that explicitly does not transmit messages.
+* Inputs relying on placeholders instead of proper labels.
+* No visible required states.
+* No robust validation.
+* No functional server-side submission.
+* Too much page length for a straightforward contact goal.
+* FAQ content that could be shortened or moved.
+* Direct contact information that is not implemented as proper `mailto:` or `tel:` links.
+
+## Global semantic problems
+
+Check and fix:
+
+* Nested `<main>` landmarks.
+* Buttons nested inside anchors.
+* Non-semantic clickable `<div>` elements.
+* Missing form labels.
+* Missing keyboard interactions.
+* Inconsistent focus states.
+* Small tap targets.
+* Motion without reduced-motion handling.
+* Links presented as non-interactive text.
+* Social network names that are spans rather than real links.
+* Heading hierarchy.
+* Missing or incorrect canonical metadata.
+
+---
+
+# 3. CREATIVE DIRECTION
+
+Preserve the brand’s quiet, editorial luxury direction, but make it more deliberate and modern.
+
+The experience should feel like a combination of:
+
+* A high-end architecture magazine
+* A private property advisory
+* A curated luxury residence platform
+* A modern editorial portfolio
+
+It must not feel like:
+
+* A generic real-estate marketplace
+* A theme template
+* A SaaS dashboard
+* An excessive glassmorphism website
+* A design full of random gradients
+* A page composed entirely of identical cards
+* An animation showcase
+* A clone of another website
+
+## Brand characteristics
+
+Use:
+
+* Generous whitespace
+* Strong image art direction
+* Restrained typography
+* Editorial asymmetry
+* Thin rules and dividers
+* Warm neutral backgrounds
+* Deep espresso text
+* Muted gold or bronze accents
+* Clear hierarchy
+* Purposeful contrast
+* Selective dark sections
+* High-quality hover states
+* Subtle motion
+
+Avoid:
+
+* Excessive rounded cards
+* Large blurry shadows
+* Neon effects
+* Overly decorative icons
+* Random pills everywhere
+* Huge blocks of centred text
+* Generic stock-template layouts
+* Every section having the same heading treatment
+* Excessive uppercase copy
+* Extremely faint text
+* Ultra-thin body text
+* Carousels that hide essential information
+
+---
+
+# 4. DESIGN SYSTEM
+
+Create or refine a central design system rather than applying arbitrary values throughout components.
+
+## Container system
+
+Use one consistent container system.
+
+Suggested desktop maximum:
+
+* Main content: approximately `1280px–1360px`
+* Editorial text: approximately `680px–760px`
+* Narrow form content: approximately `560px–680px`
+
+Suggested horizontal gutters:
+
+* Mobile: `20px`
+* Large mobile: `24px`
+* Tablet: `32px`
+* Desktop: `48px–64px`
+* Very large desktop: no uncontrolled expansion beyond the maximum container
+
+Do not use repeated nested max-width containers that create unexpected internal padding.
+
+## Grid system
+
+Use:
+
+* 4 columns on mobile
+* 8 columns on tablet
+* 12 columns on desktop
+
+Allow intentional asymmetry while keeping elements aligned to shared grid lines.
+
+## Spacing
+
+Create consistent spacing tokens.
+
+Approximate section spacing:
+
+* Mobile: `56px–72px`
+* Tablet: `72px–88px`
+* Desktop: `88px–120px`
+
+Not every section needs the maximum spacing.
+
+Use tighter spacing inside connected content groups and wider spacing only between major narrative chapters.
+
+## Typography
+
+Retain the existing editorial serif direction where appropriate.
+
+Use:
+
+* Display serif for primary headings and selected property names
+* Clean sans-serif for body copy, forms, navigation, and supporting information
+* Monospace only for small labels, reference numbers, or intentionally technical details
+
+Do not use monospace for too much interface text.
+
+Define responsive typography with `clamp()` or equivalent fluid scales.
+
+Avoid forced heading heights that can clip or overlap when copy wraps.
+
+Keep body text readable:
+
+* Approximately 16–18px for important body content
+* Approximately 14–16px for secondary content
+* Line height around 1.55–1.75
+* Comfortable text widths
+
+## Colour
+
+Preserve and refine the existing family:
+
+* Ivory
+* Warm off-white
+* Sand
+* Espresso
+* Charcoal
+* Muted gold or bronze
+* Optional muted terracotta for very limited emphasis
+
+Create CSS variables or theme tokens.
+
+Verify WCAG contrast, especially for:
+
+* Muted gold text
+* Light-grey metadata
+* Text over photographs
+* Transparent header states
+* Disabled controls
+
+## Borders and shadows
+
+Prefer:
+
+* Thin warm-neutral borders
+* Minimal, soft elevation
+* Image scaling
+* Underline motion
+* Colour transitions
+
+Do not turn every element into a floating card.
+
+---
+
+# 5. GLOBAL HEADER REBUILD
+
+Rebuild the header as a reliable, premium navigation system.
+
+## Desktop behaviour
+
+The header should:
+
+* Be positioned consistently.
+* Remain readable at all times.
+* Be transparent only when the background guarantees contrast.
+* Transition to a solid or lightly translucent warm background after scrolling.
+* Use a subtle border when solid.
+* Keep the brand mark prominent but not oversized.
+* Show an active-page state.
+* Keep navigation spacing precise.
+* Retain one primary action: `List Your Home`.
+* Avoid excessive header height.
+
+Use approximately:
+
+* 72–80px on desktop
+* 64–72px on mobile
+
+## Mobile navigation
+
+Create a polished full-screen or large-sheet mobile menu.
+
+It must:
+
+* Trap focus while open.
+* Lock background scrolling.
+* Close with the Escape key.
+* Close after navigation.
+* Include all primary navigation routes.
+* Include the primary CTA.
+* Provide visible focus states.
+* Use a proper accessible dialog/menu pattern.
+* Avoid tiny text and cramped spacing.
+
+## Reliability
+
+Do not render the header at `translateY(-100px)` and rely on JavaScript to make it visible.
+
+The header must be visible by default.
+
+Entrance motion may enhance it, but must not control whether it exists.
+
+---
+
+# 6. HOMEPAGE REBUILD
+
+The homepage must become shorter, clearer, more visual, and more conversion-focused.
+
+Remove unnecessary repetition.
+
+## Required homepage structure
+
+Use the following narrative order.
+
+### Section 1: Hero
+
+Create a premium editorial hero.
+
+Possible layout:
+
+* A 7/5 split on desktop, or
+* A full-width architectural image with an intentional editorial content block
+
+The hero must include:
+
+* Small location or category label
+* Strong primary headline
+* Concise supporting copy
+* Primary CTA: `Explore Properties`
+* Secondary CTA: `Request a Valuation`
+* Optional compact property-search entry point
+* One strong architectural or residential image
+* A tasteful property reference or editorial caption
+
+Do not use an image at only 4% opacity.
+
+The image must contribute meaningfully to the hero while maintaining text contrast.
+
+Avoid a completely empty-looking first screen.
+
+The first viewport should immediately communicate:
+
+* What Casa Aurelia does
+* Who it serves
+* What action the visitor should take
+* What kind of properties it represents
+
+### Section 2: Curated residences
+
+Display exactly six highlighted properties, creating a balanced `3 × 2` desktop composition.
+
+Use existing featured property data.
+
+Create a stronger editorial grid rather than six identical cards if possible:
+
+* One or two featured cards can span additional columns.
+* Maintain consistent information hierarchy.
+* Do not make the layout unpredictable on tablet or mobile.
+
+Each card should show only essential information:
+
+* Image
+* Property name
+* Location
+* Price
+* Bedrooms
+* Area or property type
+* Clear view-property action
+
+Fix nested interactive markup.
+
+The card may be one link, while favourite controls must be separate siblings or use a safe structure that does not nest buttons inside anchors.
+
+Add a clear `View All Properties` action after the grid.
+
+### Remove the current Property Index
+
+Delete the homepage Property Index that repeats the same listings.
+
+The complete inventory already belongs on `/properties`.
+
+Do not show the same property set twice on the homepage.
+
+### Section 3: Value proposition
+
+Replace the oversized eight-card service grid with three concise pillars.
+
+Suggested pillars:
+
+1. Curated buying
+2. Considered selling
+3. Private advisory
+
+Each pillar should contain:
+
+* A short heading
+* One brief paragraph
+* A clear relevant link
+* Optional restrained visual or number
+
+Do not use giant inactive cards with hover-only image reveals.
+
+### Section 4: Selected locations
+
+Show four selected neighborhoods or cities.
+
+Use a visually rich layout with:
+
+* Strong imagery
+* Location name
+* One-sentence character description
+* Approximate property range only if existing data supports it
+* A clear action
+
+Each location must link to a specific filtered state or city route, not all to the generic `/neighborhoods` page without context.
+
+Use query parameters or city slugs where appropriate.
+
+### Section 5: Selling proposition
+
+Create one compact but visually strong seller section.
+
+Include:
+
+* A concise seller-focused headline
+* Two or three credible deliverables
+* A valuation CTA
+* One strong image
+
+Do not repeat the same seller CTA again later on the homepage.
+
+### Section 6: Trust section
+
+Do not display fake testimonials.
+
+Choose one of the following:
+
+* Use real testimonial data if it exists.
+* Replace testimonials with a transparent process statement.
+* Show three operational principles.
+* Show verified service commitments that can genuinely be delivered.
+* Omit the section entirely.
+
+Never use “Demo Client A,” “Demo Client B,” or “Demo testimonials” in the public experience.
+
+### Section 7: Final CTA
+
+Use one clear final conversion section.
+
+Include:
+
+* Short headline
+* One supporting sentence
+* `Book a Private Consultation`
+* Optional secondary text link
+
+Do not repeat two nearly identical contact buttons.
+
+### Footer
+
+Follow the global footer requirements below.
+
+## Homepage length
+
+The rebuilt homepage should feel complete without being exhausting.
+
+Target approximately seven meaningful chapters including hero and final CTA.
+
+Do not compensate for removed sections by adding new filler.
+
+---
+
+# 7. PROPERTY CATALOGUE REBUILD
+
+Rebuild `/properties` as an efficient, elegant discovery experience.
+
+## Hero
+
+Use a compact catalogue header rather than an oversized marketing hero.
+
+Include:
+
+* Page title
+* One concise description
+* Result count
+* Optional breadcrumb
+
+The property grid should become visible quickly.
+
+## Desktop filters
+
+Use either:
+
+* A clean horizontal toolbar with an expandable advanced-filter panel, or
+* A well-proportioned left filter sidebar with the grid on the right
+
+Do not place too many cramped controls in one wrapping row.
+
+Required filters:
+
+* Search
+* City
+* Property type
+* Bedrooms
+* Price range
+* Sort
+
+Add additional filters only if supported by actual data.
+
+## Mobile filters
+
+Use a `Filters` button opening a bottom sheet or full-height drawer.
+
+The mobile filter experience must include:
+
+* Clear labels
+* Large touch targets
+* Current selections
+* Reset action
+* Apply action
+* Result count
+* Proper close behaviour
+* Keyboard accessibility
+
+Do not force five form controls into a narrow flex row.
+
+## URL state
+
+Synchronise catalogue state with URL search parameters.
+
+Example behaviour:
+
+* `/properties?city=Goa&type=Villa&beds=4&sort=price-desc`
+
+Refreshing or sharing the URL must preserve filters.
+
+Use stable parsing and validate unsupported values.
+
+## Applied filters
+
+Display applied filters as removable chips above the grid.
+
+Include:
+
+* Individual remove controls
+* `Clear all`
+* Updated result count
+
+## Search and sorting
+
+Search should work across relevant fields such as:
+
+* Property name
+* City
+* Locality
+* Property type
+
+Sorting must be stable and correctly handle numeric prices.
+
+## Property grid
+
+Use:
+
+* One column on narrow mobile
+* Two columns on tablet
+* Three columns on desktop
+
+Keep card heights visually aligned without forcing excessive blank space.
+
+Ensure:
+
+* Property title does not collide with price.
+* Metadata wraps safely.
+* Icons are decorative or properly labelled.
+* Images use the correct `sizes` attribute.
+* Cards have visible keyboard focus.
+* Hover is enhanced but not necessary for understanding.
+* Touch devices receive equivalent interaction.
+* Favourite controls are not nested inside links.
+
+## Favourites
+
+Only keep the heart/favourite feature if it works.
+
+At minimum:
+
+* Persist favourites in local storage.
+* Restore state after reload.
+* Give buttons accurate `aria-label` text.
+* Provide selected and unselected states.
+* Prevent favourite clicks from navigating to the property.
+
+If favourites are not intentionally supported, remove the heart buttons instead of leaving a decorative fake feature.
+
+## Empty and loading states
+
+Create:
+
+* Skeleton card loading state where relevant
+* Designed empty-results state
+* Clear reset-filter action
+* Error state if data retrieval fails
+
+## Results strategy
+
+For ten properties, show all results without fake pagination.
+
+Build the components so pagination or `Load More` can be added when the dataset grows.
+
+Do not add meaningless pagination for a very small dataset.
+
+---
+
+# 8. PROPERTY DETAIL PAGE REBUILD
+
+Rebuild `/properties/[slug]` into a premium property presentation and conversion page.
+
+## Page architecture
+
+Use this structure:
+
+1. Breadcrumb and gallery
+2. Property identity and primary facts
+3. Main content with sticky inquiry sidebar
+4. Description
+5. Features and amenities
+6. Location information
+7. Compact financial calculator
+8. Related properties
+9. Mobile conversion bar
+
+Consolidate unnecessary standalone sections.
+
+## Gallery
+
+Create an editorial gallery that works at every breakpoint.
+
+Desktop options:
+
+* One large main image with two or three supporting images
+* An asymmetric masonry-style composition
+* A controlled grid opening a lightbox
+
+Mobile:
+
+* Swipeable gallery or one main image with an image-count control
+* No tiny thumbnail strip that is hard to use
+* Preserve image aspect ratios
+* Avoid layout shift
+
+The gallery must include:
+
+* Proper buttons
+* Keyboard navigation
+* Escape-to-close
+* Previous and next controls
+* Image counter
+* Alt text
+* Focus management
+* Touch support
+
+Do not use a clickable `<div>` as the main interaction.
+
+## Property identity
+
+Present:
+
+* Property name
+* Location
+* Price
+* Property type
+* Property reference ID if available
+* Availability or possession
+* Clear favourite/share controls
+* Primary CTA
+
+Use a compact facts row rather than six oversized equal cards.
+
+Suggested facts:
+
+* Bedrooms
+* Bathrooms
+* Area
+* Parking
+* Possession
+* Type
+
+On mobile, use a tidy two- or three-column layout.
+
+## Main desktop layout
+
+Use an approximately `8/4` or `7/5` desktop grid.
+
+Left:
+
+* Description
+* Key features
+* Amenities
+* Neighborhood
+* Relevant property information
+
+Right:
+
+* Sticky inquiry card
+* Property price
+* Primary viewing CTA
+* Contact options
+* Short trust/privacy note
+
+The sidebar should stop before the related-properties section.
+
+It must not overlap the footer.
+
+## Inquiry card
+
+Create a high-converting inquiry experience.
+
+Fields should include:
+
+* Name
+* Email
+* Phone
+* Message
+
+Include:
+
+* Real labels
+* Required indicators
+* Inline validation
+* Accessible error summaries
+* Loading state
+* Success state
+* Failure state
+* Property name and slug sent with the inquiry
+* Consent or privacy text
+* Server-side validation
+* Spam protection
+
+Primary action:
+
+`Request a Private Viewing`
+
+Secondary action may be:
+
+`Ask for Details`
+
+Do not show multiple equal-priority buttons without explaining the difference.
+
+## EMI calculator
+
+Fix the current nested full-width section problem.
+
+The calculator must be a compact component inside the property content—not a complete `max-w-7xl py-28` section nested inside a grid column.
+
+Use inputs for:
+
+* Property price
+* Down payment
+* Loan amount
+* Interest rate
+* Tenure
+
+Initial values should derive sensibly from the current property price.
+
+For example:
+
+* Property price: actual property value
+* Down payment: configurable percentage
+* Loan amount: property price minus down payment
+
+Display:
+
+* Estimated EMI
+* Principal
+* Estimated interest
+* Total estimated repayment
+
+Add a clear disclaimer:
+
+`This is an indicative estimate and not a loan offer. Actual rates and eligibility vary by lender.`
+
+Use correct Indian currency formatting.
+
+## Related properties
+
+Always produce a balanced layout.
+
+For three-column desktop display:
+
+* Show three related properties, or
+* Use a two-column layout when only two exist
+
+Do not leave a visually empty third column.
+
+Select related properties by meaningful similarity:
+
+* City
+* Type
+* Price range
+* Bedrooms
+
+## Mobile action bar
+
+Keep a mobile sticky action bar, but make it reliable.
+
+It should:
+
+* Respect safe-area insets.
+* Avoid covering page content or footer.
+* Use one strong primary action.
+* Use one secondary action only when needed.
+* Scroll or open the inquiry interface predictably.
+* Be keyboard and screen-reader accessible.
+
+---
+
+# 9. SELL PAGE REBUILD
+
+Shorten and restructure `/sell`.
+
+The page should focus on converting owners into valuation inquiries.
+
+## Required structure
+
+### 1. Seller hero
+
+Include:
+
+* Strong seller-focused headline
+* Concise supporting copy
+* `Request a Valuation`
+* One strong background or adjacent image
+
+### 2. Credible seller value
+
+Show three or four concise benefits such as:
+
+* Market-aware pricing
+* Professional presentation
+* Qualified inquiry handling
+* Negotiation and closing coordination
+
+Do not claim access to a private buyer network unless it is genuinely supported.
+
+### 3. Four-step process
+
+Reduce the six-step process into four clearly differentiated stages:
+
+1. Understand and value
+2. Prepare and position
+3. Market and conduct viewings
+4. Negotiate and close
+
+Use concise copy.
+
+### 4. Evidence or presentation section
+
+Keep one strong visual section explaining why presentation matters.
+
+Remove unsupported statistics.
+
+Never state “properties sell 20–30% faster” or similar claims unless a reliable source is cited and context is provided.
+
+### 5. Valuation form
+
+Move the conversion form earlier and make it visually important.
+
+Fields:
+
+* Name
+* Email
+* Phone
+* Property location
+* Property type
+* Approximate area
+* Expected price, optional
+* Message, optional
+
+Implement actual validation and submission.
+
+### 6. FAQ
+
+Keep only four high-value questions.
+
+Remove repetitive or generic questions.
+
+## Remove or consolidate
+
+Remove the standalone long staging checklist from the main page.
+
+A short downloadable or expandable preparation guide can be added only if genuinely useful, but it must not interrupt the core conversion path.
+
+---
+
+# 10. NEIGHBORHOODS PAGE
+
+Turn `/neighborhoods` into a meaningful browsing experience rather than a decorative card collection.
+
+Each neighborhood or city should include:
+
+* Strong image
+* City or location name
+* Brief character description
+* Relevant lifestyle tags
+* Property count derived from data
+* Price range derived from current property data
+* Link to the corresponding filtered property catalogue
+
+Do not hard-code misleading ranges when they can be calculated from the property dataset.
+
+Add clear filtering or navigation by city if the page becomes long.
+
+Do not create separate empty city pages unless enough real content exists.
+
+A filtered catalogue URL is acceptable.
+
+---
+
+# 11. ABOUT PAGE
+
+Use the About page to explain the brand without inventing a fake company history.
+
+Suggested structure:
+
+1. Brand statement
+2. What Casa Aurelia does
+3. How properties are selected
+4. Buying and selling approach
+5. Service regions
+6. Contact CTA
+
+Keep it editorial and concise.
+
+Do not add:
+
+* Fake founder portraits
+* Fake employee cards
+* Fake awards
+* Fake office imagery described as the company’s office
+* Fake statistics
+* Fake transaction volume
+
+Replace vague AI-sounding phrases with direct human copy.
+
+---
+
+# 12. CONTACT PAGE REBUILD
+
+Make `/contact` compact, credible, and functional.
+
+## Layout
+
+Use a clean two-column desktop layout:
+
+Left:
+
+* Page heading
+* Short explanation
+* Real contact channels, when configured
+* Response expectation
+* Working hours, only if valid
+
+Right:
+
+* Contact form
+
+On mobile, stack logically.
+
+## Contact data
+
+Create a central configuration file for:
+
+* Email
+* Phone
+* Address
+* Working hours
+* Social profiles
+
+Do not duplicate these values across several components.
+
+Remove fictional values such as:
+
+* `+91 90000 00000`
+* Placeholder email addresses
+* Unverified office addresses
+
+When real data is not configured:
+
+* Do not display fake details.
+* Provide a clear development configuration placeholder.
+* Keep the page functional through the form if the submission channel is configured.
+
+Make real contact values clickable:
+
+* `mailto:`
+* `tel:`
+* Valid social URLs
+
+## Form
+
+Use proper labels, not placeholder-only fields.
+
+Required behaviour:
+
+* Client and server validation
+* Name attributes
+* Appropriate autocomplete attributes
+* Required indicators
+* Inline errors
+* Accessible success state
+* Accessible failure state
+* Loading state
+* Double-submission prevention
+* Honeypot
+* Rate limiting where possible
+* Input sanitisation
+* Server-side processing
+* No secrets exposed in client code
+
+Use the project’s existing email service if configured.
+
+Otherwise, create a clean provider abstraction and document the required environment variables.
+
+Do not hard-code credentials.
+
+## Page length
+
+Keep the page focused.
+
+Use a maximum of:
+
+* Contact introduction
+* Contact/form layout
+* Optional three- or four-question FAQ
+* Footer
+
+Remove unnecessary secondary CTAs.
+
+---
+
+# 13. FORMS AND SERVER-SIDE FUNCTIONALITY
+
+Audit every form across the website.
+
+Potential forms include:
+
+* General contact
+* Property inquiry
+* Viewing request
+* Valuation request
+
+Use a consistent shared form architecture.
+
+Recommended implementation:
+
+* React Hook Form or an equivalent reliable form library already present
+* Zod or equivalent shared schema validation
+* Server Actions or secure API routes
+* Server-side validation regardless of client validation
+* Structured email payloads
+* Consistent error objects
+* Accessible status announcements
+* Honeypot field
+* Basic rate limiting
+* Safe logging without exposing personal data
+
+Do not add a database unless necessary.
+
+If form submissions are emailed, include:
+
+* Form type
+* Property name and URL where relevant
+* Name
+* Email
+* Phone
+* Message
+* Submission timestamp
+* Referring page
+
+Never log full personal form submissions publicly.
+
+Add a short privacy notice beside submission buttons.
+
+---
+
+# 14. ANIMATION SYSTEM
+
+Motion must feel premium, restrained, and reliable.
+
+## Remove the blocking preloader
+
+The current full-screen preloader should be removed unless it serves a real technical need.
+
+Do not delay access to the website for a decorative logo animation.
+
+If a transition is retained:
+
+* It must be extremely short.
+* It must never trap the page.
+* It must not block navigation.
+* It must not run on every route change.
+* Content must remain available.
+
+## Content visible by default
+
+Never render essential page content permanently at `opacity: 0`.
+
+Use progressive enhancement:
+
+* Initial server-rendered content must be visible.
+* Apply animation classes only after the client is ready.
+* If JavaScript fails, the page remains fully usable.
+
+## Motion language
+
+Use motion for:
+
+* Subtle heading entrances
+* Image reveals
+* Card image scale
+* Underline transitions
+* Mobile menu transitions
+* Gallery transitions
+* Filter drawer
+* Accordion opening
+
+Avoid:
+
+* Animating every word individually throughout the site
+* Repeated 40px upward movement on every block
+* Excessive stagger delays
+* Heavy parallax
+* Scroll hijacking
+* Animations that delay reading
+* Motion that causes layout shift
+
+## Reduced motion
+
+Respect `prefers-reduced-motion`.
+
+For reduced-motion users:
+
+* Disable smooth scrolling
+* Disable parallax
+* Remove large translations
+* Reduce or remove staggered motion
+* Keep all content immediately visible
+
+## Smooth scrolling
+
+Only keep smooth scrolling if it does not:
+
+* Break native keyboard navigation
+* Interfere with anchor links
+* Create scroll lag
+* Degrade mobile performance
+* Fight browser history restoration
+
+Remove the smooth-scroll library if it provides no measurable value.
+
+---
+
+# 15. RESPONSIVE REQUIREMENTS
+
+Test and refine every page at:
+
+* 320px
+* 360px
+* 390px
+* 430px
+* 768px
+* 820px
+* 1024px
+* 1280px
+* 1440px
+* 1920px
+
+## Mobile
+
+Ensure:
+
+* No horizontal scrolling.
+* Headings wrap naturally.
+* Buttons do not overflow.
+* Sticky bars respect safe areas.
+* Cards are easy to tap.
+* Filter controls use a drawer.
+* Images are not excessively tall.
+* Body copy is not too small.
+* Content order remains logical.
+* Header menu works.
+* Forms use the correct input types.
+* Fixed elements do not cover content.
+
+## Tablet
+
+Do not treat tablet as a compressed desktop layout.
+
+Check:
+
+* Header navigation transition point
+* Property grid
+* Filter layout
+* Gallery
+* Sell page process
+* Footer columns
+* Form proportions
+* Heading line breaks
+
+## Large displays
+
+Avoid:
+
+* Overly long text lines
+* Excessive empty margins
+* Uncontrolled image stretching
+* Content floating in the middle of very wide screens
+* Hero copy becoming detached from its image
+
+---
+
+# 16. ACCESSIBILITY
+
+Meet WCAG 2.2 AA as closely as practical.
+
+Implement:
+
+* Skip-to-content link
+* Correct heading order
+* One main landmark per page
+* Semantic header, nav, main, section, and footer
+* Real buttons for actions
+* Real links for navigation
+* No nested interactive elements
+* Visible keyboard focus
+* Logical tab order
+* Keyboard-accessible menus
+* Keyboard-accessible gallery
+* Accessible accordions
+* Explicit form labels
+* Error descriptions connected with `aria-describedby`
+* Live regions for submission status
+* Correct button labels
+* Decorative icons hidden from assistive technology
+* Meaningful image alt text
+* Sufficient contrast
+* 44px minimum touch targets where possible
+* Reduced-motion support
+
+Check the complete site using keyboard navigation.
+
+---
+
+# 17. SEO REPAIR
+
+Audit and fix metadata across every route.
+
+## Title templates
+
+Prevent duplicated titles such as:
+
+* `Properties — Casa Aurelia — Casa Aurelia`
+* `The Glass Villa ... — Casa Aurelia — Casa Aurelia`
+
+Create one central title template.
+
+Example:
+
+* Home: `Casa Aurelia | Curated Premium Real Estate`
+* Properties: `Properties | Casa Aurelia`
+* Property: `The Glass Villa, Goa | Casa Aurelia`
+* Sell: `Sell Your Property | Casa Aurelia`
+* Contact: `Contact | Casa Aurelia`
+
+## Metadata
+
+Implement:
+
+* Correct `metadataBase`
+* Canonical URLs
+* Page-specific descriptions
+* Open Graph titles
+* Open Graph descriptions
+* Open Graph images
+* Twitter metadata
+* Correct absolute URLs
+* Favicon and app icons
+* Sitemap
+* Robots file
+
+Do not point social metadata to a domain that is not the active configured production domain.
+
+Use an environment-based site URL.
+
+## Structured data
+
+Use valid and appropriate structured data.
+
+Potential types:
+
+* `Organization` or `RealEstateAgent` only when the data is accurate
+* `BreadcrumbList`
+* Property/listing schema appropriate to the page
+* `WebSite`
+* `WebPage`
+
+Structured-data URLs must be absolute.
+
+Do not add fake ratings or aggregate reviews.
+
+Test JSON-LD for valid syntax.
+
+## Property URLs
+
+Keep current property slugs unless there is a strong SEO reason to change them.
+
+If any route changes, create redirects.
+
+---
+
+# 18. PERFORMANCE
+
+Optimise for strong Core Web Vitals.
+
+Targets:
+
+* LCP below approximately 2.5 seconds on a reasonable mobile connection
+* CLS below 0.1
+* INP below approximately 200ms
+* Lighthouse Performance above 90 where practical
+* Accessibility above 95
+* Best Practices above 95
+* SEO above 95
+
+## Images
+
+Use Next.js image optimisation correctly.
+
+Implement:
+
+* Accurate `sizes`
+* Priority only for the actual above-the-fold hero image
+* Lazy loading below the fold
+* Explicit aspect ratios
+* Blur placeholders where appropriate
+* Correct source dimensions
+* Modern formats handled by Next.js
+* No 3840px resource request for a small card where avoidable
+
+Ensure images are cropped intentionally with suitable `object-position`.
+
+## JavaScript
+
+Reduce client-side JavaScript.
+
+Avoid making entire pages client components simply for scroll animations.
+
+Prefer:
+
+* Server components for static content
+* Small isolated client components
+* CSS hover transitions
+* Dynamic imports for heavy components
+* Lazy loading for the lightbox and EMI calculator where sensible
+
+## Fonts
+
+Use `next/font` or an equivalent optimised setup.
+
+Limit font weights and families.
+
+Ensure `font-display` behaviour does not cause invisible text.
+
+## Layout shift
+
+Reserve space for:
+
+* Images
+* Galleries
+* Sticky elements
+* Forms
+* Dynamic results
+* Font swaps
+
+---
+
+# 19. COMPONENT ARCHITECTURE
+
+Audit the repository for duplicated components and styling.
+
+Create or refine reusable components such as:
+
+* `Container`
+* `Section`
+* `SectionLabel`
+* `PageHeader`
+* `Button`
+* `PropertyCard`
+* `PropertyGrid`
+* `PropertyFacts`
+* `FilterDrawer`
+* `AppliedFilters`
+* `FormField`
+* `InquiryForm`
+* `ValuationForm`
+* `ContactForm`
+* `Accordion`
+* `ImageGallery`
+* `StickyInquiryCard`
+* `EmptyState`
+* `Footer`
+* `MobileMenu`
+
+Do not create abstractions that make simple markup difficult to understand.
+
+Remove:
+
+* Dead components
+* Duplicate helpers
+* Unused animation wrappers
+* Unused packages
+* Repeated colour values
+* Repeated container classes
+* Obsolete preloader code
+* Unused imports
+* Console logs
+* Commented-out code
+
+Do not delete data or components until verifying they are unused.
+
+---
+
+# 20. FOOTER REBUILD
+
+Create a cleaner, more credible footer.
+
+Include:
+
+* Brand name
+* Short brand description
+* Primary navigation
+* Seller navigation
+* Legal links
+* Real contact details only when configured
+* Real social links only when configured
+* Copyright
+* Image credits where legally required
+
+Do not display social network names as plain spans.
+
+A social item must be:
+
+* A valid link, or
+* Removed
+
+Do not show fictional phone numbers or email addresses.
+
+On mobile:
+
+* Stack columns logically
+* Avoid overly large gaps
+* Keep legal and copyright content readable
+* Ensure the mobile property action bar does not overlap the footer
+
+---
+
+# 21. COPY EDITING
+
+Review all public copy.
+
+Improve copy that sounds:
+
+* AI-generated
+* Vague
+* Overly poetic
+* Repetitive
+* Unverifiable
+* Inflated
+* Generic
+
+Preserve the restrained editorial voice, but communicate clearly.
+
+Avoid repeating words such as:
+
+* Curated
+* Calm
+* Thoughtful
+* Premium
+* Clarity
+* Private
+
+Use them only when meaningful.
+
+Keep paragraphs short.
+
+Avoid unsupported claims such as:
+
+* “Research consistently shows...”
+* “Properties sell 20–30% faster...”
+* “Access to our private buyer list...”
+* “Verified listings...” unless a real verification process exists
+
+Where the project is explicitly a demonstration portfolio, create a discreet site-wide demo disclosure rather than inserting trust-damaging demo notes into prominent conversion sections.
+
+---
+
+# 22. QUALITY ASSURANCE
+
+After implementation, test the site rather than assuming it works.
+
+## Run
+
+Use the package manager already used by the repository.
+
+Run at minimum:
+
+* Dependency installation if required
+* Lint
+* Type checking
+* Unit tests if present
+* Production build
+* Local production preview
+* Browser testing
+
+Do not declare completion with build errors, TypeScript errors, hydration warnings, or lint errors introduced by your changes.
+
+## Browser verification
+
+Inspect every primary route in a browser.
+
+Check:
+
+* Header visibility
+* Navigation
+* Mobile menu
+* Filters
+* URL filter persistence
+* Property cards
+* Favourite behaviour
+* Property gallery
+* Inquiry form
+* Valuation form
+* Contact form
+* Accordions
+* Sticky sidebar
+* Mobile sticky action bar
+* Footer
+* Legal links
+* Empty states
+* Invalid property slug/404 page
+
+## Console
+
+Resolve:
+
+* Runtime errors
+* Hydration errors
+* React key warnings
+* Image warnings
+* Accessibility warnings
+* Failed network requests
+* Form-handler errors
+
+## Visual regression checklist
+
+Verify:
+
+* No clipped headings
+* No invisible content
+* No stuck preloader
+* No empty orphan grid columns
+* No repeated inventory sections
+* No unexpected whitespace
+* No horizontal overflow
+* No buttons inside anchors
+* No footer overlap
+* No unreadable transparent header
+* No broken image ratios
+* No layout jump after hydration
+* No mobile controls hidden behind browser UI
+
+---
+
+# 23. EXECUTION ORDER
+
+Follow this order.
+
+## Phase 1: Audit
+
+Inspect:
+
+* Repository structure
+* Routes
+* Components
+* Property data
+* Form handlers
+* CSS
+* Tailwind configuration
+* Fonts
+* Animation implementation
+* Dependencies
+* Metadata
+* Image assets
+
+Identify reusable foundations before editing.
+
+## Phase 2: Foundation
+
+Fix:
+
+* Design tokens
+* Container system
+* Typography
+* Header
+* Footer
+* Button system
+* Form controls
+* Section primitives
+* Animation defaults
+* Accessibility foundations
+
+## Phase 3: Homepage
+
+Rebuild the homepage and remove repetition.
+
+## Phase 4: Catalogue
+
+Rebuild filters, URL state, mobile filter drawer, cards, and empty states.
+
+## Phase 5: Property detail
+
+Rebuild gallery, facts, content layout, sticky inquiry form, calculator, and related properties.
+
+## Phase 6: Sell, neighborhoods, about and contact
+
+Shorten and improve every supporting page.
+
+## Phase 7: Functionality
+
+Finish:
+
+* Forms
+* Validation
+* Submission handlers
+* Favourites
+* Gallery
+* Filters
+* Mobile actions
+
+## Phase 8: SEO, accessibility and performance
+
+Complete the technical audit and repairs.
+
+## Phase 9: Verification
+
+Run all tests and perform browser checks at the required viewport sizes.
+
+---
+
+# 24. DEFINITION OF DONE
+
+The task is complete only when:
+
+* The homepage no longer repeats the property inventory.
+* The homepage has a clear narrative and balanced property grid.
+* Demo testimonials have been removed.
+* Service content has been condensed.
+* The header is always readable and visible by default.
+* The decorative blocking preloader is gone.
+* Content does not rely on `opacity: 0` to exist.
+* The mobile menu is accessible.
+* Catalogue filters are usable on mobile.
+* Filter state survives URL sharing and refresh.
+* Property cards contain no invalid nested interactions.
+* The property-detail page has a correct grid and sticky inquiry panel.
+* The EMI calculator uses the property price sensibly.
+* Related-property layouts are balanced.
+* Forms have labels, validation, server handling, and proper states.
+* Fake contact details are removed or centrally configured.
+* Unsupported marketing statistics are removed.
+* Metadata titles are no longer duplicated.
+* Canonical and social metadata use the correct production URL.
+* Structured-data URLs are absolute.
+* All pages work from 320px to 1920px.
+* There is no horizontal overflow.
+* Reduced-motion users can access everything.
+* The application passes linting, type checking, and production build.
+* No existing functional property route is broken.
+* The result feels art-directed, credible, and production-ready.
+
+---
+
+# 25. FINAL RESPONSE FORMAT
+
+After completing the work, return a concise implementation report containing:
+
+1. Summary of the design and UX changes
+2. Routes rebuilt
+3. Components created or refactored
+4. Repetition and dead code removed
+5. Functional improvements
+6. Forms and required environment variables
+7. SEO repairs
+8. Accessibility repairs
+9. Performance improvements
+10. Tests and commands run
+11. Production build result
+12. Remaining limitations, if any
+
+Do not provide vague statements such as “the website has been enhanced.”
+
+State exactly what was changed and exactly what was verified.
+
+Begin working directly inside the existing repository now.
