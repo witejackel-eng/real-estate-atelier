@@ -1,17 +1,20 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/shared/Container';
+import { SectionLabel } from '@/components/shared/SectionLabel';
+import { createMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Privacy Policy',
-  description: 'Privacy Policy for Casa Aurelia — a demo real estate website.',
-};
+  description: 'Privacy Policy for Casa Aurelia.',
+  path: '/privacy',
+});
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen py-24 sm:py-32 pt-28 sm:pt-36">
+    <div className="min-h-screen py-24 sm:py-32 pt-28 sm:pt-36">
       <Container>
         <div className="max-w-3xl mx-auto">
-          <span className="mono-label">Legal</span>
+          <SectionLabel>Legal</SectionLabel>
           <h1 className="font-display text-4xl sm:text-5xl text-espresso mt-2 mb-10 tracking-tight">
             Privacy Policy
           </h1>
@@ -110,6 +113,6 @@ export default function PrivacyPage() {
           </div>
         </div>
       </Container>
-    </main>
+    </div>
   );
 }

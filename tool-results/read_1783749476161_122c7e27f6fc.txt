@@ -1,0 +1,1885 @@
+     1→# CASA AURELIA — COMPLETE UX, LAYOUT, DESIGN AND CONVERSION REBUILD
+     2→
+     3→You are working inside the existing **Casa Aurelia real-estate website repository** currently deployed at:
+     4→
+     5→https://real-estate-atelier.vercel.app/
+     6→
+     7→This is an existing Next.js application. Do not create a second application, replacement repository, disconnected prototype, or separate redesign folder.
+     8→
+     9→Your task is to audit and rebuild the current interface into a polished, high-end, conversion-focused luxury real-estate website.
+    10→
+    11→This is not a request for superficial styling.
+    12→
+    13→You must fix:
+    14→
+    15→* Page architecture
+    16→* Layout hierarchy
+    17→* Responsive behaviour
+    18→* Repetition
+    19→* Excessive page length
+    20→* Weak conversion paths
+    21→* Accessibility
+    22→* Animation reliability
+    23→* Forms
+    24→* Property discovery
+    25→* Property-detail usability
+    26→* Trust and credibility
+    27→* SEO
+    28→* Performance
+    29→* Mobile usability
+    30→* Component consistency
+    31→* Invalid interactive markup
+    32→* Visual polish
+    33→
+    34→The completed website should feel like a professionally art-directed luxury-property platform, not an AI-generated template.
+    35→
+    36→---
+    37→
+    38→# 1. OPERATING RULES
+    39→
+    40→Follow these rules throughout the task.
+    41→
+    42→## Do not ask me questions
+    43→
+    44→Inspect the existing repository, components, routes, data structures, assets, styles, dependencies, and configuration. Make sensible implementation decisions from the existing project.
+    45→
+    46→## Do not merely report problems
+    47→
+    48→Implement the improvements directly.
+    49→
+    50→Do not stop after creating:
+    51→
+    52→* An audit
+    53→* A plan
+    54→* A design document
+    55→* A list of suggestions
+    56→* Wireframes without code
+    57→* Placeholder components
+    58→* TODO comments
+    59→
+    60→The final result must be working code.
+    61→
+    62→## Preserve the existing application
+    63→
+    64→Retain and improve the current:
+    65→
+    66→* Next.js application
+    67→* App Router structure
+    68→* Property data
+    69→* Dynamic property routes
+    70→* Existing useful images
+    71→* Existing working filters
+    72→* Existing SEO foundations
+    73→* Existing legal pages
+    74→* Existing brand name
+    75→* Existing quiet-luxury colour direction
+    76→
+    77→Do not unnecessarily replace the framework or rewrite the entire application using another stack.
+    78→
+    79→## Do not invent credibility
+    80→
+    81→Never add fake:
+    82→
+    83→* Client names
+    84→* Sales statistics
+    85→* Awards
+    86→* Transactions
+    87→* Testimonials
+    88→* Reviews
+    89→* Team members
+    90→* Office addresses
+    91→* Partnerships
+    92→* Press mentions
+    93→* Years of experience
+    94→* Property verification claims
+    95→* RERA numbers
+    96→* Licensing details
+    97→* Buyer networks
+    98→* Market-performance figures
+    99→
+   100→If credible information does not exist in the repository, omit it or label it clearly as demo data in a discreet development-only manner.
+   101→
+   102→Do not display “Demo Client A,” “Demo Client B,” or similar fake testimonials on the public homepage.
+   103→
+   104→## Do not leave fake functionality
+   105→
+   106→A form must either:
+   107→
+   108→1. Submit successfully through a real server-side handler, or
+   109→2. Clearly state that submission is unavailable.
+   110→
+   111→Never display a fake success message after doing nothing.
+   112→
+   113→## Do not damage existing routes
+   114→
+   115→All current routes must continue working unless a route is intentionally consolidated and redirected.
+   116→
+   117→Check at minimum:
+   118→
+   119→* `/`
+   120→* `/properties`
+   121→* `/properties/[slug]`
+   122→* `/sell`
+   123→* `/neighborhoods`
+   124→* `/about`
+   125→* `/contact`
+   126→* `/privacy`
+   127→* `/terms`
+   128→
+   129→---
+   130→
+   131→# 2. CURRENT PROBLEMS THAT MUST BE FIXED
+   132→
+   133→The following problems have already been identified on the live website. Do not ignore them.
+   134→
+   135→## Homepage problems
+   136→
+   137→The homepage currently:
+   138→
+   139→* Displays featured property cards and then repeats nearly the same inventory in a separate Property Index.
+   140→* Shows too many properties before giving users a meaningful reason to trust the agency.
+   141→* Contains eight large service cards with equal visual importance.
+   142→* Uses a very long sequence of similarly spaced sections.
+   143→* Contains too many headings using the same reveal treatment.
+   144→* Includes demo testimonials that weaken trust.
+   145→* Repeats seller and contact calls to action.
+   146→* Makes the hero background image almost invisible.
+   147→* Does not establish a strong visual focal point.
+   148→* Feels like multiple page concepts stacked vertically rather than one directed experience.
+   149→* Has several hover-dependent effects that provide no equivalent experience on touch devices.
+   150→* Uses service cards that appear clickable but are not proper links or buttons.
+   151→* Shows seven featured properties in a three-column desktop grid, creating an unbalanced final row.
+   152→
+   153→## Header problems
+   154→
+   155→The current header:
+   156→
+   157→* Starts transparent.
+   158→* Can lack sufficient contrast over different backgrounds.
+   159→* Is hidden through an initial transform and depends on JavaScript animation.
+   160→* Does not provide a clear active-page state.
+   161→* Needs a more polished mobile navigation experience.
+   162→* Contains a primary action but does not visually adapt enough between the homepage and internal pages.
+   163→
+   164→## Animation problems
+   165→
+   166→Many elements are rendered initially with:
+   167→
+   168→* `opacity: 0`
+   169→* Translated positions
+   170→* A hidden header
+   171→* A full-screen preloader
+   172→
+   173→This makes core content dependent on client-side animation and hydration.
+   174→
+   175→If JavaScript loads slowly or an animation fails, important content may remain invisible.
+   176→
+   177→This must be corrected.
+   178→
+   179→## Property catalogue problems
+   180→
+   181→The catalogue currently has:
+   182→
+   183→* A crowded sticky filter row.
+   184→* Several dropdowns competing for limited mobile width.
+   185→* Placeholder-only controls without proper visible labels.
+   186→* No polished mobile filter sheet.
+   187→* No obvious applied-filter chips.
+   188→* No clear reset action.
+   189→* No strong empty-results state.
+   190→* No URL-synchronised filter state.
+   191→* No pagination or intentional load-more behaviour.
+   192→* Nested interactive elements where a favourite button sits inside a linked property card.
+   193→* No clear persistence strategy for favourites.
+   194→* Duplicate metadata title formatting.
+   195→
+   196→## Property-detail problems
+   197→
+   198→The property page currently has:
+   199→
+   200→* Too many separate vertical sections.
+   201→* A layout mismatch between the EMI calculator and inquiry form.
+   202→* A full-width EMI section nested inside half of a two-column grid.
+   203→* Excessive nested container padding.
+   204→* A calculator starting at ₹50 lakh even for a ₹4.8 crore property.
+   205→* An inquiry form that lacks strong visual priority.
+   206→* No proper sticky desktop inquiry panel.
+   207→* A clickable gallery region without correct button semantics.
+   208→* Six equal fact cards that take too much room.
+   209→* Only two related-property cards inside a three-column layout.
+   210→* Duplicate brand text in the document title.
+   211→* Open Graph URLs pointing at a potentially incorrect production hostname.
+   212→* Relative URLs inside structured data.
+   213→* Several sections that can be consolidated without losing information.
+   214→
+   215→## Sell page problems
+   216→
+   217→The page currently includes:
+   218→
+   219→* A long six-step process.
+   220→* A lengthy editorial explanation.
+   221→* A separate staging checklist.
+   222→* A large valuation form.
+   223→* A full FAQ section.
+   224→* Unsupported marketing statistics and generalised claims.
+   225→* Too many similarly styled sections.
+   226→* Too much scrolling before the conversion form.
+   227→
+   228→## Contact page problems
+   229→
+   230→The contact page currently contains:
+   231→
+   232→* Fictional contact information.
+   233→* A form that explicitly does not transmit messages.
+   234→* Inputs relying on placeholders instead of proper labels.
+   235→* No visible required states.
+   236→* No robust validation.
+   237→* No functional server-side submission.
+   238→* Too much page length for a straightforward contact goal.
+   239→* FAQ content that could be shortened or moved.
+   240→* Direct contact information that is not implemented as proper `mailto:` or `tel:` links.
+   241→
+   242→## Global semantic problems
+   243→
+   244→Check and fix:
+   245→
+   246→* Nested `<main>` landmarks.
+   247→* Buttons nested inside anchors.
+   248→* Non-semantic clickable `<div>` elements.
+   249→* Missing form labels.
+   250→* Missing keyboard interactions.
+   251→* Inconsistent focus states.
+   252→* Small tap targets.
+   253→* Motion without reduced-motion handling.
+   254→* Links presented as non-interactive text.
+   255→* Social network names that are spans rather than real links.
+   256→* Heading hierarchy.
+   257→* Missing or incorrect canonical metadata.
+   258→
+   259→---
+   260→
+   261→# 3. CREATIVE DIRECTION
+   262→
+   263→Preserve the brand’s quiet, editorial luxury direction, but make it more deliberate and modern.
+   264→
+   265→The experience should feel like a combination of:
+   266→
+   267→* A high-end architecture magazine
+   268→* A private property advisory
+   269→* A curated luxury residence platform
+   270→* A modern editorial portfolio
+   271→
+   272→It must not feel like:
+   273→
+   274→* A generic real-estate marketplace
+   275→* A theme template
+   276→* A SaaS dashboard
+   277→* An excessive glassmorphism website
+   278→* A design full of random gradients
+   279→* A page composed entirely of identical cards
+   280→* An animation showcase
+   281→* A clone of another website
+   282→
+   283→## Brand characteristics
+   284→
+   285→Use:
+   286→
+   287→* Generous whitespace
+   288→* Strong image art direction
+   289→* Restrained typography
+   290→* Editorial asymmetry
+   291→* Thin rules and dividers
+   292→* Warm neutral backgrounds
+   293→* Deep espresso text
+   294→* Muted gold or bronze accents
+   295→* Clear hierarchy
+   296→* Purposeful contrast
+   297→* Selective dark sections
+   298→* High-quality hover states
+   299→* Subtle motion
+   300→
+   301→Avoid:
+   302→
+   303→* Excessive rounded cards
+   304→* Large blurry shadows
+   305→* Neon effects
+   306→* Overly decorative icons
+   307→* Random pills everywhere
+   308→* Huge blocks of centred text
+   309→* Generic stock-template layouts
+   310→* Every section having the same heading treatment
+   311→* Excessive uppercase copy
+   312→* Extremely faint text
+   313→* Ultra-thin body text
+   314→* Carousels that hide essential information
+   315→
+   316→---
+   317→
+   318→# 4. DESIGN SYSTEM
+   319→
+   320→Create or refine a central design system rather than applying arbitrary values throughout components.
+   321→
+   322→## Container system
+   323→
+   324→Use one consistent container system.
+   325→
+   326→Suggested desktop maximum:
+   327→
+   328→* Main content: approximately `1280px–1360px`
+   329→* Editorial text: approximately `680px–760px`
+   330→* Narrow form content: approximately `560px–680px`
+   331→
+   332→Suggested horizontal gutters:
+   333→
+   334→* Mobile: `20px`
+   335→* Large mobile: `24px`
+   336→* Tablet: `32px`
+   337→* Desktop: `48px–64px`
+   338→* Very large desktop: no uncontrolled expansion beyond the maximum container
+   339→
+   340→Do not use repeated nested max-width containers that create unexpected internal padding.
+   341→
+   342→## Grid system
+   343→
+   344→Use:
+   345→
+   346→* 4 columns on mobile
+   347→* 8 columns on tablet
+   348→* 12 columns on desktop
+   349→
+   350→Allow intentional asymmetry while keeping elements aligned to shared grid lines.
+   351→
+   352→## Spacing
+   353→
+   354→Create consistent spacing tokens.
+   355→
+   356→Approximate section spacing:
+   357→
+   358→* Mobile: `56px–72px`
+   359→* Tablet: `72px–88px`
+   360→* Desktop: `88px–120px`
+   361→
+   362→Not every section needs the maximum spacing.
+   363→
+   364→Use tighter spacing inside connected content groups and wider spacing only between major narrative chapters.
+   365→
+   366→## Typography
+   367→
+   368→Retain the existing editorial serif direction where appropriate.
+   369→
+   370→Use:
+   371→
+   372→* Display serif for primary headings and selected property names
+   373→* Clean sans-serif for body copy, forms, navigation, and supporting information
+   374→* Monospace only for small labels, reference numbers, or intentionally technical details
+   375→
+   376→Do not use monospace for too much interface text.
+   377→
+   378→Define responsive typography with `clamp()` or equivalent fluid scales.
+   379→
+   380→Avoid forced heading heights that can clip or overlap when copy wraps.
+   381→
+   382→Keep body text readable:
+   383→
+   384→* Approximately 16–18px for important body content
+   385→* Approximately 14–16px for secondary content
+   386→* Line height around 1.55–1.75
+   387→* Comfortable text widths
+   388→
+   389→## Colour
+   390→
+   391→Preserve and refine the existing family:
+   392→
+   393→* Ivory
+   394→* Warm off-white
+   395→* Sand
+   396→* Espresso
+   397→* Charcoal
+   398→* Muted gold or bronze
+   399→* Optional muted terracotta for very limited emphasis
+   400→
+   401→Create CSS variables or theme tokens.
+   402→
+   403→Verify WCAG contrast, especially for:
+   404→
+   405→* Muted gold text
+   406→* Light-grey metadata
+   407→* Text over photographs
+   408→* Transparent header states
+   409→* Disabled controls
+   410→
+   411→## Borders and shadows
+   412→
+   413→Prefer:
+   414→
+   415→* Thin warm-neutral borders
+   416→* Minimal, soft elevation
+   417→* Image scaling
+   418→* Underline motion
+   419→* Colour transitions
+   420→
+   421→Do not turn every element into a floating card.
+   422→
+   423→---
+   424→
+   425→# 5. GLOBAL HEADER REBUILD
+   426→
+   427→Rebuild the header as a reliable, premium navigation system.
+   428→
+   429→## Desktop behaviour
+   430→
+   431→The header should:
+   432→
+   433→* Be positioned consistently.
+   434→* Remain readable at all times.
+   435→* Be transparent only when the background guarantees contrast.
+   436→* Transition to a solid or lightly translucent warm background after scrolling.
+   437→* Use a subtle border when solid.
+   438→* Keep the brand mark prominent but not oversized.
+   439→* Show an active-page state.
+   440→* Keep navigation spacing precise.
+   441→* Retain one primary action: `List Your Home`.
+   442→* Avoid excessive header height.
+   443→
+   444→Use approximately:
+   445→
+   446→* 72–80px on desktop
+   447→* 64–72px on mobile
+   448→
+   449→## Mobile navigation
+   450→
+   451→Create a polished full-screen or large-sheet mobile menu.
+   452→
+   453→It must:
+   454→
+   455→* Trap focus while open.
+   456→* Lock background scrolling.
+   457→* Close with the Escape key.
+   458→* Close after navigation.
+   459→* Include all primary navigation routes.
+   460→* Include the primary CTA.
+   461→* Provide visible focus states.
+   462→* Use a proper accessible dialog/menu pattern.
+   463→* Avoid tiny text and cramped spacing.
+   464→
+   465→## Reliability
+   466→
+   467→Do not render the header at `translateY(-100px)` and rely on JavaScript to make it visible.
+   468→
+   469→The header must be visible by default.
+   470→
+   471→Entrance motion may enhance it, but must not control whether it exists.
+   472→
+   473→---
+   474→
+   475→# 6. HOMEPAGE REBUILD
+   476→
+   477→The homepage must become shorter, clearer, more visual, and more conversion-focused.
+   478→
+   479→Remove unnecessary repetition.
+   480→
+   481→## Required homepage structure
+   482→
+   483→Use the following narrative order.
+   484→
+   485→### Section 1: Hero
+   486→
+   487→Create a premium editorial hero.
+   488→
+   489→Possible layout:
+   490→
+   491→* A 7/5 split on desktop, or
+   492→* A full-width architectural image with an intentional editorial content block
+   493→
+   494→The hero must include:
+   495→
+   496→* Small location or category label
+   497→* Strong primary headline
+   498→* Concise supporting copy
+   499→* Primary CTA: `Explore Properties`
+   500→* Secondary CTA: `Request a Valuation`
+   501→* Optional compact property-search entry point
+   502→* One strong architectural or residential image
+   503→* A tasteful property reference or editorial caption
+   504→
+   505→Do not use an image at only 4% opacity.
+   506→
+   507→The image must contribute meaningfully to the hero while maintaining text contrast.
+   508→
+   509→Avoid a completely empty-looking first screen.
+   510→
+   511→The first viewport should immediately communicate:
+   512→
+   513→* What Casa Aurelia does
+   514→* Who it serves
+   515→* What action the visitor should take
+   516→* What kind of properties it represents
+   517→
+   518→### Section 2: Curated residences
+   519→
+   520→Display exactly six highlighted properties, creating a balanced `3 × 2` desktop composition.
+   521→
+   522→Use existing featured property data.
+   523→
+   524→Create a stronger editorial grid rather than six identical cards if possible:
+   525→
+   526→* One or two featured cards can span additional columns.
+   527→* Maintain consistent information hierarchy.
+   528→* Do not make the layout unpredictable on tablet or mobile.
+   529→
+   530→Each card should show only essential information:
+   531→
+   532→* Image
+   533→* Property name
+   534→* Location
+   535→* Price
+   536→* Bedrooms
+   537→* Area or property type
+   538→* Clear view-property action
+   539→
+   540→Fix nested interactive markup.
+   541→
+   542→The card may be one link, while favourite controls must be separate siblings or use a safe structure that does not nest buttons inside anchors.
+   543→
+   544→Add a clear `View All Properties` action after the grid.
+   545→
+   546→### Remove the current Property Index
+   547→
+   548→Delete the homepage Property Index that repeats the same listings.
+   549→
+   550→The complete inventory already belongs on `/properties`.
+   551→
+   552→Do not show the same property set twice on the homepage.
+   553→
+   554→### Section 3: Value proposition
+   555→
+   556→Replace the oversized eight-card service grid with three concise pillars.
+   557→
+   558→Suggested pillars:
+   559→
+   560→1. Curated buying
+   561→2. Considered selling
+   562→3. Private advisory
+   563→
+   564→Each pillar should contain:
+   565→
+   566→* A short heading
+   567→* One brief paragraph
+   568→* A clear relevant link
+   569→* Optional restrained visual or number
+   570→
+   571→Do not use giant inactive cards with hover-only image reveals.
+   572→
+   573→### Section 4: Selected locations
+   574→
+   575→Show four selected neighborhoods or cities.
+   576→
+   577→Use a visually rich layout with:
+   578→
+   579→* Strong imagery
+   580→* Location name
+   581→* One-sentence character description
+   582→* Approximate property range only if existing data supports it
+   583→* A clear action
+   584→
+   585→Each location must link to a specific filtered state or city route, not all to the generic `/neighborhoods` page without context.
+   586→
+   587→Use query parameters or city slugs where appropriate.
+   588→
+   589→### Section 5: Selling proposition
+   590→
+   591→Create one compact but visually strong seller section.
+   592→
+   593→Include:
+   594→
+   595→* A concise seller-focused headline
+   596→* Two or three credible deliverables
+   597→* A valuation CTA
+   598→* One strong image
+   599→
+   600→Do not repeat the same seller CTA again later on the homepage.
+   601→
+   602→### Section 6: Trust section
+   603→
+   604→Do not display fake testimonials.
+   605→
+   606→Choose one of the following:
+   607→
+   608→* Use real testimonial data if it exists.
+   609→* Replace testimonials with a transparent process statement.
+   610→* Show three operational principles.
+   611→* Show verified service commitments that can genuinely be delivered.
+   612→* Omit the section entirely.
+   613→
+   614→Never use “Demo Client A,” “Demo Client B,” or “Demo testimonials” in the public experience.
+   615→
+   616→### Section 7: Final CTA
+   617→
+   618→Use one clear final conversion section.
+   619→
+   620→Include:
+   621→
+   622→* Short headline
+   623→* One supporting sentence
+   624→* `Book a Private Consultation`
+   625→* Optional secondary text link
+   626→
+   627→Do not repeat two nearly identical contact buttons.
+   628→
+   629→### Footer
+   630→
+   631→Follow the global footer requirements below.
+   632→
+   633→## Homepage length
+   634→
+   635→The rebuilt homepage should feel complete without being exhausting.
+   636→
+   637→Target approximately seven meaningful chapters including hero and final CTA.
+   638→
+   639→Do not compensate for removed sections by adding new filler.
+   640→
+   641→---
+   642→
+   643→# 7. PROPERTY CATALOGUE REBUILD
+   644→
+   645→Rebuild `/properties` as an efficient, elegant discovery experience.
+   646→
+   647→## Hero
+   648→
+   649→Use a compact catalogue header rather than an oversized marketing hero.
+   650→
+   651→Include:
+   652→
+   653→* Page title
+   654→* One concise description
+   655→* Result count
+   656→* Optional breadcrumb
+   657→
+   658→The property grid should become visible quickly.
+   659→
+   660→## Desktop filters
+   661→
+   662→Use either:
+   663→
+   664→* A clean horizontal toolbar with an expandable advanced-filter panel, or
+   665→* A well-proportioned left filter sidebar with the grid on the right
+   666→
+   667→Do not place too many cramped controls in one wrapping row.
+   668→
+   669→Required filters:
+   670→
+   671→* Search
+   672→* City
+   673→* Property type
+   674→* Bedrooms
+   675→* Price range
+   676→* Sort
+   677→
+   678→Add additional filters only if supported by actual data.
+   679→
+   680→## Mobile filters
+   681→
+   682→Use a `Filters` button opening a bottom sheet or full-height drawer.
+   683→
+   684→The mobile filter experience must include:
+   685→
+   686→* Clear labels
+   687→* Large touch targets
+   688→* Current selections
+   689→* Reset action
+   690→* Apply action
+   691→* Result count
+   692→* Proper close behaviour
+   693→* Keyboard accessibility
+   694→
+   695→Do not force five form controls into a narrow flex row.
+   696→
+   697→## URL state
+   698→
+   699→Synchronise catalogue state with URL search parameters.
+   700→
+   701→Example behaviour:
+   702→
+   703→* `/properties?city=Goa&type=Villa&beds=4&sort=price-desc`
+   704→
+   705→Refreshing or sharing the URL must preserve filters.
+   706→
+   707→Use stable parsing and validate unsupported values.
+   708→
+   709→## Applied filters
+   710→
+   711→Display applied filters as removable chips above the grid.
+   712→
+   713→Include:
+   714→
+   715→* Individual remove controls
+   716→* `Clear all`
+   717→* Updated result count
+   718→
+   719→## Search and sorting
+   720→
+   721→Search should work across relevant fields such as:
+   722→
+   723→* Property name
+   724→* City
+   725→* Locality
+   726→* Property type
+   727→
+   728→Sorting must be stable and correctly handle numeric prices.
+   729→
+   730→## Property grid
+   731→
+   732→Use:
+   733→
+   734→* One column on narrow mobile
+   735→* Two columns on tablet
+   736→* Three columns on desktop
+   737→
+   738→Keep card heights visually aligned without forcing excessive blank space.
+   739→
+   740→Ensure:
+   741→
+   742→* Property title does not collide with price.
+   743→* Metadata wraps safely.
+   744→* Icons are decorative or properly labelled.
+   745→* Images use the correct `sizes` attribute.
+   746→* Cards have visible keyboard focus.
+   747→* Hover is enhanced but not necessary for understanding.
+   748→* Touch devices receive equivalent interaction.
+   749→* Favourite controls are not nested inside links.
+   750→
+   751→## Favourites
+   752→
+   753→Only keep the heart/favourite feature if it works.
+   754→
+   755→At minimum:
+   756→
+   757→* Persist favourites in local storage.
+   758→* Restore state after reload.
+   759→* Give buttons accurate `aria-label` text.
+   760→* Provide selected and unselected states.
+   761→* Prevent favourite clicks from navigating to the property.
+   762→
+   763→If favourites are not intentionally supported, remove the heart buttons instead of leaving a decorative fake feature.
+   764→
+   765→## Empty and loading states
+   766→
+   767→Create:
+   768→
+   769→* Skeleton card loading state where relevant
+   770→* Designed empty-results state
+   771→* Clear reset-filter action
+   772→* Error state if data retrieval fails
+   773→
+   774→## Results strategy
+   775→
+   776→For ten properties, show all results without fake pagination.
+   777→
+   778→Build the components so pagination or `Load More` can be added when the dataset grows.
+   779→
+   780→Do not add meaningless pagination for a very small dataset.
+   781→
+   782→---
+   783→
+   784→# 8. PROPERTY DETAIL PAGE REBUILD
+   785→
+   786→Rebuild `/properties/[slug]` into a premium property presentation and conversion page.
+   787→
+   788→## Page architecture
+   789→
+   790→Use this structure:
+   791→
+   792→1. Breadcrumb and gallery
+   793→2. Property identity and primary facts
+   794→3. Main content with sticky inquiry sidebar
+   795→4. Description
+   796→5. Features and amenities
+   797→6. Location information
+   798→7. Compact financial calculator
+   799→8. Related properties
+   800→9. Mobile conversion bar
+   801→
+   802→Consolidate unnecessary standalone sections.
+   803→
+   804→## Gallery
+   805→
+   806→Create an editorial gallery that works at every breakpoint.
+   807→
+   808→Desktop options:
+   809→
+   810→* One large main image with two or three supporting images
+   811→* An asymmetric masonry-style composition
+   812→* A controlled grid opening a lightbox
+   813→
+   814→Mobile:
+   815→
+   816→* Swipeable gallery or one main image with an image-count control
+   817→* No tiny thumbnail strip that is hard to use
+   818→* Preserve image aspect ratios
+   819→* Avoid layout shift
+   820→
+   821→The gallery must include:
+   822→
+   823→* Proper buttons
+   824→* Keyboard navigation
+   825→* Escape-to-close
+   826→* Previous and next controls
+   827→* Image counter
+   828→* Alt text
+   829→* Focus management
+   830→* Touch support
+   831→
+   832→Do not use a clickable `<div>` as the main interaction.
+   833→
+   834→## Property identity
+   835→
+   836→Present:
+   837→
+   838→* Property name
+   839→* Location
+   840→* Price
+   841→* Property type
+   842→* Property reference ID if available
+   843→* Availability or possession
+   844→* Clear favourite/share controls
+   845→* Primary CTA
+   846→
+   847→Use a compact facts row rather than six oversized equal cards.
+   848→
+   849→Suggested facts:
+   850→
+   851→* Bedrooms
+   852→* Bathrooms
+   853→* Area
+   854→* Parking
+   855→* Possession
+   856→* Type
+   857→
+   858→On mobile, use a tidy two- or three-column layout.
+   859→
+   860→## Main desktop layout
+   861→
+   862→Use an approximately `8/4` or `7/5` desktop grid.
+   863→
+   864→Left:
+   865→
+   866→* Description
+   867→* Key features
+   868→* Amenities
+   869→* Neighborhood
+   870→* Relevant property information
+   871→
+   872→Right:
+   873→
+   874→* Sticky inquiry card
+   875→* Property price
+   876→* Primary viewing CTA
+   877→* Contact options
+   878→* Short trust/privacy note
+   879→
+   880→The sidebar should stop before the related-properties section.
+   881→
+   882→It must not overlap the footer.
+   883→
+   884→## Inquiry card
+   885→
+   886→Create a high-converting inquiry experience.
+   887→
+   888→Fields should include:
+   889→
+   890→* Name
+   891→* Email
+   892→* Phone
+   893→* Message
+   894→
+   895→Include:
+   896→
+   897→* Real labels
+   898→* Required indicators
+   899→* Inline validation
+   900→* Accessible error summaries
+   901→* Loading state
+   902→* Success state
+   903→* Failure state
+   904→* Property name and slug sent with the inquiry
+   905→* Consent or privacy text
+   906→* Server-side validation
+   907→* Spam protection
+   908→
+   909→Primary action:
+   910→
+   911→`Request a Private Viewing`
+   912→
+   913→Secondary action may be:
+   914→
+   915→`Ask for Details`
+   916→
+   917→Do not show multiple equal-priority buttons without explaining the difference.
+   918→
+   919→## EMI calculator
+   920→
+   921→Fix the current nested full-width section problem.
+   922→
+   923→The calculator must be a compact component inside the property content—not a complete `max-w-7xl py-28` section nested inside a grid column.
+   924→
+   925→Use inputs for:
+   926→
+   927→* Property price
+   928→* Down payment
+   929→* Loan amount
+   930→* Interest rate
+   931→* Tenure
+   932→
+   933→Initial values should derive sensibly from the current property price.
+   934→
+   935→For example:
+   936→
+   937→* Property price: actual property value
+   938→* Down payment: configurable percentage
+   939→* Loan amount: property price minus down payment
+   940→
+   941→Display:
+   942→
+   943→* Estimated EMI
+   944→* Principal
+   945→* Estimated interest
+   946→* Total estimated repayment
+   947→
+   948→Add a clear disclaimer:
+   949→
+   950→`This is an indicative estimate and not a loan offer. Actual rates and eligibility vary by lender.`
+   951→
+   952→Use correct Indian currency formatting.
+   953→
+   954→## Related properties
+   955→
+   956→Always produce a balanced layout.
+   957→
+   958→For three-column desktop display:
+   959→
+   960→* Show three related properties, or
+   961→* Use a two-column layout when only two exist
+   962→
+   963→Do not leave a visually empty third column.
+   964→
+   965→Select related properties by meaningful similarity:
+   966→
+   967→* City
+   968→* Type
+   969→* Price range
+   970→* Bedrooms
+   971→
+   972→## Mobile action bar
+   973→
+   974→Keep a mobile sticky action bar, but make it reliable.
+   975→
+   976→It should:
+   977→
+   978→* Respect safe-area insets.
+   979→* Avoid covering page content or footer.
+   980→* Use one strong primary action.
+   981→* Use one secondary action only when needed.
+   982→* Scroll or open the inquiry interface predictably.
+   983→* Be keyboard and screen-reader accessible.
+   984→
+   985→---
+   986→
+   987→# 9. SELL PAGE REBUILD
+   988→
+   989→Shorten and restructure `/sell`.
+   990→
+   991→The page should focus on converting owners into valuation inquiries.
+   992→
+   993→## Required structure
+   994→
+   995→### 1. Seller hero
+   996→
+   997→Include:
+   998→
+   999→* Strong seller-focused headline
+  1000→* Concise supporting copy
+  1001→* `Request a Valuation`
+  1002→* One strong background or adjacent image
+  1003→
+  1004→### 2. Credible seller value
+  1005→
+  1006→Show three or four concise benefits such as:
+  1007→
+  1008→* Market-aware pricing
+  1009→* Professional presentation
+  1010→* Qualified inquiry handling
+  1011→* Negotiation and closing coordination
+  1012→
+  1013→Do not claim access to a private buyer network unless it is genuinely supported.
+  1014→
+  1015→### 3. Four-step process
+  1016→
+  1017→Reduce the six-step process into four clearly differentiated stages:
+  1018→
+  1019→1. Understand and value
+  1020→2. Prepare and position
+  1021→3. Market and conduct viewings
+  1022→4. Negotiate and close
+  1023→
+  1024→Use concise copy.
+  1025→
+  1026→### 4. Evidence or presentation section
+  1027→
+  1028→Keep one strong visual section explaining why presentation matters.
+  1029→
+  1030→Remove unsupported statistics.
+  1031→
+  1032→Never state “properties sell 20–30% faster” or similar claims unless a reliable source is cited and context is provided.
+  1033→
+  1034→### 5. Valuation form
+  1035→
+  1036→Move the conversion form earlier and make it visually important.
+  1037→
+  1038→Fields:
+  1039→
+  1040→* Name
+  1041→* Email
+  1042→* Phone
+  1043→* Property location
+  1044→* Property type
+  1045→* Approximate area
+  1046→* Expected price, optional
+  1047→* Message, optional
+  1048→
+  1049→Implement actual validation and submission.
+  1050→
+  1051→### 6. FAQ
+  1052→
+  1053→Keep only four high-value questions.
+  1054→
+  1055→Remove repetitive or generic questions.
+  1056→
+  1057→## Remove or consolidate
+  1058→
+  1059→Remove the standalone long staging checklist from the main page.
+  1060→
+  1061→A short downloadable or expandable preparation guide can be added only if genuinely useful, but it must not interrupt the core conversion path.
+  1062→
+  1063→---
+  1064→
+  1065→# 10. NEIGHBORHOODS PAGE
+  1066→
+  1067→Turn `/neighborhoods` into a meaningful browsing experience rather than a decorative card collection.
+  1068→
+  1069→Each neighborhood or city should include:
+  1070→
+  1071→* Strong image
+  1072→* City or location name
+  1073→* Brief character description
+  1074→* Relevant lifestyle tags
+  1075→* Property count derived from data
+  1076→* Price range derived from current property data
+  1077→* Link to the corresponding filtered property catalogue
+  1078→
+  1079→Do not hard-code misleading ranges when they can be calculated from the property dataset.
+  1080→
+  1081→Add clear filtering or navigation by city if the page becomes long.
+  1082→
+  1083→Do not create separate empty city pages unless enough real content exists.
+  1084→
+  1085→A filtered catalogue URL is acceptable.
+  1086→
+  1087→---
+  1088→
+  1089→# 11. ABOUT PAGE
+  1090→
+  1091→Use the About page to explain the brand without inventing a fake company history.
+  1092→
+  1093→Suggested structure:
+  1094→
+  1095→1. Brand statement
+  1096→2. What Casa Aurelia does
+  1097→3. How properties are selected
+  1098→4. Buying and selling approach
+  1099→5. Service regions
+  1100→6. Contact CTA
+  1101→
+  1102→Keep it editorial and concise.
+  1103→
+  1104→Do not add:
+  1105→
+  1106→* Fake founder portraits
+  1107→* Fake employee cards
+  1108→* Fake awards
+  1109→* Fake office imagery described as the company’s office
+  1110→* Fake statistics
+  1111→* Fake transaction volume
+  1112→
+  1113→Replace vague AI-sounding phrases with direct human copy.
+  1114→
+  1115→---
+  1116→
+  1117→# 12. CONTACT PAGE REBUILD
+  1118→
+  1119→Make `/contact` compact, credible, and functional.
+  1120→
+  1121→## Layout
+  1122→
+  1123→Use a clean two-column desktop layout:
+  1124→
+  1125→Left:
+  1126→
+  1127→* Page heading
+  1128→* Short explanation
+  1129→* Real contact channels, when configured
+  1130→* Response expectation
+  1131→* Working hours, only if valid
+  1132→
+  1133→Right:
+  1134→
+  1135→* Contact form
+  1136→
+  1137→On mobile, stack logically.
+  1138→
+  1139→## Contact data
+  1140→
+  1141→Create a central configuration file for:
+  1142→
+  1143→* Email
+  1144→* Phone
+  1145→* Address
+  1146→* Working hours
+  1147→* Social profiles
+  1148→
+  1149→Do not duplicate these values across several components.
+  1150→
+  1151→Remove fictional values such as:
+  1152→
+  1153→* `+91 90000 00000`
+  1154→* Placeholder email addresses
+  1155→* Unverified office addresses
+  1156→
+  1157→When real data is not configured:
+  1158→
+  1159→* Do not display fake details.
+  1160→* Provide a clear development configuration placeholder.
+  1161→* Keep the page functional through the form if the submission channel is configured.
+  1162→
+  1163→Make real contact values clickable:
+  1164→
+  1165→* `mailto:`
+  1166→* `tel:`
+  1167→* Valid social URLs
+  1168→
+  1169→## Form
+  1170→
+  1171→Use proper labels, not placeholder-only fields.
+  1172→
+  1173→Required behaviour:
+  1174→
+  1175→* Client and server validation
+  1176→* Name attributes
+  1177→* Appropriate autocomplete attributes
+  1178→* Required indicators
+  1179→* Inline errors
+  1180→* Accessible success state
+  1181→* Accessible failure state
+  1182→* Loading state
+  1183→* Double-submission prevention
+  1184→* Honeypot
+  1185→* Rate limiting where possible
+  1186→* Input sanitisation
+  1187→* Server-side processing
+  1188→* No secrets exposed in client code
+  1189→
+  1190→Use the project’s existing email service if configured.
+  1191→
+  1192→Otherwise, create a clean provider abstraction and document the required environment variables.
+  1193→
+  1194→Do not hard-code credentials.
+  1195→
+  1196→## Page length
+  1197→
+  1198→Keep the page focused.
+  1199→
+  1200→Use a maximum of:
+  1201→
+  1202→* Contact introduction
+  1203→* Contact/form layout
+  1204→* Optional three- or four-question FAQ
+  1205→* Footer
+  1206→
+  1207→Remove unnecessary secondary CTAs.
+  1208→
+  1209→---
+  1210→
+  1211→# 13. FORMS AND SERVER-SIDE FUNCTIONALITY
+  1212→
+  1213→Audit every form across the website.
+  1214→
+  1215→Potential forms include:
+  1216→
+  1217→* General contact
+  1218→* Property inquiry
+  1219→* Viewing request
+  1220→* Valuation request
+  1221→
+  1222→Use a consistent shared form architecture.
+  1223→
+  1224→Recommended implementation:
+  1225→
+  1226→* React Hook Form or an equivalent reliable form library already present
+  1227→* Zod or equivalent shared schema validation
+  1228→* Server Actions or secure API routes
+  1229→* Server-side validation regardless of client validation
+  1230→* Structured email payloads
+  1231→* Consistent error objects
+  1232→* Accessible status announcements
+  1233→* Honeypot field
+  1234→* Basic rate limiting
+  1235→* Safe logging without exposing personal data
+  1236→
+  1237→Do not add a database unless necessary.
+  1238→
+  1239→If form submissions are emailed, include:
+  1240→
+  1241→* Form type
+  1242→* Property name and URL where relevant
+  1243→* Name
+  1244→* Email
+  1245→* Phone
+  1246→* Message
+  1247→* Submission timestamp
+  1248→* Referring page
+  1249→
+  1250→Never log full personal form submissions publicly.
+  1251→
+  1252→Add a short privacy notice beside submission buttons.
+  1253→
+  1254→---
+  1255→
+  1256→# 14. ANIMATION SYSTEM
+  1257→
+  1258→Motion must feel premium, restrained, and reliable.
+  1259→
+  1260→## Remove the blocking preloader
+  1261→
+  1262→The current full-screen preloader should be removed unless it serves a real technical need.
+  1263→
+  1264→Do not delay access to the website for a decorative logo animation.
+  1265→
+  1266→If a transition is retained:
+  1267→
+  1268→* It must be extremely short.
+  1269→* It must never trap the page.
+  1270→* It must not block navigation.
+  1271→* It must not run on every route change.
+  1272→* Content must remain available.
+  1273→
+  1274→## Content visible by default
+  1275→
+  1276→Never render essential page content permanently at `opacity: 0`.
+  1277→
+  1278→Use progressive enhancement:
+  1279→
+  1280→* Initial server-rendered content must be visible.
+  1281→* Apply animation classes only after the client is ready.
+  1282→* If JavaScript fails, the page remains fully usable.
+  1283→
+  1284→## Motion language
+  1285→
+  1286→Use motion for:
+  1287→
+  1288→* Subtle heading entrances
+  1289→* Image reveals
+  1290→* Card image scale
+  1291→* Underline transitions
+  1292→* Mobile menu transitions
+  1293→* Gallery transitions
+  1294→* Filter drawer
+  1295→* Accordion opening
+  1296→
+  1297→Avoid:
+  1298→
+  1299→* Animating every word individually throughout the site
+  1300→* Repeated 40px upward movement on every block
+  1301→* Excessive stagger delays
+  1302→* Heavy parallax
+  1303→* Scroll hijacking
+  1304→* Animations that delay reading
+  1305→* Motion that causes layout shift
+  1306→
+  1307→## Reduced motion
+  1308→
+  1309→Respect `prefers-reduced-motion`.
+  1310→
+  1311→For reduced-motion users:
+  1312→
+  1313→* Disable smooth scrolling
+  1314→* Disable parallax
+  1315→* Remove large translations
+  1316→* Reduce or remove staggered motion
+  1317→* Keep all content immediately visible
+  1318→
+  1319→## Smooth scrolling
+  1320→
+  1321→Only keep smooth scrolling if it does not:
+  1322→
+  1323→* Break native keyboard navigation
+  1324→* Interfere with anchor links
+  1325→* Create scroll lag
+  1326→* Degrade mobile performance
+  1327→* Fight browser history restoration
+  1328→
+  1329→Remove the smooth-scroll library if it provides no measurable value.
+  1330→
+  1331→---
+  1332→
+  1333→# 15. RESPONSIVE REQUIREMENTS
+  1334→
+  1335→Test and refine every page at:
+  1336→
+  1337→* 320px
+  1338→* 360px
+  1339→* 390px
+  1340→* 430px
+  1341→* 768px
+  1342→* 820px
+  1343→* 1024px
+  1344→* 1280px
+  1345→* 1440px
+  1346→* 1920px
+  1347→
+  1348→## Mobile
+  1349→
+  1350→Ensure:
+  1351→
+  1352→* No horizontal scrolling.
+  1353→* Headings wrap naturally.
+  1354→* Buttons do not overflow.
+  1355→* Sticky bars respect safe areas.
+  1356→* Cards are easy to tap.
+  1357→* Filter controls use a drawer.
+  1358→* Images are not excessively tall.
+  1359→* Body copy is not too small.
+  1360→* Content order remains logical.
+  1361→* Header menu works.
+  1362→* Forms use the correct input types.
+  1363→* Fixed elements do not cover content.
+  1364→
+  1365→## Tablet
+  1366→
+  1367→Do not treat tablet as a compressed desktop layout.
+  1368→
+  1369→Check:
+  1370→
+  1371→* Header navigation transition point
+  1372→* Property grid
+  1373→* Filter layout
+  1374→* Gallery
+  1375→* Sell page process
+  1376→* Footer columns
+  1377→* Form proportions
+  1378→* Heading line breaks
+  1379→
+  1380→## Large displays
+  1381→
+  1382→Avoid:
+  1383→
+  1384→* Overly long text lines
+  1385→* Excessive empty margins
+  1386→* Uncontrolled image stretching
+  1387→* Content floating in the middle of very wide screens
+  1388→* Hero copy becoming detached from its image
+  1389→
+  1390→---
+  1391→
+  1392→# 16. ACCESSIBILITY
+  1393→
+  1394→Meet WCAG 2.2 AA as closely as practical.
+  1395→
+  1396→Implement:
+  1397→
+  1398→* Skip-to-content link
+  1399→* Correct heading order
+  1400→* One main landmark per page
+  1401→* Semantic header, nav, main, section, and footer
+  1402→* Real buttons for actions
+  1403→* Real links for navigation
+  1404→* No nested interactive elements
+  1405→* Visible keyboard focus
+  1406→* Logical tab order
+  1407→* Keyboard-accessible menus
+  1408→* Keyboard-accessible gallery
+  1409→* Accessible accordions
+  1410→* Explicit form labels
+  1411→* Error descriptions connected with `aria-describedby`
+  1412→* Live regions for submission status
+  1413→* Correct button labels
+  1414→* Decorative icons hidden from assistive technology
+  1415→* Meaningful image alt text
+  1416→* Sufficient contrast
+  1417→* 44px minimum touch targets where possible
+  1418→* Reduced-motion support
+  1419→
+  1420→Check the complete site using keyboard navigation.
+  1421→
+  1422→---
+  1423→
+  1424→# 17. SEO REPAIR
+  1425→
+  1426→Audit and fix metadata across every route.
+  1427→
+  1428→## Title templates
+  1429→
+  1430→Prevent duplicated titles such as:
+  1431→
+  1432→* `Properties — Casa Aurelia — Casa Aurelia`
+  1433→* `The Glass Villa ... — Casa Aurelia — Casa Aurelia`
+  1434→
+  1435→Create one central title template.
+  1436→
+  1437→Example:
+  1438→
+  1439→* Home: `Casa Aurelia | Curated Premium Real Estate`
+  1440→* Properties: `Properties | Casa Aurelia`
+  1441→* Property: `The Glass Villa, Goa | Casa Aurelia`
+  1442→* Sell: `Sell Your Property | Casa Aurelia`
+  1443→* Contact: `Contact | Casa Aurelia`
+  1444→
+  1445→## Metadata
+  1446→
+  1447→Implement:
+  1448→
+  1449→* Correct `metadataBase`
+  1450→* Canonical URLs
+  1451→* Page-specific descriptions
+  1452→* Open Graph titles
+  1453→* Open Graph descriptions
+  1454→* Open Graph images
+  1455→* Twitter metadata
+  1456→* Correct absolute URLs
+  1457→* Favicon and app icons
+  1458→* Sitemap
+  1459→* Robots file
+  1460→
+  1461→Do not point social metadata to a domain that is not the active configured production domain.
+  1462→
+  1463→Use an environment-based site URL.
+  1464→
+  1465→## Structured data
+  1466→
+  1467→Use valid and appropriate structured data.
+  1468→
+  1469→Potential types:
+  1470→
+  1471→* `Organization` or `RealEstateAgent` only when the data is accurate
+  1472→* `BreadcrumbList`
+  1473→* Property/listing schema appropriate to the page
+  1474→* `WebSite`
+  1475→* `WebPage`
+  1476→
+  1477→Structured-data URLs must be absolute.
+  1478→
+  1479→Do not add fake ratings or aggregate reviews.
+  1480→
+  1481→Test JSON-LD for valid syntax.
+  1482→
+  1483→## Property URLs
+  1484→
+  1485→Keep current property slugs unless there is a strong SEO reason to change them.
+  1486→
+  1487→If any route changes, create redirects.
+  1488→
+  1489→---
+  1490→
+  1491→# 18. PERFORMANCE
+  1492→
+  1493→Optimise for strong Core Web Vitals.
+  1494→
+  1495→Targets:
+  1496→
+  1497→* LCP below approximately 2.5 seconds on a reasonable mobile connection
+  1498→* CLS below 0.1
+  1499→* INP below approximately 200ms
+  1500→* Lighthouse Performance above 90 where practical
+  1501→* Accessibility above 95
+  1502→* Best Practices above 95
+  1503→* SEO above 95
+  1504→
+  1505→## Images
+  1506→
+  1507→Use Next.js image optimisation correctly.
+  1508→
+  1509→Implement:
+  1510→
+  1511→* Accurate `sizes`
+  1512→* Priority only for the actual above-the-fold hero image
+  1513→* Lazy loading below the fold
+  1514→* Explicit aspect ratios
+  1515→* Blur placeholders where appropriate
+  1516→* Correct source dimensions
+  1517→* Modern formats handled by Next.js
+  1518→* No 3840px resource request for a small card where avoidable
+  1519→
+  1520→Ensure images are cropped intentionally with suitable `object-position`.
+  1521→
+  1522→## JavaScript
+  1523→
+  1524→Reduce client-side JavaScript.
+  1525→
+  1526→Avoid making entire pages client components simply for scroll animations.
+  1527→
+  1528→Prefer:
+  1529→
+  1530→* Server components for static content
+  1531→* Small isolated client components
+  1532→* CSS hover transitions
+  1533→* Dynamic imports for heavy components
+  1534→* Lazy loading for the lightbox and EMI calculator where sensible
+  1535→
+  1536→## Fonts
+  1537→
+  1538→Use `next/font` or an equivalent optimised setup.
+  1539→
+  1540→Limit font weights and families.
+  1541→
+  1542→Ensure `font-display` behaviour does not cause invisible text.
+  1543→
+  1544→## Layout shift
+  1545→
+  1546→Reserve space for:
+  1547→
+  1548→* Images
+  1549→* Galleries
+  1550→* Sticky elements
+  1551→* Forms
+  1552→* Dynamic results
+  1553→* Font swaps
+  1554→
+  1555→---
+  1556→
+  1557→# 19. COMPONENT ARCHITECTURE
+  1558→
+  1559→Audit the repository for duplicated components and styling.
+  1560→
+  1561→Create or refine reusable components such as:
+  1562→
+  1563→* `Container`
+  1564→* `Section`
+  1565→* `SectionLabel`
+  1566→* `PageHeader`
+  1567→* `Button`
+  1568→* `PropertyCard`
+  1569→* `PropertyGrid`
+  1570→* `PropertyFacts`
+  1571→* `FilterDrawer`
+  1572→* `AppliedFilters`
+  1573→* `FormField`
+  1574→* `InquiryForm`
+  1575→* `ValuationForm`
+  1576→* `ContactForm`
+  1577→* `Accordion`
+  1578→* `ImageGallery`
+  1579→* `StickyInquiryCard`
+  1580→* `EmptyState`
+  1581→* `Footer`
+  1582→* `MobileMenu`
+  1583→
+  1584→Do not create abstractions that make simple markup difficult to understand.
+  1585→
+  1586→Remove:
+  1587→
+  1588→* Dead components
+  1589→* Duplicate helpers
+  1590→* Unused animation wrappers
+  1591→* Unused packages
+  1592→* Repeated colour values
+  1593→* Repeated container classes
+  1594→* Obsolete preloader code
+  1595→* Unused imports
+  1596→* Console logs
+  1597→* Commented-out code
+  1598→
+  1599→Do not delete data or components until verifying they are unused.
+  1600→
+  1601→---
+  1602→
+  1603→# 20. FOOTER REBUILD
+  1604→
+  1605→Create a cleaner, more credible footer.
+  1606→
+  1607→Include:
+  1608→
+  1609→* Brand name
+  1610→* Short brand description
+  1611→* Primary navigation
+  1612→* Seller navigation
+  1613→* Legal links
+  1614→* Real contact details only when configured
+  1615→* Real social links only when configured
+  1616→* Copyright
+  1617→* Image credits where legally required
+  1618→
+  1619→Do not display social network names as plain spans.
+  1620→
+  1621→A social item must be:
+  1622→
+  1623→* A valid link, or
+  1624→* Removed
+  1625→
+  1626→Do not show fictional phone numbers or email addresses.
+  1627→
+  1628→On mobile:
+  1629→
+  1630→* Stack columns logically
+  1631→* Avoid overly large gaps
+  1632→* Keep legal and copyright content readable
+  1633→* Ensure the mobile property action bar does not overlap the footer
+  1634→
+  1635→---
+  1636→
+  1637→# 21. COPY EDITING
+  1638→
+  1639→Review all public copy.
+  1640→
+  1641→Improve copy that sounds:
+  1642→
+  1643→* AI-generated
+  1644→* Vague
+  1645→* Overly poetic
+  1646→* Repetitive
+  1647→* Unverifiable
+  1648→* Inflated
+  1649→* Generic
+  1650→
+  1651→Preserve the restrained editorial voice, but communicate clearly.
+  1652→
+  1653→Avoid repeating words such as:
+  1654→
+  1655→* Curated
+  1656→* Calm
+  1657→* Thoughtful
+  1658→* Premium
+  1659→* Clarity
+  1660→* Private
+  1661→
+  1662→Use them only when meaningful.
+  1663→
+  1664→Keep paragraphs short.
+  1665→
+  1666→Avoid unsupported claims such as:
+  1667→
+  1668→* “Research consistently shows...”
+  1669→* “Properties sell 20–30% faster...”
+  1670→* “Access to our private buyer list...”
+  1671→* “Verified listings...” unless a real verification process exists
+  1672→
+  1673→Where the project is explicitly a demonstration portfolio, create a discreet site-wide demo disclosure rather than inserting trust-damaging demo notes into prominent conversion sections.
+  1674→
+  1675→---
+  1676→
+  1677→# 22. QUALITY ASSURANCE
+  1678→
+  1679→After implementation, test the site rather than assuming it works.
+  1680→
+  1681→## Run
+  1682→
+  1683→Use the package manager already used by the repository.
+  1684→
+  1685→Run at minimum:
+  1686→
+  1687→* Dependency installation if required
+  1688→* Lint
+  1689→* Type checking
+  1690→* Unit tests if present
+  1691→* Production build
+  1692→* Local production preview
+  1693→* Browser testing
+  1694→
+  1695→Do not declare completion with build errors, TypeScript errors, hydration warnings, or lint errors introduced by your changes.
+  1696→
+  1697→## Browser verification
+  1698→
+  1699→Inspect every primary route in a browser.
+  1700→
+  1701→Check:
+  1702→
+  1703→* Header visibility
+  1704→* Navigation
+  1705→* Mobile menu
+  1706→* Filters
+  1707→* URL filter persistence
+  1708→* Property cards
+  1709→* Favourite behaviour
+  1710→* Property gallery
+  1711→* Inquiry form
+  1712→* Valuation form
+  1713→* Contact form
+  1714→* Accordions
+  1715→* Sticky sidebar
+  1716→* Mobile sticky action bar
+  1717→* Footer
+  1718→* Legal links
+  1719→* Empty states
+  1720→* Invalid property slug/404 page
+  1721→
+  1722→## Console
+  1723→
+  1724→Resolve:
+  1725→
+  1726→* Runtime errors
+  1727→* Hydration errors
+  1728→* React key warnings
+  1729→* Image warnings
+  1730→* Accessibility warnings
+  1731→* Failed network requests
+  1732→* Form-handler errors
+  1733→
+  1734→## Visual regression checklist
+  1735→
+  1736→Verify:
+  1737→
+  1738→* No clipped headings
+  1739→* No invisible content
+  1740→* No stuck preloader
+  1741→* No empty orphan grid columns
+  1742→* No repeated inventory sections
+  1743→* No unexpected whitespace
+  1744→* No horizontal overflow
+  1745→* No buttons inside anchors
+  1746→* No footer overlap
+  1747→* No unreadable transparent header
+  1748→* No broken image ratios
+  1749→* No layout jump after hydration
+  1750→* No mobile controls hidden behind browser UI
+  1751→
+  1752→---
+  1753→
+  1754→# 23. EXECUTION ORDER
+  1755→
+  1756→Follow this order.
+  1757→
+  1758→## Phase 1: Audit
+  1759→
+  1760→Inspect:
+  1761→
+  1762→* Repository structure
+  1763→* Routes
+  1764→* Components
+  1765→* Property data
+  1766→* Form handlers
+  1767→* CSS
+  1768→* Tailwind configuration
+  1769→* Fonts
+  1770→* Animation implementation
+  1771→* Dependencies
+  1772→* Metadata
+  1773→* Image assets
+  1774→
+  1775→Identify reusable foundations before editing.
+  1776→
+  1777→## Phase 2: Foundation
+  1778→
+  1779→Fix:
+  1780→
+  1781→* Design tokens
+  1782→* Container system
+  1783→* Typography
+  1784→* Header
+  1785→* Footer
+  1786→* Button system
+  1787→* Form controls
+  1788→* Section primitives
+  1789→* Animation defaults
+  1790→* Accessibility foundations
+  1791→
+  1792→## Phase 3: Homepage
+  1793→
+  1794→Rebuild the homepage and remove repetition.
+  1795→
+  1796→## Phase 4: Catalogue
+  1797→
+  1798→Rebuild filters, URL state, mobile filter drawer, cards, and empty states.
+  1799→
+  1800→## Phase 5: Property detail
+  1801→
+  1802→Rebuild gallery, facts, content layout, sticky inquiry form, calculator, and related properties.
+  1803→
+  1804→## Phase 6: Sell, neighborhoods, about and contact
+  1805→
+  1806→Shorten and improve every supporting page.
+  1807→
+  1808→## Phase 7: Functionality
+  1809→
+  1810→Finish:
+  1811→
+  1812→* Forms
+  1813→* Validation
+  1814→* Submission handlers
+  1815→* Favourites
+  1816→* Gallery
+  1817→* Filters
+  1818→* Mobile actions
+  1819→
+  1820→## Phase 8: SEO, accessibility and performance
+  1821→
+  1822→Complete the technical audit and repairs.
+  1823→
+  1824→## Phase 9: Verification
+  1825→
+  1826→Run all tests and perform browser checks at the required viewport sizes.
+  1827→
+  1828→---
+  1829→
+  1830→# 24. DEFINITION OF DONE
+  1831→
+  1832→The task is complete only when:
+  1833→
+  1834→* The homepage no longer repeats the property inventory.
+  1835→* The homepage has a clear narrative and balanced property grid.
+  1836→* Demo testimonials have been removed.
+  1837→* Service content has been condensed.
+  1838→* The header is always readable and visible by default.
+  1839→* The decorative blocking preloader is gone.
+  1840→* Content does not rely on `opacity: 0` to exist.
+  1841→* The mobile menu is accessible.
+  1842→* Catalogue filters are usable on mobile.
+  1843→* Filter state survives URL sharing and refresh.
+  1844→* Property cards contain no invalid nested interactions.
+  1845→* The property-detail page has a correct grid and sticky inquiry panel.
+  1846→* The EMI calculator uses the property price sensibly.
+  1847→* Related-property layouts are balanced.
+  1848→* Forms have labels, validation, server handling, and proper states.
+  1849→* Fake contact details are removed or centrally configured.
+  1850→* Unsupported marketing statistics are removed.
+  1851→* Metadata titles are no longer duplicated.
+  1852→* Canonical and social metadata use the correct production URL.
+  1853→* Structured-data URLs are absolute.
+  1854→* All pages work from 320px to 1920px.
+  1855→* There is no horizontal overflow.
+  1856→* Reduced-motion users can access everything.
+  1857→* The application passes linting, type checking, and production build.
+  1858→* No existing functional property route is broken.
+  1859→* The result feels art-directed, credible, and production-ready.
+  1860→
+  1861→---
+  1862→
+  1863→# 25. FINAL RESPONSE FORMAT
+  1864→
+  1865→After completing the work, return a concise implementation report containing:
+  1866→
+  1867→1. Summary of the design and UX changes
+  1868→2. Routes rebuilt
+  1869→3. Components created or refactored
+  1870→4. Repetition and dead code removed
+  1871→5. Functional improvements
+  1872→6. Forms and required environment variables
+  1873→7. SEO repairs
+  1874→8. Accessibility repairs
+  1875→9. Performance improvements
+  1876→10. Tests and commands run
+  1877→11. Production build result
+  1878→12. Remaining limitations, if any
+  1879→
+  1880→Do not provide vague statements such as “the website has been enhanced.”
+  1881→
+  1882→State exactly what was changed and exactly what was verified.
+  1883→
+  1884→Begin working directly inside the existing repository now.
+  1885→

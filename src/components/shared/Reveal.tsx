@@ -12,10 +12,10 @@ interface RevealProps {
 }
 
 const directionOffset = {
-  up: { y: 10, x: 0 },
-  down: { y: -10, x: 0 },
-  left: { x: 10, y: 0 },
-  right: { x: -10, y: 0 },
+  up: { y: 12, x: 0 },
+  down: { y: -12, x: 0 },
+  left: { x: 12, y: 0 },
+  right: { x: -12, y: 0 },
   none: { x: 0, y: 0 },
 };
 
@@ -26,10 +26,11 @@ export function Reveal({
   direction = 'up',
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const isInView = useInView(ref, { once: true, margin: '-60px' });
 
   const offset = directionOffset[direction];
 
+  // Content is ALWAYS visible (opacity: 1). Motion is progressive enhancement.
   return (
     <motion.div
       ref={ref}
@@ -37,10 +38,10 @@ export function Reveal({
       animate={
         isInView
           ? { opacity: 1, x: 0, y: 0 }
-          : { opacity: 0.85, ...offset }
+          : { opacity: 1, ...offset }
       }
       transition={{
-        duration: 0.6,
+        duration: 0.7,
         delay,
         ease: [0.22, 1, 0.36, 1],
       }}

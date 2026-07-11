@@ -96,7 +96,7 @@ body {
   outline-offset: 2px;
 }
 
-/* Container utilities */
+/* Container utilities — used by Container component */
 .container-main {
   max-width: 1360px;
   margin-left: auto;
@@ -108,6 +108,12 @@ body {
   .container-main {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+  }
+}
+@media (min-width: 768px) {
+  .container-main {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 @media (min-width: 1024px) {
@@ -130,6 +136,12 @@ body {
     padding-right: 1.5rem;
   }
 }
+@media (min-width: 768px) {
+  .container-editorial {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
 @media (min-width: 1024px) {
   .container-editorial {
     padding-left: 4rem;
@@ -150,8 +162,40 @@ body {
     padding-right: 1.5rem;
   }
 }
+@media (min-width: 768px) {
+  .container-form {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
 @media (min-width: 1024px) {
   .container-form {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+.container-narrow {
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 640px) {
+  .container-narrow {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 768px) {
+  .container-narrow {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .container-narrow {
     padding-left: 4rem;
     padding-right: 4rem;
   }
@@ -164,20 +208,20 @@ body {
 }
 @media (min-width: 640px) {
   .section-py {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
   }
 }
 @media (min-width: 1024px) {
   .section-py {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+    padding-top: 5.5rem;
+    padding-bottom: 5.5rem;
   }
 }
 @media (min-width: 1280px) {
   .section-py {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: 6.5rem;
+    padding-bottom: 6.5rem;
   }
 }
 

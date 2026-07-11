@@ -1,15 +1,12 @@
-import type { Metadata } from 'next';
+import { createMetadata } from '@/lib/seo';
 import { ContactClient } from '@/components/contact/ContactClient';
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Contact',
   description:
     'Get in touch with Casa Aurelia for property inquiries, valuations, or general questions. We respond within 24 hours.',
-  openGraph: {
-    title: 'Contact — Casa Aurelia',
-    description: 'Get in touch with Casa Aurelia for property inquiries and general questions.',
-  },
-};
+  path: '/contact',
+});
 
 export default function ContactPage() {
   return <ContactClient />;

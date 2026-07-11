@@ -1,7 +1,7 @@
-import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { properties, getPropertyBySlug, getSimilarProperties } from '@/data/properties';
 import { PropertyDetailClient } from '@/components/properties/PropertyDetailClient';
+import { createMetadata, SITE_URL } from '@/lib/seo';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -11,21 +11,18 @@ export function generateStaticParams() {
   return properties.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const property = getPropertyBySlug(slug);
   if (!property) {
-    return { title: 'Property Not Found — Casa Aurelia' };
+    return { title: 'Property Not Found' };
   }
-  return {
-    title: `${property.title} in ${property.location} — Casa Aurelia`,
+  return createMetadata({
+    title: `${property.title}, ${property.location}`,
     description: property.shortDescription,
-    openGraph: {
-      title: `${property.title} — Casa Aurelia`,
-      description: property.shortDescription,
-      images: [{ url: property.heroImage, width: 1200, height: 800 }],
-    },
-  };
+    path: `/properties/${property.slug}`,
+    image: property.heroImage,
+  });
 }
 
 export default async function PropertyDetailPage({ params }: Props) {
@@ -36,14 +33,17 @@ export default async function PropertyDetailPage({ params }: Props) {
     notFound();
   }
 
-  const similarProperties = getSimilarProperties(slug, 3);
+  // Get up to 3 similar, or fewer with matching layout
+  const similarRaw = getSimilarProperties(slug, 4);
+  const similarProperties = similarRaw.length >= 3 ? similarRaw.slice(0, 3) : similarRaw;
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
     name: property.title,
     description: property.shortDescription,
-    url: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/properties/${property.slug}`,
+    url: `${SITE_URL}/properties/${property.slug}`,
+    image: `${SITE_URL}${property.heroImage}`,
     offers: {
       '@type': 'Offer',
       price: property.priceNumber,

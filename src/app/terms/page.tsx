@@ -1,17 +1,19 @@
-import type { Metadata } from 'next';
 import { Container } from '@/components/shared/Container';
+import { SectionLabel } from '@/components/shared/SectionLabel';
+import { createMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Terms of Use',
-  description: 'Terms of Use for Casa Aurelia — a demo real estate website.',
-};
+  description: 'Terms of Use for Casa Aurelia.',
+  path: '/terms',
+});
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen py-24 sm:py-32 pt-28 sm:pt-36">
+    <div className="min-h-screen py-24 sm:py-32 pt-28 sm:pt-36">
       <Container>
         <div className="max-w-3xl mx-auto">
-          <span className="mono-label">Legal</span>
+          <SectionLabel>Legal</SectionLabel>
           <h1 className="font-display text-4xl sm:text-5xl text-espresso mt-2 mb-10 tracking-tight">
             Terms of Use
           </h1>
@@ -22,7 +24,7 @@ export default function TermsPage() {
               <p className="font-body text-sm text-espresso/70 leading-relaxed">
                 This website (&quot;Casa Aurelia&quot;) is a demonstration project created for portfolio and
                 educational purposes. It does not represent a real real estate brokerage, advisory firm,
-                or any other type of business entity. All property listings, team members, contact
+                or any other type of business entity. All property listings, contact
                 information, and services described on this website are fictional.
               </p>
             </section>
@@ -33,8 +35,7 @@ export default function TermsPage() {
                 Casa Aurelia does not provide any real estate brokerage, advisory, valuation, or property
                 management services. Any forms, calculators, or interactive features on this website are
                 for demonstration purposes only and should not be relied upon for making property
-                decisions. No transactions, agreements, or professional relationships are created through
-                the use of this website.
+                decisions.
               </p>
             </section>
 
@@ -43,8 +44,7 @@ export default function TermsPage() {
               <p className="font-body text-sm text-espresso/70 leading-relaxed">
                 The design, layout, and code of this website are original work created for demonstration
                 purposes. Property images used on this site are either generated, licensed for
-                demonstration use, or used under fair use principles. No claim is made to the ownership
-                of property images or any third-party content that may appear on this site.
+                demonstration use, or used under fair use principles.
               </p>
             </section>
 
@@ -69,29 +69,10 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="font-display text-xl text-espresso mb-3">Changes to These Terms</h2>
-              <p className="font-body text-sm text-espresso/70 leading-relaxed">
-                These terms may be updated from time to time. Continued use of this website after any
-                changes constitutes your acceptance of the updated terms.
-              </p>
-            </section>
-
-            <section>
               <h2 className="font-display text-xl text-espresso mb-3">Governing Law</h2>
               <p className="font-body text-sm text-espresso/70 leading-relaxed">
                 These terms are governed by the laws of India. Any disputes arising from the use of this
                 website would be subject to the exclusive jurisdiction of the courts in New Delhi, India.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="font-display text-xl text-espresso mb-3">Contact</h2>
-              <p className="font-body text-sm text-espresso/70 leading-relaxed">
-                For questions about these terms, contact us at:{' '}
-                <span className="text-gold">hello@casaaurelia.com</span>
-              </p>
-              <p className="font-body text-sm text-espresso/50 mt-2">
-                Please note this email address is fictional and part of the demo.
               </p>
             </section>
 
@@ -103,6 +84,6 @@ export default function TermsPage() {
           </div>
         </div>
       </Container>
-    </main>
+    </div>
   );
 }
