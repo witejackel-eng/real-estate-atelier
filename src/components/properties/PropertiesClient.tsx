@@ -44,6 +44,7 @@ function readFavorites(): string[] {
 const emptyFavorites: string[] = [];
 
 function subscribeToFavorites(callback: () => void) {
+  if (typeof window === 'undefined') return () => {};
   window.addEventListener('storage', callback);
   return () => window.removeEventListener('storage', callback);
 }
