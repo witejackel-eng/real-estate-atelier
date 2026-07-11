@@ -29,7 +29,7 @@ export function Reveal({
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    queueMicrotask(() => setMounted(true));
 
     const el = ref.current;
     if (!el) return;

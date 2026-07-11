@@ -9,6 +9,9 @@
   --color-gold: #B9905A;
   --color-terracotta: #A45F3D;
   --color-offwhite: #FFFDF8;
+  --color-citrus: #D9FF53;
+  --color-cobalt: #3057F5;
+  --color-paper: #ECE9E1;
 
   --font-display: 'Playfair Display', 'Cormorant Garamond', serif;
   --font-body: 'Inter', 'Geist', sans-serif;
@@ -247,4 +250,22 @@ body {
 @keyframes slideIn {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
+}
+
+.display-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px currentColor;
+}
+
+.text-vertical {
+  writing-mode: vertical-rl;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
 }

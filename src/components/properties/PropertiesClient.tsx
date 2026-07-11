@@ -34,10 +34,14 @@ function useFavorites() {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(FAVORITES_KEY);
-      if (raw) setFavorites(JSON.parse(raw));
-    } catch { /* ignore */ }
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
+      try {
+        const raw = localStorage.getItem(FAVORITES_KEY);
+        if (raw) setFavorites(JSON.parse(raw));
+      } catch { /* ignore */ }
+    });
 
     const onStorage = () => {
       try {
@@ -46,7 +50,10 @@ function useFavorites() {
       } catch { /* ignore */ }
     };
     window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    return () => {
+      active = false;
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
 
   const toggle = useCallback((slug: string) => {

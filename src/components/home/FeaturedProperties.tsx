@@ -3,7 +3,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, ArrowRight } from 'lucide-react';
+import { Heart, ArrowUpRight } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
 import { SectionLabel } from '@/components/shared/SectionLabel';
 import { Button } from '@/components/shared/Button';
@@ -19,7 +19,7 @@ function PropertyCard({ property, isFav, onToggle }: {
 }) {
   return (
     <Reveal>
-      <div className="relative">
+      <div className="relative border-t border-espresso/20 pt-3">
         {/* Favorite button — sibling of the link */}
         <button
           type="button"
@@ -45,18 +45,18 @@ function PropertyCard({ property, isFav, onToggle }: {
         {/* Card link */}
         <Link href={`/properties/${property.slug}`} className="group block">
           <article>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-sm mb-4">
+            <div className="relative aspect-[4/3] overflow-hidden mb-4">
               <Image
                 src={property.heroImage}
                 alt={property.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                className="object-cover grayscale-[18%] transition-all duration-700 group-hover:scale-[1.035] group-hover:grayscale-0"
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
             </div>
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <h3 className="font-display text-lg mb-1 group-hover:text-gold transition-colors truncate">
+                <h3 className="font-display text-xl tracking-[-0.02em] mb-1 group-hover:text-cobalt transition-colors truncate">
                   {property.title}
                 </h3>
                 <p className="text-sm text-espresso/60 truncate">{property.location}</p>
@@ -84,10 +84,14 @@ export function FeaturedProperties() {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(FAVORITES_KEY);
-      if (raw) setFavorites(JSON.parse(raw));
-    } catch { /* ignore */ }
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
+      try {
+        const raw = localStorage.getItem(FAVORITES_KEY);
+        if (raw) setFavorites(JSON.parse(raw));
+      } catch { /* ignore */ }
+    });
 
     const onStorage = () => {
       try {
@@ -96,7 +100,10 @@ export function FeaturedProperties() {
       } catch { /* ignore */ }
     };
     window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    return () => {
+      active = false;
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
 
   const toggleFavorite = useCallback((slug: string) => {
@@ -114,19 +121,23 @@ export function FeaturedProperties() {
   const properties = getFeaturedProperties().slice(0, 6);
 
   return (
-    <section className="section-py" aria-label="Featured properties">
+    <section className="bg-paper py-24 lg:py-36" aria-label="Featured properties">
       <Container variant="main">
-        <Reveal>
-          <SectionLabel>Featured Properties</SectionLabel>
-          <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] mb-3">
-            Curated Residences
-          </h2>
-          <p className="text-espresso/60 body-text mb-10">
-            A selection of homes chosen for their design, location, and character.
-          </p>
-        </Reveal>
+        <div className="mb-14 grid gap-8 border-t border-espresso/30 pt-4 lg:grid-cols-12 lg:mb-20">
+          <Reveal className="lg:col-span-3">
+            <SectionLabel className="text-espresso">N° 002 / The collection</SectionLabel>
+          </Reveal>
+          <Reveal className="lg:col-span-9" delay={0.06}>
+            <h2 className="max-w-5xl font-display text-[clamp(3.25rem,7.2vw,7.5rem)] leading-[0.92] tracking-[-0.055em]">
+              Homes with a point of view.
+            </h2>
+            <p className="mt-8 max-w-xl body-text text-espresso/65">
+              Not everything makes the edit. Each residence is visited, studied, and selected for the details that cannot be reduced to a checklist.
+            </p>
+          </Reveal>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
           {properties.map((property) => (
             <PropertyCard
               key={property.id}
@@ -137,10 +148,10 @@ export function FeaturedProperties() {
           ))}
         </div>
 
-        <div className="flex justify-center mt-12">
-          <Button variant="ghost" href="/properties">
-            View All Properties
-            <ArrowRight size={14} className="ml-2" />
+        <div className="flex justify-end mt-14 border-t border-espresso/20 pt-5">
+          <Button variant="ghost" href="/properties" className="no-underline">
+            View the full collection
+            <ArrowUpRight size={15} className="ml-2" />
           </Button>
         </div>
       </Container>
