@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 /* ────────────────────────────────────────────
    Inline RevealDiv
@@ -54,48 +55,58 @@ function RevealDiv({
    ──────────────────────────────────────────── */
 export function NotFoundClient() {
   return (
-    <section className="min-h-[80vh] flex items-center justify-center">
-      <div className="container-editorial text-center py-20 md:py-32">
+    <section className="min-h-[80vh] flex items-center justify-center pt-32 md:pt-40 lg:pt-48 pb-20 md:pb-28">
+      <div className="container-editorial text-center">
         {/* Architectural visual element */}
         <RevealDiv>
-          <div className="relative inline-block mb-8" aria-hidden="true">
-            {/* Grid lines */}
-            <div className="relative w-32 h-32 md:w-40 md:h-40">
-              <div className="absolute inset-0 border border-espresso/6" />
-              <div className="absolute inset-4 border border-espresso/6" />
-              <div className="absolute inset-8 border border-espresso/6" />
-              <div className="absolute inset-12 border border-espresso/6" />
+          <div className="relative inline-block mb-10" aria-hidden="true">
+            <div className="relative w-24 h-24 md:w-28 md:h-28">
+              <div className="absolute inset-0 border border-espresso/8" />
+              <div className="absolute inset-4 border border-espresso/8" />
+              <div className="absolute inset-8 border border-espresso/8" />
               {/* Corner accents */}
-              <div className="absolute top-0 left-0 w-6 h-px bg-warm-grey" />
-              <div className="absolute top-0 left-0 w-px h-6 bg-warm-grey" />
-              <div className="absolute bottom-0 right-0 w-6 h-px bg-warm-grey" />
-              <div className="absolute bottom-0 right-0 w-px h-6 bg-warm-grey" />
+              <div className="absolute top-0 left-0 w-5 h-px bg-warm-grey" />
+              <div className="absolute top-0 left-0 w-px h-5 bg-warm-grey" />
+              <div className="absolute bottom-0 right-0 w-5 h-px bg-warm-grey" />
+              <div className="absolute bottom-0 right-0 w-px h-5 bg-warm-grey" />
             </div>
           </div>
         </RevealDiv>
 
         <RevealDiv delay={0.1}>
-          <h1 className="display-hero text-warm-grey">
-            404
+          <span className="section-number block mb-3 text-warm-grey">
+            Error 404
+          </span>
+        </RevealDiv>
+
+        <RevealDiv delay={0.15}>
+          <h1 className="display-page text-espresso mb-5">
+            This address is no longer on the <em className="text-gold not-italic">map.</em>
           </h1>
         </RevealDiv>
 
-        <RevealDiv delay={0.2}>
-          <p className="body-copy text-warm-grey mt-6 mb-12 max-w-md mx-auto">
-            This address is no longer on the map.
+        <RevealDiv delay={0.25}>
+          <p className="body-copy text-warm-grey mb-12 max-w-md mx-auto">
+            The page you&apos;re looking for doesn&apos;t exist, may have moved,
+            or was never part of the collection. Let&apos;s get you back to
+            something useful.
           </p>
         </RevealDiv>
 
-        <RevealDiv delay={0.3}>
-          <nav className="flex flex-col sm:flex-row items-center justify-center gap-4" aria-label="Navigation">
+        <RevealDiv delay={0.35}>
+          <nav
+            className="flex flex-col sm:flex-row items-center justify-center gap-3"
+            aria-label="Navigation"
+          >
             <Link href="/properties" className="btn-primary">
-              Properties
+              Browse properties
+              <ArrowRight size={14} aria-hidden="true" />
             </Link>
             <Link href="/" className="btn-outline-dark">
-              Homepage
+              Back home
             </Link>
-            <Link href="/contact" className="btn-outline-dark">
-              Contact
+            <Link href="/contact" className="btn-ghost">
+              Contact us
             </Link>
           </nav>
         </RevealDiv>

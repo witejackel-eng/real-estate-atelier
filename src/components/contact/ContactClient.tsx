@@ -2,7 +2,10 @@
 
 import { useEffect, useRef, useState, type FormEvent, type FocusEvent } from 'react';
 import Link from 'next/link';
-import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { Loader2, ArrowRight, Mail, Phone, Clock } from 'lucide-react';
+import { PageHero } from '@/components/shared/PageHero';
+import { SectionHeader } from '@/components/shared/SectionHeader';
 
 /* ────────────────────────────────────────────
    Inline RevealDiv
@@ -119,11 +122,9 @@ export function ContactClient() {
     e.preventDefault();
     const form = e.currentTarget;
 
-    // Honeypot check
     const honey = (form.elements.namedItem('_honey') as HTMLInputElement)?.value;
     if (honey) return;
 
-    // Validate all
     const nameVal = (form.elements.namedItem('name') as HTMLInputElement)?.value || '';
     const emailVal = (form.elements.namedItem('email') as HTMLInputElement)?.value || '';
     const phoneVal = (form.elements.namedItem('phone') as HTMLInputElement)?.value || '';
@@ -169,82 +170,125 @@ export function ContactClient() {
   return (
     <>
       {/* ── Hero ─────────────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number">N°005</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h1 className="display-page text-espresso mt-4 mb-8">
-              Let&apos;s start a conversation.
-            </h1>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <p className="body-copy text-warm-grey max-w-xl">
-              Whether you&apos;re considering buying, selling, or just want to understand
-              the market better, we&apos;re happy to talk.
-            </p>
-          </RevealDiv>
-        </div>
-      </section>
+      <PageHero
+        label="Contact"
+        title={
+          <>
+            Let&apos;s start a <em className="text-gold not-italic">conversation.</em>
+          </>
+        }
+        subtitle="Whether you're considering buying, selling, or just want to understand the market better, we're happy to talk. Tell us what you're thinking and we'll respond within 24 hours."
+      />
 
       {/* ── Two-Column Layout ────────────────── */}
       <section className="pb-20 md:pb-28 lg:pb-36">
         <div className="container-site">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-            {/* ── Left column ──────────────────── */}
-            <div className="lg:col-span-5 flex flex-col justify-center lg:sticky lg:top-32 lg:self-start">
+            {/* ── Left column: context + channels ── */}
+            <aside className="lg:col-span-5 flex flex-col gap-8">
               <RevealDiv>
                 <h2 className="heading-property text-espresso mb-4">
                   We&apos;d rather talk than broadcast.
                 </h2>
-              </RevealDiv>
-              <RevealDiv delay={0.08}>
-                <p className="body-copy text-warm-grey mb-8">
+                <p className="body-copy text-warm-grey">
                   Real estate decisions are personal. A form is a starting point, not a
-                  substitute for a proper conversation. Tell us what you&apos;re thinking
-                  and we&apos;ll respond within 24 hours.
+                  substitute for a proper conversation. Share a few details below and
+                  we&apos;ll take it from there.
                 </p>
               </RevealDiv>
+
+              {/* Channel list */}
+              <RevealDiv delay={0.08}>
+                <ul className="space-y-5 border-t border-espresso/8 pt-6">
+                  <li className="flex items-start gap-4">
+                    <span className="shrink-0 w-10 h-10 rounded-full bg-paper flex items-center justify-center text-espresso">
+                      <Mail size={16} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="label-micro text-warm-grey mb-1">Email</p>
+                      <a
+                        href="mailto:hello@casaaurelia.com"
+                        className="body-copy text-espresso hover:text-gold transition-colors"
+                      >
+                        hello@casaaurelia.com
+                      </a>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="shrink-0 w-10 h-10 rounded-full bg-paper flex items-center justify-center text-espresso">
+                      <Phone size={16} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="label-micro text-warm-grey mb-1">Phone</p>
+                      <a
+                        href="tel:+919800000000"
+                        className="body-copy text-espresso hover:text-gold transition-colors"
+                      >
+                        +91 98000 00000
+                      </a>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="shrink-0 w-10 h-10 rounded-full bg-paper flex items-center justify-center text-espresso">
+                      <Clock size={16} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="label-micro text-warm-grey mb-1">Response Time</p>
+                      <p className="body-copy text-espresso">Within 24 hours, Monday to Saturday</p>
+                    </div>
+                  </li>
+                </ul>
+              </RevealDiv>
+
+              {/* Quick links */}
               <RevealDiv delay={0.16}>
-                <div className="space-y-3 mb-8">
-                  <Link
-                    href="/properties"
-                    className="block body-copy text-gold hover:text-gold/70 transition-colors cursor-view"
-                  >
-                    Browse properties &rarr;
-                  </Link>
-                  <Link
-                    href="/sell"
-                    className="block body-copy text-gold hover:text-gold/70 transition-colors cursor-view"
-                  >
-                    Selling your home &rarr;
-                  </Link>
+                <div className="border-t border-espresso/8 pt-6 space-y-3">
+                  <p className="label-micro text-warm-grey">Or skip ahead to</p>
+                  <div className="flex flex-col gap-2">
+                    <Link
+                      href="/properties"
+                      className="inline-flex items-center gap-2 body-copy text-espresso hover:text-gold transition-colors group"
+                    >
+                      Browse the collection
+                      <ArrowRight
+                        size={14}
+                        className="text-warm-grey group-hover:text-gold group-hover:translate-x-1 transition-all"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                    <Link
+                      href="/sell"
+                      className="inline-flex items-center gap-2 body-copy text-espresso hover:text-gold transition-colors group"
+                    >
+                      Selling your home
+                      <ArrowRight
+                        size={14}
+                        className="text-warm-grey group-hover:text-gold group-hover:translate-x-1 transition-all"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </div>
                 </div>
               </RevealDiv>
-              <RevealDiv delay={0.24}>
-                <div className="rounded-sm bg-paper/60 border border-espresso/5 p-4">
-                  <p className="label-micro text-warm-grey leading-relaxed">
-                    This is a demonstration website. Form submissions are logged locally.
-                  </p>
-                </div>
-              </RevealDiv>
-            </div>
+            </aside>
 
             {/* ── Right column: Form ────────────── */}
             <div className="lg:col-span-7">
               <RevealDiv delay={0.1}>
                 {formState === 'success' ? (
-                  <div className="text-center py-20">
-                    <p className="font-display text-xl md:text-2xl text-espresso mb-3">
+                  <div className="text-center py-16 md:py-20 border border-espresso/8 rounded-sm bg-paper/40">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full border border-gold/40 mb-6">
+                      <span className="text-gold text-2xl" aria-hidden="true">✓</span>
+                    </div>
+                    <p className="font-display text-2xl md:text-3xl text-espresso mb-3">
                       Thank you.
                     </p>
-                    <p className="body-copy text-warm-grey max-w-sm mx-auto">
+                    <p className="body-copy text-warm-grey max-w-sm mx-auto mb-8">
                       We have received your message and will respond shortly.
                     </p>
                     <button
                       type="button"
-                      className="btn-outline-dark mt-8"
+                      className="btn-outline-dark"
                       onClick={() => {
                         setFormState('idle');
                         setFields({
@@ -258,7 +302,11 @@ export function ContactClient() {
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-6 border border-espresso/8 rounded-sm p-6 sm:p-8 lg:p-10 bg-offwhite/40"
+                    noValidate
+                  >
                     {/* Honeypot */}
                     <div className="absolute -left-[9999px]" aria-hidden="true">
                       <label htmlFor="_honey_contact">Leave blank</label>
@@ -347,6 +395,7 @@ export function ContactClient() {
                           className="input-light"
                           onBlur={handleBlur}
                           onFocus={handleFocus}
+                          defaultValue=""
                         >
                           <option value="" disabled>
                             Select a subject
@@ -375,39 +424,70 @@ export function ContactClient() {
 
                     {formState === 'error' && (
                       <p className="text-sm text-red-500" role="alert">
-                        Something went wrong. Please try again.
+                        Something went wrong. Please try again or email us directly.
                       </p>
                     )}
 
-                    <button
-                      type="submit"
-                      className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
-                      disabled={formState === 'loading'}
-                    >
-                      {formState === 'loading' ? (
-                        <>
-                          <Loader2 size={14} className="animate-spin" aria-hidden="true" />
-                          Sending
-                        </>
-                      ) : (
-                        'Send Message'
-                      )}
-                    </button>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+                      <button
+                        type="submit"
+                        className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+                        disabled={formState === 'loading'}
+                      >
+                        {formState === 'loading' ? (
+                          <>
+                            <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+                            Sending
+                          </>
+                        ) : (
+                          'Send Message'
+                        )}
+                      </button>
 
-                    <p className="label-micro text-warm-grey/60 mt-6 leading-relaxed">
-                      Your information is handled in accordance with our{' '}
-                      <a href="/privacy" className="underline hover:text-espresso/80 transition-colors">
-                        Privacy Policy
-                      </a>
-                      . We will not share your details with third parties.
-                    </p>
-                    <p className="label-micro text-espresso/30 mt-4">
-                      This is a demonstration website. No data is transmitted.
-                    </p>
+                      <p className="label-micro text-warm-grey/70 leading-relaxed sm:text-right max-w-xs">
+                        Handled per our{' '}
+                        <a
+                          href="/privacy"
+                          className="underline hover:text-espresso transition-colors"
+                        >
+                          Privacy Policy
+                        </a>
+                        .
+                      </p>
+                    </div>
                   </form>
                 )}
               </RevealDiv>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Closing strip ────────────────────── */}
+      <section className="bg-espresso py-16 md:py-20">
+        <div className="container-site">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+            <RevealDiv>
+              <p className="label-micro text-gold mb-3">01</p>
+              <h3 className="heading-sub text-ivory mb-2">Discreet</h3>
+              <p className="body-copy-light opacity-60 text-sm">
+                Your search, your finances, and your decisions stay between us.
+              </p>
+            </RevealDiv>
+            <RevealDiv delay={0.1}>
+              <p className="label-micro text-gold mb-3">02</p>
+              <h3 className="heading-sub text-ivory mb-2">Considered</h3>
+              <p className="body-copy-light opacity-60 text-sm">
+                We work with a limited number of clients so every conversation gets full attention.
+              </p>
+            </RevealDiv>
+            <RevealDiv delay={0.2}>
+              <p className="label-micro text-gold mb-3">03</p>
+              <h3 className="heading-sub text-ivory mb-2">Honest</h3>
+              <p className="body-copy-light opacity-60 text-sm">
+                If a property isn&apos;t right for you, we&apos;ll say so. No pressure, no theatre.
+              </p>
+            </RevealDiv>
           </div>
         </div>
       </section>
@@ -431,7 +511,7 @@ function FieldGroup({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label className="label-mono text-espresso/50">
+      <label className="label-micro text-espresso/60">
         {label}
         {required && <span className="text-gold ml-1">*</span>}
       </label>

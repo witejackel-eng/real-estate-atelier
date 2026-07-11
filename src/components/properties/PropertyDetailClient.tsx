@@ -435,13 +435,13 @@ export function PropertyDetailClient({
                         i < metaItems.length - 1 && 'border-b border-espresso/8'
                       )}
                     >
-                      <p className="label-mono text-warm-grey">{item.label}</p>
+                      <p className="label-micro text-warm-grey">{item.label}</p>
                       <p className="body-copy text-espresso">{item.value}</p>
                     </div>
                   ))}
                   {property.parking && (
                     <div className="grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] items-baseline py-3.5 border-b border-espresso/8">
-                      <p className="label-mono text-warm-grey">Parking</p>
+                      <p className="label-micro text-warm-grey">Parking</p>
                       <p className="body-copy text-espresso">{property.parking}</p>
                     </div>
                   )}
@@ -521,8 +521,8 @@ export function PropertyDetailClient({
           <Reveal>
             <div className="container-form">
               <div className="text-center mb-10">
-                <p className="label-micro text-warm-grey mb-3">Get in touch</p>
-                <h2 className="display-page text-ivory mb-2" style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}>
+                <p className="label-micro text-warm-grey mb-3">Enquire</p>
+                <h2 className="heading-property text-ivory mb-3" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
                   Interested in this property?
                 </h2>
                 <p className="body-copy-light text-ivory/60 max-w-[480px] mx-auto">

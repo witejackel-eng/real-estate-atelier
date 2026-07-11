@@ -21,30 +21,35 @@ export function Footer() {
 
   return (
     <footer
-      className="bg-espresso text-ivory mt-16 lg:mt-24"
+      className="bg-espresso text-ivory mt-0"
       role="contentinfo"
     >
       <div className="container-site py-16 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-8">
-          {/* Brand */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="font-display text-2xl tracking-tight cursor-view">
+        {/* Top: brand + tagline */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-12 lg:mb-16">
+          <div className="lg:col-span-5">
+            <Link
+              href="/"
+              className="font-display text-3xl tracking-tight inline-flex items-baseline gap-3"
+            >
               Casa Aurelia
-              <span className="label-micro ml-2 opacity-40">Atelier 01</span>
+              <span className="label-micro opacity-40">Atelier 01</span>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--color-warm-grey)' }}>
+            <p
+              className="mt-4 body-copy-light opacity-60 max-w-md"
+            >
               Private residential advisory for considered homes across India.
+              Fewer listings, more attention, clear advice.
             </p>
           </div>
 
-          {/* Links section — 3 columns on desktop */}
-          <div className="lg:col-span-3">
-            {/* Horizontal divider (desktop only) */}
+          {/* Links */}
+          <div className="lg:col-span-7">
             <div className="hidden lg:block mb-8" aria-hidden="true">
               <hr className="editorial-rule-light" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 lg:gap-8">
               {/* Explore */}
               <div>
                 <h3 className="label-micro text-ivory/40 mb-5">Explore</h3>
@@ -53,7 +58,7 @@ export function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                        className="text-sm text-ivory/70 hover:text-gold transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -70,7 +75,7 @@ export function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                        className="text-sm text-ivory/70 hover:text-gold transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -87,7 +92,7 @@ export function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                        className="text-sm text-ivory/70 hover:text-gold transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -100,12 +105,12 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <hr className="editorial-rule-light my-12" />
+        <hr className="editorial-rule-light mb-8" />
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <p className="label-micro text-ivory/25">
+          <p className="label-micro text-ivory/40">
             &copy; {year} Casa Aurelia. All rights reserved.
           </p>
-          <p className="label-micro text-ivory/20">
+          <p className="label-micro text-ivory/30">
             Demo property platform — for demonstration purposes only.
           </p>
         </div>

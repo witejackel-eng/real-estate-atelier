@@ -3,7 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { cities } from '@/data/properties';
+import { PageHero } from '@/components/shared/PageHero';
+import { SectionHeader } from '@/components/shared/SectionHeader';
 
 /* ────────────────────────────────────────────
    Inline RevealDiv (IntersectionObserver)
@@ -112,58 +115,67 @@ export function AboutClient() {
   return (
     <>
       {/* ── Hero ─────────────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number">N°004</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h1 className="display-page text-espresso mt-4 mb-8">
-              A deliberate real-estate practice.
-            </h1>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <p className="body-copy text-warm-grey max-w-xl">
-              Casa Aurelia is not a brokerage operating at scale. We are a small, intentional
-              practice that works with a limited number of clients and properties at any given
-              time.
-            </p>
-          </RevealDiv>
-        </div>
-      </section>
+      <PageHero
+        label="About"
+        title={
+          <>
+            A deliberate real-estate <em className="text-gold not-italic">practice.</em>
+          </>
+        }
+        subtitle="Casa Aurelia is not a brokerage operating at scale. We are a small, intentional practice that works with a limited number of clients and properties at any given time."
+      />
 
       {/* ── Full-width Image ──────────────────── */}
-      <section className="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden">
-        <div className="absolute inset-0 md:pl-[12vw]">
-          <Image
-            src="/images/about-studio.jpg"
-            alt="A bright, thoughtfully arranged interior space with natural materials and clean lines"
-            fill
-            className="object-cover"
-            sizes="100vw"
-          />
+      <section className="pb-20 md:pb-28 lg:pb-36">
+        <div className="container-site">
+          <RevealDiv>
+            <div className="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden">
+              <Image
+                src="/images/about-studio.jpg"
+                alt="A bright, thoughtfully arranged interior space with natural materials and clean lines"
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+            </div>
+          </RevealDiv>
         </div>
       </section>
 
       {/* ── Philosophy ───────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
+      <section className="pb-20 md:pb-28 lg:pb-36">
         <div className="container-site">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-7">
-              <RevealDiv>
-                <span className="section-number">Philosophy</span>
-              </RevealDiv>
-              <RevealDiv delay={0.08}>
-                <p className="display-section text-espresso mt-6 leading-[1.05]">
-                  Fewer listings. More attention. Clear advice. Straightforward communication.
+              <SectionHeader
+                label="Philosophy"
+                title={
+                  <>
+                    Fewer listings.
+                    <br />
+                    More attention.
+                    <br />
+                    Clear advice.
+                  </>
+                }
+                size="section"
+                bottomSpacing="md"
+              />
+              <RevealDiv delay={0.1}>
+                <p className="body-copy text-warm-grey max-w-lg">
+                  We don&apos;t believe in listing everything that comes our way. Instead, we
+                  choose a small number of properties we genuinely believe in, and give each
+                  one the time and craft required to find the right buyer. The result is a
+                  quieter, more honest process for everyone involved.
                 </p>
               </RevealDiv>
             </div>
             <div className="lg:col-span-5">
-              <RevealDiv delay={0.16}>
+              <RevealDiv delay={0.15}>
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <Image
-                    src="/images/about-studio.jpg"
+                    src="/images/hero-interior.jpg"
                     alt="Interior detail showing natural materials and considered design"
                     fill
                     className="object-cover"
@@ -176,47 +188,38 @@ export function AboutClient() {
         </div>
       </section>
 
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
+      <hr className="editorial-rule container-site" />
 
       {/* ── What We Do (Scroll-Triggered List) ── */}
       <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number">What We Do</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h2 className="display-section text-espresso mt-4 mb-12">
-              Three things, done carefully.
-            </h2>
-          </RevealDiv>
-          <ScrollList items={whatWeDo} />
+        <div className="container-site">
+          <SectionHeader
+            label="What We Do"
+            title="Three things, done carefully."
+            subtitle="We keep our focus narrow so each engagement gets the attention it deserves."
+          />
+          <div className="max-w-3xl mx-auto mt-12 md:mt-16">
+            <ScrollList items={whatWeDo} />
+          </div>
         </div>
       </section>
 
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
+      <hr className="editorial-rule container-site" />
 
       {/* ── Selection Process (Vertical Timeline) ── */}
       <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number">Selection</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h2 className="heading-property text-espresso mt-4 mb-12">
-              How properties make it onto the platform
-            </h2>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <p className="body-copy text-warm-grey mb-16">
-              Every listing begins with a visit. Properties that don&apos;t meet our standards
-              simply don&apos;t get listed.
-            </p>
-          </RevealDiv>
-
-          {/* Vertical timeline */}
-          <div className="relative">
+        <div className="container-site">
+          <SectionHeader
+            label="Selection"
+            title="How properties make it onto the platform"
+            subtitle="Every listing begins with a visit. Properties that don't meet our standards simply don't get listed."
+          />
+          <div className="relative max-w-3xl mx-auto mt-12 md:mt-16">
             {/* Vertical line */}
-            <div className="absolute left-[23px] md:left-[31px] top-0 bottom-0 w-px bg-espresso/10" aria-hidden="true" />
+            <div
+              className="absolute left-[23px] md:left-[31px] top-2 bottom-2 w-px bg-espresso/10"
+              aria-hidden="true"
+            />
 
             <ol className="space-y-12 md:space-y-16">
               {selectionSteps.map((step, i) => (
@@ -227,10 +230,11 @@ export function AboutClient() {
                       className="absolute left-[18px] md:left-[26px] top-1.5 w-[11px] h-[11px] rounded-full border-2 border-espresso/30 bg-ivory"
                       aria-hidden="true"
                     />
-                    <span className="label-micro text-warm-grey">{step.number}</span>
-                    <h3 className="font-display text-xl md:text-2xl text-espresso mt-1 mb-2">
-                      {step.label}
-                    </h3>
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="label-micro text-warm-grey">{step.number}</span>
+                      <span className="h-px w-6 bg-warm-grey/30" aria-hidden="true" />
+                      <h3 className="heading-sub text-espresso">{step.label}</h3>
+                    </div>
                     <p className="body-copy text-warm-grey max-w-md">
                       {step.description}
                     </p>
@@ -244,48 +248,82 @@ export function AboutClient() {
 
       {/* ── Approach (Dark Section) ──────────── */}
       <section className="py-20 md:py-28 lg:py-36 bg-espresso">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number text-warm-grey">Approach</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <p className="display-section text-ivory mt-6 leading-[1.05]">
-              Direct. Transparent. Unhurried.
-            </p>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <p className="body-copy-light mt-8 max-w-lg">
-              There are no high-pressure tactics here. If a property isn&apos;t right for you,
-              we&apos;ll say so. If we think your expectations need recalibrating,
-              we&apos;ll have that conversation honestly. Our job is to help you make a good
-              decision — not to close a deal at any cost.
-            </p>
-          </RevealDiv>
+        <div className="container-site">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            <div className="lg:col-span-5">
+              <SectionHeader
+                label="Approach"
+                title={
+                  <>
+                    Direct.
+                    <br />
+                    Transparent.
+                    <br />
+                    Unhurried.
+                  </>
+                }
+                tone="light"
+                size="section"
+                bottomSpacing="none"
+              />
+            </div>
+            <div className="lg:col-span-7 lg:pl-8">
+              <RevealDiv delay={0.1}>
+                <p className="body-copy-light opacity-70 max-w-xl">
+                  There are no high-pressure tactics here. If a property isn&apos;t right for
+                  you, we&apos;ll say so. If we think your expectations need recalibrating,
+                  we&apos;ll have that conversation honestly. Our job is to help you make a
+                  good decision — not to close a deal at any cost.
+                </p>
+              </RevealDiv>
+              <RevealDiv delay={0.2}>
+                <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="border-t border-ivory/10 pt-4">
+                    <p className="label-micro text-gold mb-2">Engagement</p>
+                    <p className="body-copy-light opacity-60 text-sm">
+                      A limited number of clients at any time.
+                    </p>
+                  </div>
+                  <div className="border-t border-ivory/10 pt-4">
+                    <p className="label-micro text-gold mb-2">Communication</p>
+                    <p className="body-copy-light opacity-60 text-sm">
+                      Direct, honest, and on the record — always.
+                    </p>
+                  </div>
+                  <div className="border-t border-ivory/10 pt-4">
+                    <p className="label-micro text-gold mb-2">Privacy</p>
+                    <p className="body-copy-light opacity-60 text-sm">
+                      Your search and your details stay between us.
+                    </p>
+                  </div>
+                  <div className="border-t border-ivory/10 pt-4">
+                    <p className="label-micro text-gold mb-2">Outcome</p>
+                    <p className="body-copy-light opacity-60 text-sm">
+                      A decision you&apos;d make again, not one you regret.
+                    </p>
+                  </div>
+                </div>
+              </RevealDiv>
+            </div>
+          </div>
         </div>
       </section>
-
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
 
       {/* ── Locations / Regions ──────────────── */}
       <section className="py-20 md:py-28 lg:py-36">
         <div className="container-site">
-          <div className="container-editorial">
-            <RevealDiv>
-              <span className="section-number">Regions</span>
-            </RevealDiv>
-            <RevealDiv delay={0.08}>
-              <h2 className="heading-property text-espresso mt-4 mb-12">
-                Where we work
-              </h2>
-            </RevealDiv>
-          </div>
-          <RevealDiv delay={0.16}>
-            <div className="flex flex-wrap gap-x-8 gap-y-3 md:gap-x-12 md:gap-y-4">
+          <SectionHeader
+            label="Regions"
+            title="Where we work"
+            subtitle="Click any city to see what's currently in the collection."
+          />
+          <RevealDiv delay={0.1}>
+            <div className="flex flex-wrap gap-x-8 gap-y-3 md:gap-x-12 md:gap-y-4 mt-10">
               {cities.map((city, i) => (
                 <Link
                   key={city}
                   href={`/properties?city=${encodeURIComponent(city)}`}
-                  className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-espresso/20 hover:text-espresso transition-colors duration-300 cursor-view"
+                  className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-espresso/20 hover:text-espresso transition-colors duration-300"
                   style={{ transitionDelay: `${i * 30}ms` }}
                 >
                   {city}
@@ -296,18 +334,16 @@ export function AboutClient() {
         </div>
       </section>
 
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
-
       {/* ── Closing CTA ──────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
+      <section className="bg-paper py-16 md:py-20">
+        <div className="container-site text-center">
           <RevealDiv>
             <h2 className="heading-property text-espresso mb-4">
               Want to talk?
             </h2>
           </RevealDiv>
           <RevealDiv delay={0.08}>
-            <p className="body-copy text-warm-grey mb-8 max-w-md">
+            <p className="body-copy text-warm-grey mb-8 max-w-md mx-auto">
               We&apos;re always open to a good conversation — about a specific property,
               the market, or how we might be able to help.
             </p>
@@ -315,6 +351,7 @@ export function AboutClient() {
           <RevealDiv delay={0.16}>
             <Link href="/contact" className="btn-primary">
               Get in Touch
+              <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </RevealDiv>
         </div>
@@ -383,7 +420,7 @@ function ScrollListItem({
             aria-hidden="true"
           />
 
-          <h3 className="font-display text-lg md:text-xl text-espresso mb-2">
+          <h3 className="heading-sub text-espresso mb-2">
             {item.title}
           </h3>
 

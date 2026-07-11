@@ -611,7 +611,7 @@ export function PropertiesClient({
   /* ---------------------------------------------------------------- */
 
   return (
-    <main>
+    <>
       {/* ── Opening Section ── */}
       <section className="relative min-h-[70vh] sm:min-h-[80vh] flex items-end overflow-hidden">
         {/* Background Image */}
@@ -625,31 +625,32 @@ export function PropertiesClient({
         />
         {/* Dark overlay */}
         <div
-          className="absolute inset-0 bg-espresso/70"
+          className="absolute inset-0 bg-gradient-to-t from-espresso/90 via-espresso/50 to-espresso/30"
           aria-hidden="true"
         />
 
         {/* Content */}
-        <div className="container-site relative z-10 pb-16 sm:pb-20 lg:pb-24 pt-40 sm:pt-48 lg:pt-56">
+        <div className="container-site relative z-10 pb-16 sm:pb-20 lg:pb-24 pt-32 sm:pt-40 lg:pt-48">
           <RevealDiv>
             <span className="section-number text-offwhite/60">
-              N°001
+              The Collection
             </span>
           </RevealDiv>
           <RevealDiv delay={0.1}>
             <h1 className="display-page text-offwhite mt-4">
-              The Collection
+              Homes with a <em className="text-gold not-italic">point of view.</em>
             </h1>
           </RevealDiv>
           <RevealDiv delay={0.2}>
             <p className="body-copy-light mt-6 max-w-xl text-offwhite/80">
               A considered selection of residential properties across
-              India&rsquo;s most compelling cities.
+              India&rsquo;s most compelling cities — each visited, assessed,
+              and chosen before it appears here.
             </p>
           </RevealDiv>
           <RevealDiv delay={0.3}>
             <p className="label-micro text-offwhite/50 mt-6">
-              {results.length} properties
+              {results.length} {results.length === 1 ? 'property' : 'properties'} in the current collection
             </p>
           </RevealDiv>
         </div>
@@ -903,27 +904,29 @@ export function PropertiesClient({
       </div>
 
       {/* ── Closing Section ── */}
-      <section className="container-site py-20 lg:py-32 text-center">
-        <RevealDiv>
-          <h2 className="heading-property text-espresso">
-            Nothing here quite fits?
-          </h2>
-        </RevealDiv>
-        <RevealDiv delay={0.15}>
-          <p className="body-copy text-warm-grey mt-4 max-w-md mx-auto">
-            Tell us what you are looking for and we&rsquo;ll curate something
-            personally.
-          </p>
-        </RevealDiv>
-        <RevealDiv delay={0.25}>
-          <Link
-            href="/contact"
-            className="btn-outline-dark inline-flex mt-8"
-          >
-            Get in touch
-            <ArrowRight size={14} aria-hidden="true" />
-          </Link>
-        </RevealDiv>
+      <section className="bg-espresso py-16 md:py-24 text-center">
+        <div className="container-site">
+          <RevealDiv>
+            <h2 className="heading-property text-ivory">
+              Nothing here quite fits?
+            </h2>
+          </RevealDiv>
+          <RevealDiv delay={0.15}>
+            <p className="body-copy-light opacity-60 mt-4 max-w-md mx-auto">
+              Tell us what you are looking for and we&rsquo;ll curate something
+              personally — often before it appears here.
+            </p>
+          </RevealDiv>
+          <RevealDiv delay={0.25}>
+            <Link
+              href="/contact"
+              className="btn-primary inline-flex mt-8"
+            >
+              Start a private brief
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+          </RevealDiv>
+        </div>
       </section>
 
       {/* ── Mobile Filter Overlay ── */}
@@ -1110,6 +1113,6 @@ export function PropertiesClient({
           </div>
         </div>
       )}
-    </main>
+    </>
   );
 }
