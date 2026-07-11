@@ -13,15 +13,15 @@ const benefits = [
 
 export function SellingCTA() {
   return (
-    <section className="section-py" aria-label="For sellers">
+    <section className="bg-paper py-24 lg:py-36" aria-label="For sellers">
       <Container variant="main">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 gap-12 border-t border-espresso/30 pt-4 lg:grid-cols-12 lg:gap-12">
           {/* Content */}
-          <Reveal>
+          <Reveal className="lg:col-span-5 lg:flex lg:flex-col lg:justify-between">
             <div>
-              <SectionLabel>For Sellers</SectionLabel>
-              <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] mb-4">
-                Sell with Confidence
+              <SectionLabel className="text-espresso">N° 005 / For sellers</SectionLabel>
+              <h2 className="mt-10 font-display text-[clamp(3rem,5.5vw,6rem)] leading-[0.92] tracking-[-0.05em] mb-7">
+                Your home,<br /><span className="italic text-cobalt">properly seen.</span>
               </h2>
               <p className="body-text text-espresso/70 mb-8">
                 We take on a limited number of properties to ensure each one
@@ -41,15 +41,15 @@ export function SellingCTA() {
                   </li>
                 ))}
               </ul>
-              <Button variant="primary" size="lg" href="/sell">
+              <Button variant="primary" size="lg" href="/sell" className="rounded-full bg-cobalt hover:bg-espresso">
                 Request a Valuation
               </Button>
             </div>
           </Reveal>
 
           {/* Image */}
-          <Reveal direction="right" delay={0.15}>
-            <div className="relative aspect-[4/3] rounded-sm overflow-hidden">
+          <Reveal className="lg:col-span-7" direction="right" delay={0.15}>
+            <div className="relative aspect-[4/3] overflow-hidden lg:aspect-[5/4]">
               <Image
                 src="/images/sell-hero.jpg"
                 alt="A well-staged luxury living room with natural light and premium furnishings"
