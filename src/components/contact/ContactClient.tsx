@@ -1,29 +1,145 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type FocusEvent } from 'react';
+import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
-import { Container } from '@/components/shared/Container';
-import { Reveal } from '@/components/shared/Reveal';
-import { Button } from '@/components/shared/Button';
 
-const subjectOptions = [
-  'Property Inquiry',
-  'Valuation Request',
-  'General Question',
-] as const;
+/* ────────────────────────────────────────────
+   Inline RevealDiv
+   ──────────────────────────────────────────── */
+function RevealDiv({
+  children,
+  className = '',
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
-const inputClasses =
-  'w-full rounded-sm border border-espresso/15 bg-offwhite/60 px-4 py-3 text-sm text-espresso placeholder:text-espresso/35 focus:border-gold/50 focus:outline-none transition-colors';
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { rootMargin: '-40px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'none' : 'translateY(16px)',
+        transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────
+   Data
+   ──────────────────────────────────────────── */
+const subjectOptions = ['General', 'Buy', 'Sell', 'Other'] as const;
+
+type FieldState = {
+  touched: boolean;
+  error: string | null;
+};
+
+type FormFields = {
+  name: FieldState;
+  email: FieldState;
+  phone: FieldState;
+};
+
+/* ────────────────────────────────────────────
+   Component
+   ──────────────────────────────────────────── */
 export function ContactClient() {
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [focused, setFocused] = useState<string | null>(null);
+  const [fields, setFields] = useState<FormFields>({
+    name: { touched: false, error: null },
+    email: { touched: false, error: null },
+    phone: { touched: false, error: null },
+  });
+
+  function validateField(name: string, value: string): string | null {
+    if (name === 'name' && !value.trim()) return 'Name is required.';
+    if (name === 'email') {
+      if (!value.trim()) return 'Email is required.';
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) return 'Please enter a valid email.';
+    }
+    if (name === 'phone' && !value.trim()) return 'Phone is required.';
+    return null;
+  }
+
+  function handleBlur(e: FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    setFields((prev) => ({
+      ...prev,
+      [name]: { touched: true, error },
+    }));
+    setFocused(null);
+  }
+
+  function handleFocus(e: FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    setFocused(e.target.name);
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    const { name, value } = e.target;
+    const field = fields[name as keyof FormFields];
+    if (field?.touched) {
+      const error = validateField(name, value);
+      setFields((prev) => ({
+        ...prev,
+        [name]: { ...field, error },
+      }));
+    }
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
 
+    // Honeypot check
     const honey = (form.elements.namedItem('_honey') as HTMLInputElement)?.value;
     if (honey) return;
+
+    // Validate all
+    const nameVal = (form.elements.namedItem('name') as HTMLInputElement)?.value || '';
+    const emailVal = (form.elements.namedItem('email') as HTMLInputElement)?.value || '';
+    const phoneVal = (form.elements.namedItem('phone') as HTMLInputElement)?.value || '';
+
+    const nameErr = validateField('name', nameVal);
+    const emailErr = validateField('email', emailVal);
+    const phoneErr = validateField('phone', phoneVal);
+
+    const newFields: FormFields = {
+      name: { touched: true, error: nameErr },
+      email: { touched: true, error: emailErr },
+      phone: { touched: true, error: phoneErr },
+    };
+    setFields(newFields);
+
+    if (nameErr || emailErr || phoneErr) return;
 
     setFormState('loading');
 
@@ -51,174 +167,277 @@ export function ContactClient() {
   }
 
   return (
-    <section className="section-py" aria-label="Contact us">
-      <Container variant="main">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          {/* ── Left column ─────────────────────── */}
-          <div className="lg:col-span-5 flex flex-col justify-center">
-            <Reveal>
-              <h1 className="font-display text-[clamp(2rem,5vw,3.25rem)] leading-[1.1] text-espresso text-balance">
-                Get in Touch
-              </h1>
-              <p className="body-text text-espresso/70 mt-5 mb-4">
-                Whether you&apos;re considering buying, selling, or just want to understand
-                the market better, we&apos;re happy to talk.
-              </p>
-              <p className="text-sm text-espresso/50 mb-8">
-                We aim to respond within 24 hours.
-              </p>
-              <div className="rounded-sm bg-sand/50 border border-espresso/5 p-4 mb-6">
-                <p className="text-xs text-espresso/50 leading-relaxed">
-                  This is a demonstration website. Form submissions are logged locally.
+    <>
+      {/* ── Hero ─────────────────────────────── */}
+      <section className="py-20 md:py-28 lg:py-36">
+        <div className="container-editorial">
+          <RevealDiv>
+            <span className="section-number">N°005</span>
+          </RevealDiv>
+          <RevealDiv delay={0.08}>
+            <h1 className="display-page text-espresso mt-4 mb-8">
+              Let&apos;s start a conversation.
+            </h1>
+          </RevealDiv>
+          <RevealDiv delay={0.16}>
+            <p className="body-copy text-warm-grey max-w-xl">
+              Whether you&apos;re considering buying, selling, or just want to understand
+              the market better, we&apos;re happy to talk.
+            </p>
+          </RevealDiv>
+        </div>
+      </section>
+
+      {/* ── Two-Column Layout ────────────────── */}
+      <section className="pb-20 md:pb-28 lg:pb-36">
+        <div className="container-site">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            {/* ── Left column ──────────────────── */}
+            <div className="lg:col-span-5 flex flex-col justify-center lg:sticky lg:top-32 lg:self-start">
+              <RevealDiv>
+                <h2 className="heading-property text-espresso mb-4">
+                  We&apos;d rather talk than broadcast.
+                </h2>
+              </RevealDiv>
+              <RevealDiv delay={0.08}>
+                <p className="body-copy text-warm-grey mb-8">
+                  Real estate decisions are personal. A form is a starting point, not a
+                  substitute for a proper conversation. Tell us what you&apos;re thinking
+                  and we&apos;ll respond within 24 hours.
                 </p>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* ── Right column: form ──────────────── */}
-          <div className="lg:col-span-7">
-            <Reveal delay={0.1}>
-              {formState === 'success' ? (
-                <div className="text-center py-16">
-                  <p className="font-display text-xl text-espresso mb-2">
-                    Thank you for reaching out
-                  </p>
-                  <p className="text-sm text-espresso/60">
-                    We&apos;ll be in touch soon.
-                  </p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="mt-6"
-                    onClick={() => setFormState('idle')}
+              </RevealDiv>
+              <RevealDiv delay={0.16}>
+                <div className="space-y-3 mb-8">
+                  <Link
+                    href="/properties"
+                    className="block body-copy text-cobalt hover:text-cobalt/70 transition-colors cursor-view"
                   >
-                    Send another message
-                  </Button>
+                    Browse properties &rarr;
+                  </Link>
+                  <Link
+                    href="/sell"
+                    className="block body-copy text-cobalt hover:text-cobalt/70 transition-colors cursor-view"
+                  >
+                    Selling your home &rarr;
+                  </Link>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                  {/* Honeypot */}
-                  <div className="absolute -left-[9999px]" aria-hidden>
-                    <label htmlFor="_honey_contact">Leave blank</label>
-                    <input
-                      type="text"
-                      id="_honey_contact"
-                      name="_honey"
-                      tabIndex={-1}
-                      autoComplete="off"
-                    />
-                  </div>
+              </RevealDiv>
+              <RevealDiv delay={0.24}>
+                <div className="rounded-sm bg-paper/60 border border-espresso/5 p-4">
+                  <p className="label-micro text-warm-grey leading-relaxed">
+                    This is a demonstration website. Form submissions are logged locally.
+                  </p>
+                </div>
+              </RevealDiv>
+            </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <FieldGroup label="Name" required>
+            {/* ── Right column: Form ────────────── */}
+            <div className="lg:col-span-7">
+              <RevealDiv delay={0.1}>
+                {formState === 'success' ? (
+                  <div className="text-center py-20">
+                    <p className="font-display text-xl md:text-2xl text-espresso mb-3">
+                      Thank you.
+                    </p>
+                    <p className="body-copy text-warm-grey max-w-sm mx-auto">
+                      We have received your message and will respond shortly.
+                    </p>
+                    <button
+                      type="button"
+                      className="btn-outline-dark mt-8"
+                      onClick={() => {
+                        setFormState('idle');
+                        setFields({
+                          name: { touched: false, error: null },
+                          email: { touched: false, error: null },
+                          phone: { touched: false, error: null },
+                        });
+                      }}
+                    >
+                      Send another message
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                    {/* Honeypot */}
+                    <div className="absolute -left-[9999px]" aria-hidden="true">
+                      <label htmlFor="_honey_contact">Leave blank</label>
                       <input
                         type="text"
-                        name="name"
-                        required
-                        className={inputClasses}
-                        placeholder="Your full name"
+                        id="_honey_contact"
+                        name="_honey"
+                        tabIndex={-1}
+                        autoComplete="off"
                       />
-                    </FieldGroup>
+                    </div>
 
-                    <FieldGroup label="Email" required>
-                      <input
-                        type="email"
-                        name="email"
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <FieldGroup
+                        label="Name"
                         required
-                        className={inputClasses}
-                        placeholder="you@example.com"
-                      />
-                    </FieldGroup>
+                        error={fields.name.touched ? fields.name.error : null}
+                      >
+                        <input
+                          type="text"
+                          name="name"
+                          required
+                          className={`input-light ${
+                            focused === 'name'
+                              ? 'border-cobalt'
+                              : fields.name.touched && fields.name.error
+                                ? 'border-red-400'
+                                : ''
+                          }`}
+                          placeholder="Your full name"
+                          onBlur={handleBlur}
+                          onFocus={handleFocus}
+                          onChange={handleChange}
+                        />
+                      </FieldGroup>
 
-                    <FieldGroup label="Phone" required>
-                      <input
-                        type="tel"
-                        name="phone"
+                      <FieldGroup
+                        label="Email"
                         required
-                        className={inputClasses}
-                        placeholder="+91 98765 43210"
-                      />
-                    </FieldGroup>
+                        error={fields.email.touched ? fields.email.error : null}
+                      >
+                        <input
+                          type="email"
+                          name="email"
+                          required
+                          className={`input-light ${
+                            focused === 'email'
+                              ? 'border-cobalt'
+                              : fields.email.touched && fields.email.error
+                                ? 'border-red-400'
+                                : ''
+                          }`}
+                          placeholder="you@example.com"
+                          onBlur={handleBlur}
+                          onFocus={handleFocus}
+                          onChange={handleChange}
+                        />
+                      </FieldGroup>
 
-                    <FieldGroup label="Subject" required>
-                      <select name="subject" required className={inputClasses}>
-                        <option value="" disabled>
-                          Select a subject
-                        </option>
-                        {subjectOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
+                      <FieldGroup
+                        label="Phone"
+                        required
+                        error={fields.phone.touched ? fields.phone.error : null}
+                      >
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          className={`input-light ${
+                            focused === 'phone'
+                              ? 'border-cobalt'
+                              : fields.phone.touched && fields.phone.error
+                                ? 'border-red-400'
+                                : ''
+                          }`}
+                          placeholder="+91 98765 43210"
+                          onBlur={handleBlur}
+                          onFocus={handleFocus}
+                          onChange={handleChange}
+                        />
+                      </FieldGroup>
+
+                      <FieldGroup label="Subject">
+                        <select
+                          name="subject"
+                          className="input-light"
+                          onBlur={handleBlur}
+                          onFocus={handleFocus}
+                        >
+                          <option value="" disabled>
+                            Select a subject
                           </option>
-                        ))}
-                      </select>
+                          {subjectOptions.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      </FieldGroup>
+                    </div>
+
+                    <FieldGroup label="Message">
+                      <textarea
+                        name="message"
+                        rows={5}
+                        className={`input-light resize-y ${
+                          focused === 'message' ? 'border-cobalt' : ''
+                        }`}
+                        placeholder="Tell us how we can help..."
+                        onBlur={handleBlur}
+                        onFocus={handleFocus}
+                      />
                     </FieldGroup>
-                  </div>
 
-                  <FieldGroup label="Message" required>
-                    <textarea
-                      name="message"
-                      required
-                      rows={5}
-                      className={`${inputClasses} resize-y`}
-                      placeholder="Tell us how we can help..."
-                    />
-                  </FieldGroup>
-
-                  {formState === 'error' && (
-                    <p className="text-sm text-terracotta" role="alert">
-                      Something went wrong. Please try again.
-                    </p>
-                  )}
-
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    size="lg"
-                    disabled={formState === 'loading'}
-                  >
-                    {formState === 'loading' ? (
-                      <>
-                        <Loader2 size={14} className="animate-spin mr-2" aria-hidden />
-                        Sending
-                      </>
-                    ) : (
-                      'Send Message'
+                    {formState === 'error' && (
+                      <p className="text-sm text-red-500" role="alert">
+                        Something went wrong. Please try again.
+                      </p>
                     )}
-                  </Button>
 
-                  <p className="text-xs text-espresso/40 mt-4">
-                    Your information is handled in accordance with our{' '}
-                    <a href="/privacy" className="underline hover:text-espresso/60 transition-colors">
-                      Privacy Policy
-                    </a>
-                    .
-                  </p>
-                </form>
-              )}
-            </Reveal>
+                    <button
+                      type="submit"
+                      className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+                      disabled={formState === 'loading'}
+                    >
+                      {formState === 'loading' ? (
+                        <>
+                          <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+                          Sending
+                        </>
+                      ) : (
+                        'Send Message'
+                      )}
+                    </button>
+
+                    <p className="label-micro text-warm-grey/60 mt-6 leading-relaxed">
+                      Your information is handled in accordance with our{' '}
+                      <a href="/privacy" className="underline hover:text-espresso/80 transition-colors">
+                        Privacy Policy
+                      </a>
+                      . We will not share your details with third parties.
+                    </p>
+                  </form>
+                )}
+              </RevealDiv>
+            </div>
           </div>
         </div>
-      </Container>
-    </section>
+      </section>
+    </>
   );
 }
 
+/* ────────────────────────────────────────────
+   Field Group Helper
+   ──────────────────────────────────────────── */
 function FieldGroup({
   label,
   required = false,
+  error = null,
   children,
 }: {
   label: string;
   required?: boolean;
+  error?: string | null;
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-mono uppercase tracking-[0.08em] text-espresso/60">
+    <div className="flex flex-col gap-2">
+      <label className="label-mono text-espresso/50">
         {label}
-        {required && <span className="text-gold ml-1">*</span>}
+        {required && <span className="text-cobalt ml-1">*</span>}
       </label>
       {children}
+      {error && (
+        <p className="text-xs text-red-500" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

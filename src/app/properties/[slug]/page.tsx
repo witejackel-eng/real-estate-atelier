@@ -33,7 +33,8 @@ export default async function PropertyDetailPage({ params }: Props) {
     notFound();
   }
 
-  // Get up to 3 similar, or fewer with matching layout
+  const propertyIndex = properties.findIndex((p) => p.slug === slug);
+
   const similarRaw = getSimilarProperties(slug, 4);
   const similarProperties = similarRaw.length >= 3 ? similarRaw.slice(0, 3) : similarRaw;
 
@@ -70,7 +71,11 @@ export default async function PropertyDetailPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <PropertyDetailClient property={property} similarProperties={similarProperties} />
+      <PropertyDetailClient
+        property={property}
+        propertyIndex={propertyIndex}
+        similarProperties={similarProperties}
+      />
     </>
   );
 }

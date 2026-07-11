@@ -4,7 +4,7 @@ import { NeighborhoodsClient } from '@/components/neighborhoods/NeighborhoodsCli
 export const metadata = createMetadata({
   title: 'Neighborhoods',
   description:
-    "Explore India's most desirable residential neighborhoods. Detailed guides on lifestyle, property types, and price ranges for Delhi NCR, Mumbai, Goa, Bangalore, Pune, and Hyderabad.",
+    'Explore India\'s most desirable residential neighborhoods — Delhi NCR, Mumbai, Goa, Bangalore, Pune, Hyderabad, Jaipur, and Alibaug.',
   path: '/neighborhoods',
 });
 

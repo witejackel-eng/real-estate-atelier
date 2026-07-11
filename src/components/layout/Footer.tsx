@@ -2,11 +2,11 @@ import Link from 'next/link';
 
 const exploreLinks = [
   { label: 'Properties', href: '/properties' },
-  { label: 'Neighborhoods', href: '/neighborhoods' },
+  { label: 'Neighbourhoods', href: '/neighborhoods' },
   { label: 'About', href: '/about' },
 ];
 
-const servicesLinks = [
+const serviceLinks = [
   { label: 'Sell Your Home', href: '/sell' },
   { label: 'Contact', href: '/contact' },
 ];
@@ -16,70 +16,88 @@ const legalLinks = [
   { label: 'Terms of Service', href: '/terms' },
 ];
 
-function FooterLinkGroup({
-  heading,
-  links,
-}: {
-  heading: string;
-  links: readonly { label: string; href: string }[];
-}) {
-  return (
-    <div>
-      <h4 className="font-mono text-xs uppercase tracking-wider text-gold mb-4">
-        {heading}
-      </h4>
-      <ul>
-        {links.map((link) => (
-          <li key={link.href}>
-            <Link
-              href={link.href}
-              className="block py-1 text-sm text-offwhite/60 hover:text-offwhite transition-colors"
-            >
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="bg-espresso text-offwhite/80 mt-auto">
-      <div className="max-w-[1360px] mx-auto px-5 sm:px-6 lg:px-16 border-t border-offwhite/10">
-        {/* 4-column grid */}
-        <div className="py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
-          {/* Column 1: Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <Link
-              href="/"
-              className="font-display text-lg text-offwhite"
-            >
+    <footer
+      className="bg-espresso text-ivory"
+      role="contentinfo"
+    >
+      <div className="container-site py-16 lg:py-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+          {/* Brand */}
+          <div className="lg:col-span-1">
+            <Link href="/" className="font-display text-2xl tracking-tight cursor-view">
               Casa Aurelia
             </Link>
-            <p className="mt-3 text-sm text-offwhite/50 leading-relaxed max-w-xs">
-              Curated residential properties across India&apos;s most
-              sought-after cities.
+            <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--color-warm-grey)' }}>
+              Private residential advisory for considered homes across India.
             </p>
+            <span className="label-micro mt-6 inline-block text-ivory/20">
+              Atelier 01
+            </span>
           </div>
 
-          {/* Column 2: Explore */}
-          <FooterLinkGroup heading="Explore" links={exploreLinks} />
+          {/* Explore */}
+          <div>
+            <h3 className="label-interface text-ivory/40 mb-6">Explore</h3>
+            <ul className="space-y-3">
+              {exploreLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          {/* Column 3: Services */}
-          <FooterLinkGroup heading="Services" links={servicesLinks} />
+          {/* Services */}
+          <div>
+            <h3 className="label-interface text-ivory/40 mb-6">Services</h3>
+            <ul className="space-y-3">
+              {serviceLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          {/* Column 4: Legal */}
-          <FooterLinkGroup heading="Legal" links={legalLinks} />
+          {/* Legal */}
+          <div>
+            <h3 className="label-interface text-ivory/40 mb-6">Legal</h3>
+            <ul className="space-y-3">
+              {legalLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-offwhite/10 py-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-          <p className="text-xs text-offwhite/40">
-            &copy; {new Date().getFullYear()} Casa Aurelia. All rights reserved.
+        <hr className="editorial-rule-light my-12" />
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <p className="label-micro text-ivory/30">
+            &copy; {year} Casa Aurelia. All rights reserved.
           </p>
-          <p className="text-xs text-offwhite/40">
+          <p className="label-micro text-ivory/20">
             Demo property platform — for demonstration purposes only.
           </p>
         </div>

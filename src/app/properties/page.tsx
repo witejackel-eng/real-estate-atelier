@@ -2,8 +2,9 @@ import { PropertiesClient } from '@/components/properties/PropertiesClient';
 import { createMetadata } from '@/lib/seo';
 
 export const metadata = createMetadata({
-  title: 'Properties',
-  description: 'Browse our curated collection of premium residential properties across India — villas, penthouses, apartments, and heritage homes.',
+  title: 'The Collection',
+  description:
+    'A considered selection of residential properties across India\'s most compelling cities — villas, penthouses, apartments, duplexes, heritage homes, and weekend retreats.',
   path: '/properties',
 });
 
