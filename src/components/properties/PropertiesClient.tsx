@@ -285,7 +285,7 @@ function PropertyCardInline({
               fill={isFavorited ? 'currentColor' : 'none'}
               stroke="currentColor"
               strokeWidth={isFavorited ? 0 : 1.5}
-              className={isFavorited ? 'text-chartreuse' : 'text-offwhite'}
+              className={isFavorited ? 'text-gold' : 'text-offwhite'}
               aria-hidden="true"
             >
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -380,7 +380,7 @@ function PropertyCardInline({
             fill={isFavorited ? 'currentColor' : 'none'}
             stroke="currentColor"
             strokeWidth={isFavorited ? 0 : 1.5}
-            className={isFavorited ? 'text-chartreuse' : 'text-offwhite'}
+            className={isFavorited ? 'text-gold' : 'text-offwhite'}
             aria-hidden="true"
           >
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -748,7 +748,7 @@ export function PropertiesClient({
               <button
                 type="button"
                 onClick={clearAll}
-                className="label-interface text-warm-grey hover:text-espresso transition-colors px-2 py-2"
+                className="btn-ghost text-sm"
               >
                 Clear
               </button>
@@ -802,7 +802,7 @@ export function PropertiesClient({
           <SlidersHorizontal size={16} aria-hidden="true" />
           Filters
           {activeCount > 0 && (
-            <span className="inline-flex items-center justify-center min-w-[20px] h-5 rounded-full bg-chartreuse text-espresso text-[10px] font-mono px-1.5">
+            <span className="inline-flex items-center justify-center min-w-[20px] h-5 rounded-full bg-sand text-espresso text-[10px] font-mono px-1.5">
               {activeCount}
             </span>
           )}
@@ -887,13 +887,12 @@ export function PropertiesClient({
               Try adjusting your search criteria or clearing all filters to
               see the full collection.
             </p>
-            <button
-              type="button"
-              onClick={clearAll}
+            <Link
+              href="/contact"
               className="btn-outline-dark"
             >
-              Clear all filters
-            </button>
+              Start a private brief
+            </Link>
           </div>
         )}
       </section>

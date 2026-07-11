@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { properties } from '@/data/properties';
 import { neighborhoods } from '@/data/neighborhoods';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://casaaurelia.com';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://real-estate-atelier.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [

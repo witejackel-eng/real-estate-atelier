@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const SITE_NAME = 'Casa Aurelia';
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://casaaurelia.com';
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://real-estate-atelier.vercel.app';
 
 interface CreateMetadataOptions {
   title: string;
@@ -12,7 +12,7 @@ interface CreateMetadataOptions {
 
 export function createMetadata({ title, description, path, image }: CreateMetadataOptions): Metadata {
   const url = `${SITE_URL}${path}`;
-  const ogImage = image ? `${SITE_URL}${image}` : `${SITE_URL}/og-default.jpg`;
+  const ogImage = image ? `${SITE_URL}${image}` : undefined;
 
   return {
     title: {
@@ -29,13 +29,13 @@ export function createMetadata({ title, description, path, image }: CreateMetada
       siteName: SITE_NAME,
       type: 'website',
       locale: 'en_IN',
-      ...(image && { images: [{ url: ogImage, width: 1200, height: 630, alt: title }] }),
+      ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 630, alt: title }] }),
     },
     twitter: {
       card: 'summary_large_image',
       title: `${title} | Casa Aurelia`,
       description,
-      ...(image && { images: [ogImage] }),
+      ...(ogImage && { images: [ogImage] }),
     },
   };
 }

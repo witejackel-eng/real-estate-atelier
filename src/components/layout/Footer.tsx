@@ -21,80 +21,88 @@ export function Footer() {
 
   return (
     <footer
-      className="bg-espresso text-ivory"
+      className="bg-espresso text-ivory mt-16 lg:mt-24"
       role="contentinfo"
     >
       <div className="container-site py-16 lg:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="font-display text-2xl tracking-tight cursor-view">
               Casa Aurelia
+              <span className="label-micro ml-2 opacity-40">Atelier 01</span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--color-warm-grey)' }}>
               Private residential advisory for considered homes across India.
             </p>
-            <span className="label-micro mt-6 inline-block text-ivory/20">
-              Atelier 01
-            </span>
           </div>
 
-          {/* Explore */}
-          <div>
-            <h3 className="label-interface text-ivory/40 mb-6">Explore</h3>
-            <ul className="space-y-3">
-              {exploreLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Links section — 3 columns on desktop */}
+          <div className="lg:col-span-3">
+            {/* Horizontal divider (desktop only) */}
+            <div className="hidden lg:block mb-8" aria-hidden="true">
+              <hr className="editorial-rule-light" />
+            </div>
 
-          {/* Services */}
-          <div>
-            <h3 className="label-interface text-ivory/40 mb-6">Services</h3>
-            <ul className="space-y-3">
-              {serviceLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-8">
+              {/* Explore */}
+              <div>
+                <h3 className="label-micro text-ivory/40 mb-5">Explore</h3>
+                <ul className="space-y-3">
+                  {exploreLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          {/* Legal */}
-          <div>
-            <h3 className="label-interface text-ivory/40 mb-6">Legal</h3>
-            <ul className="space-y-3">
-              {legalLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+              {/* Services */}
+              <div>
+                <h3 className="label-micro text-ivory/40 mb-5">Services</h3>
+                <ul className="space-y-3">
+                  {serviceLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Legal */}
+              <div>
+                <h3 className="label-micro text-ivory/40 mb-5">Legal</h3>
+                <ul className="space-y-3">
+                  {legalLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-sm text-ivory/70 hover:text-ivory transition-colors cursor-view"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Bottom bar */}
         <hr className="editorial-rule-light my-12" />
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <p className="label-micro text-ivory/30">
+          <p className="label-micro text-ivory/25">
             &copy; {year} Casa Aurelia. All rights reserved.
           </p>
           <p className="label-micro text-ivory/20">

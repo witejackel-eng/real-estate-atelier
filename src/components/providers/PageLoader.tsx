@@ -79,7 +79,7 @@ export function PageLoader() {
               style={{
                 width: `${count}%`,
                 height: '100%',
-                background: 'var(--color-chartreuse)',
+                background: 'var(--color-gold)',
                 transition: 'width 0.1s linear',
               }}
             />

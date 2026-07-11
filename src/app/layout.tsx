@@ -71,6 +71,7 @@ export default function RootLayout({
           <CursorManager />
           <ScrollProgress />
           <Header />
+          <Header />
           <main id="main-content">
             {children}
           </main>

@@ -54,7 +54,7 @@ export function CursorManager() {
       const label = document.createElement('span');
       label.className = 'cursor-label';
       label.textContent = 'VIEW';
-      label.style.cssText = 'font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-cobalt);pointer-events:none;';
+      label.style.cssText = 'font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-gold);pointer-events:none;';
       dot.appendChild(label);
     };
     const removeViewing = () => {

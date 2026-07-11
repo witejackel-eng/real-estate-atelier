@@ -4,7 +4,7 @@ import { AboutClient } from '@/components/about/AboutClient';
 export const metadata = createMetadata({
   title: 'About',
   description:
-    'Casa Aurelia is a deliberate real-estate practice where client clarity matters more than commission timelines. Learn about our philosophy, selection process, and the cities we serve.',
+    'A deliberate real-estate practice. Fewer listings, more attention, clear advice, straightforward communication.',
   path: '/about',
 });
 

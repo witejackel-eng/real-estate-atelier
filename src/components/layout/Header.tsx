@@ -76,14 +76,22 @@ export function Header() {
         }}
       >
         <div className="container-site flex items-center justify-between h-16 lg:h-20">
-          {/* Left: Logo */}
-          <Link
-            href="/"
-            className="font-display text-lg lg:text-xl tracking-tight cursor-view"
-            style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-espresso)' }}
-          >
-            Casa Aurelia
-          </Link>
+          {/* Left: Logo + Atelier label */}
+          <div className="flex items-center">
+            <Link
+              href="/"
+              className="font-display text-lg lg:text-xl tracking-tight cursor-view"
+              style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-espresso)' }}
+            >
+              Casa Aurelia
+            </Link>
+            <span
+              className="hidden sm:inline label-micro ml-2 opacity-40"
+              style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-warm-grey)' }}
+            >
+              Atelier 01
+            </span>
+          </div>
 
           {/* Center: Page label (desktop) */}
           <div className="hidden lg:block absolute left-1/2 -translate-x-1/2">
@@ -107,7 +115,7 @@ export function Header() {
             </button>
             <Link
               href="/sell"
-              className="btn-primary text-[10px] px-4 py-2 cursor-view"
+              className="btn-outline-dark text-[10px] px-3 py-1.5 cursor-view"
             >
               List Your Home
             </Link>
@@ -115,13 +123,13 @@ export function Header() {
 
           {/* Right: Mobile hamburger */}
           <button
-            className="lg:hidden flex flex-col gap-1.5 p-2 cursor-view"
+            className="lg:hidden flex flex-col gap-1.5 p-3 cursor-view"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-espresso)' }}
           >
-            <span className="block w-6 h-px bg-current" />
-            <span className="block w-4 h-px bg-current ml-auto" />
+            <span className="block w-7 h-px bg-current" />
+            <span className="block w-5 h-px bg-current ml-auto" />
           </button>
         </div>
       </header>
@@ -179,13 +187,13 @@ export function Header() {
                       <span
                         className="label-micro transition-colors duration-300"
                         style={{
-                          color: hoveredItem === i || isActive ? 'var(--color-chartreuse)' : 'rgba(242,238,229,0.3)',
+                          color: hoveredItem === i || isActive ? 'var(--color-gold)' : 'rgba(242,238,229,0.3)',
                         }}
                       >
                         {item.num}
                       </span>
                       <span
-                        className="font-display text-4xl lg:text-7xl transition-colors duration-300"
+                        className="font-display text-3xl lg:text-6xl transition-colors duration-300"
                         style={{
                           color: hoveredItem === i || isActive ? 'var(--color-ivory)' : 'rgba(242,238,229,0.5)',
                         }}
@@ -194,7 +202,7 @@ export function Header() {
                       </span>
                       {isActive && (
                         <span
-                          className="hidden lg:block w-2 h-2 rounded-full bg-chartreuse ml-4"
+                          className="hidden lg:block w-2 h-2 rounded-full bg-sand ml-4"
                         />
                       )}
                     </Link>
@@ -205,7 +213,7 @@ export function Header() {
           </nav>
 
           {/* Bottom info */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pt-8 border-t border-ivory/10">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pt-10 border-t border-ivory/10">
             <Link
               href="/sell"
               onClick={() => setMenuOpen(false)}

@@ -4,7 +4,7 @@ import { ContactClient } from '@/components/contact/ContactClient';
 export const metadata = createMetadata({
   title: 'Contact',
   description:
-    'Get in touch with Casa Aurelia for property inquiries, valuations, or general questions. We respond within 24 hours.',
+    'Start a private conversation about your next home. Contact Casa Aurelia for property enquiries, advisory, or selling.',
   path: '/contact',
 });
 

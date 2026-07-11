@@ -132,7 +132,7 @@ function ScrollChevron() {
         height="24"
         viewBox="0 0 16 24"
         fill="none"
-        className="animate-bounce"
+        className="animate-slow-pulse"
         aria-hidden="true"
       >
         <path
@@ -160,7 +160,7 @@ function PropertyIndex({ index }: { index: number }) {
 function SellerStep({ number, title, description }: { number: string; title: string; description: string }) {
   return (
     <div className="flex gap-4 items-start">
-      <span className="label-micro text-cobalt font-bold text-sm mt-0.5 shrink-0">{number}</span>
+      <span className="label-micro text-gold font-bold text-sm mt-0.5 shrink-0">{number}</span>
       <div>
         <h4 className="font-body text-sm font-semibold text-espresso mb-1">{title}</h4>
         <p className="body-copy text-warm-grey text-sm !text-[14px] !leading-relaxed">{description}</p>
@@ -192,20 +192,47 @@ export default function HomePage() {
 
 /* ─── N°000 — Hero ─── */
 function HeroSection() {
+  const heroImgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const img = heroImgRef.current;
+    if (!img) return;
+    const start = performance.now();
+    const duration = 2000;
+
+    const animate = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const scale = 1.05 - 0.05 * eased;
+      img.style.transform = `scale(${scale})`;
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, []);
+
   return (
     <section
       className="relative min-h-screen flex flex-col justify-end overflow-hidden pt-20 lg:pt-24"
       aria-label="Hero"
     >
+      {/* Crosshair overlay */}
+      <div className="crosshair-overlay" />
+
       {/* Background image */}
       <div className="absolute inset-0 z-0">
         <Image
+          ref={heroImgRef}
           src="/images/hero-main.jpg"
           alt="Luxury residential interior with warm natural light"
           fill
           sizes="100vw"
           priority
           className="object-cover"
+          style={{ transform: 'scale(1.05)' }}
         />
         <div
           className="absolute inset-0"
@@ -221,13 +248,13 @@ function HeroSection() {
         <div className="mb-6">
           <h1 className="display-hero text-ivory">
             Live{' '}
-            <em className="text-chartreuse" style={{ fontStyle: 'italic' }}>
+            <em className="text-gold" style={{ fontStyle: 'italic' }}>
               remarkably.
             </em>
           </h1>
         </div>
 
-        <p className="body-copy-light opacity-70 max-w-lg mb-8">
+        <p className="body-copy-light opacity-55 max-w-lg mb-8">
           Private residential advisory for considered homes across India.
         </p>
 
@@ -252,11 +279,11 @@ function HeroSection() {
 /* ─── N°001 — The Collection ─── */
 function CollectionSection() {
   return (
-    <section className="py-16 md:py-24 lg:py-32" aria-label="Featured Properties">
+    <section className="section-py" aria-label="Featured Properties">
       <div className="container-site">
         {/* Section header */}
         <RevealDiv className="mb-12 md:mb-16 lg:mb-24">
-          <span className="section-number block mb-4">001</span>
+          <span className="section-number block mb-4">N°001</span>
           <h2 className="display-section text-espresso">Homes with a point of view.</h2>
           <p className="body-copy text-warm-grey mt-6 max-w-xl">
             Each property in our collection has been visited, assessed, and selected.
@@ -274,7 +301,7 @@ function CollectionSection() {
         <div className="mt-12 md:mt-16">
           <Link
             href="/properties"
-            className="label-interface text-espresso hover:text-cobalt transition-colors duration-200 inline-flex items-center gap-2 group"
+            className="label-interface text-espresso hover:text-gold transition-colors duration-200 inline-flex items-center gap-2 group"
           >
             View the full collection
             <ArrowIcon className="transition-transform duration-200 group-hover:translate-x-1" />
@@ -298,7 +325,7 @@ function PropertyRow({
   return (
     <RevealDiv
       as="article"
-      className={`grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 py-10 md:py-14 border-t border-espresso/[0.08]`}
+      className={`grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 py-10 md:py-14 border-t border-espresso/[0.06]`}
       translateY={40}
     >
       {/* Image */}
@@ -330,7 +357,7 @@ function PropertyRow({
         <div className="grid grid-cols-2 gap-x-6 gap-y-3 mb-6">
           <div>
             <span className="label-micro text-warm-grey block mb-0.5">Price</span>
-            <span className="font-body text-sm text-espresso font-medium">{property.price}</span>
+            <span className="font-mono text-sm text-espresso font-medium">{property.price}</span>
           </div>
           <div>
             <span className="label-micro text-warm-grey block mb-0.5">Type</span>
@@ -348,7 +375,7 @@ function PropertyRow({
 
         <Link
           href={`/properties/${property.slug}`}
-          className="label-interface text-cobalt hover:text-espresso transition-colors duration-200 inline-flex items-center gap-2 group self-start"
+          className="label-interface text-gold hover:text-espresso transition-colors duration-200 inline-flex items-center gap-2 group self-start"
         >
           View property
           <SmallArrowIcon className="transition-transform duration-200 group-hover:translate-x-1" />
@@ -367,11 +394,11 @@ function MethodSection() {
   ];
 
   return (
-    <section className="bg-cobalt py-16 md:py-24 lg:py-32" aria-label="Our Method">
+    <section className="bg-espresso section-py" aria-label="Our Method">
       <div className="container-site">
         <RevealDiv className="mb-12 md:mb-16 lg:mb-20" translateY={30}>
           <span className="section-number block mb-4" style={{ color: 'rgba(242,238,229,0.4)' }}>
-            002
+            N°002
           </span>
           <h2 className="display-section text-ivory">Less noise. Better decisions.</h2>
         </RevealDiv>
@@ -380,12 +407,12 @@ function MethodSection() {
           {principles.map((p, i) => (
             <RevealDiv key={p.num} delay={i * 120} translateY={24}>
               <div className="flex items-baseline gap-4 md:gap-6">
-                <span className="label-micro text-chartreuse text-sm md:text-base font-bold tracking-wider shrink-0">
+                <span className="label-micro text-gold text-sm md:text-base font-bold tracking-wider shrink-0">
                   {p.num}
                 </span>
                 <h3 className="heading-property text-ivory">{p.title}</h3>
               </div>
-              <p className="body-copy-light opacity-60 mt-2 ml-0 md:ml-[calc(1ch+1.5rem+1.5rem)]">
+              <p className="body-copy-light opacity-50 mt-2 ml-0 md:ml-[calc(1ch+1.5rem+1.5rem)]">
                 {p.description}
               </p>
             </RevealDiv>
@@ -399,10 +426,10 @@ function MethodSection() {
 /* ─── N°003 — Places ─── */
 function PlacesSection() {
   return (
-    <section className="py-16 md:py-24 lg:py-32" aria-label="Places">
+    <section className="section-py" aria-label="Places">
       <div className="container-site mb-12 md:mb-16 lg:mb-20">
         <RevealDiv>
-          <span className="section-number block mb-4">003</span>
+          <span className="section-number block mb-4">N°003</span>
           <h2 className="display-section text-espresso">A life, placed well.</h2>
         </RevealDiv>
       </div>
@@ -454,10 +481,10 @@ function CityCard({
         </p>
         <Link
           href={`/properties?city=${encodeURIComponent(neighborhood.name)}`}
-          className="label-interface text-ivory/80 hover:text-chartreuse transition-colors duration-200 inline-flex items-center gap-2 group/link"
+          className="btn-ghost !text-ivory/70 hover:!text-gold"
         >
           Explore
-          <SmallArrowIcon className="transition-transform duration-200 group-hover/link:translate-x-1" />
+          <SmallArrowIcon />
         </Link>
       </div>
 
@@ -499,14 +526,14 @@ function SellersSection() {
   ];
 
   return (
-    <section className="py-16 md:py-24 lg:py-32" aria-label="For Sellers">
+    <section className="section-py" aria-label="For Sellers">
       <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left: text content */}
           <div className="flex flex-col justify-between">
             <div>
               <RevealDiv className="mb-8 md:mb-12" translateY={30}>
-                <span className="section-number block mb-4">004</span>
+                <span className="section-number block mb-4">N°004</span>
                 <h2 className="display-section text-espresso">
                   Your home,
                   <br />
@@ -573,11 +600,11 @@ function StandardSection() {
   ];
 
   return (
-    <section className="bg-chartreuse py-16 md:py-24 lg:py-32" aria-label="Our Standards">
+    <section className="bg-paper section-py" aria-label="Our Standards">
       <div className="container-site">
         <RevealDiv className="mb-12 md:mb-16 lg:mb-20" translateY={30}>
-          <span className="section-number block mb-4" style={{ color: 'rgba(23,19,16,0.35)' }}>
-            005
+          <span className="section-number block mb-4" style={{ color: 'rgba(23,19,16,0.3)' }}>
+            N°005
           </span>
           <h2 className="display-section text-espresso">
             Personal attention.
@@ -608,21 +635,21 @@ function StandardSection() {
 function FinalCTASection() {
   return (
     <section
-      className="relative min-h-screen flex items-center justify-center bg-cobalt overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center bg-espresso overflow-hidden"
       aria-label="Get in Touch"
     >
       <RevealDiv className="container-site text-center" as="div" translateY={40}>
-        <span className="section-number block mb-6" style={{ color: 'rgba(242,238,229,0.4)' }}>
-          006
+        <span className="section-number block mb-6" style={{ color: 'rgba(247,241,232,0.3)' }}>
+          N°006
         </span>
         <h2 className="display-hero text-ivory">
           Let&apos;s find
           <br />
-          <em className="text-chartreuse" style={{ fontStyle: 'italic' }}>
+          <em className="text-gold" style={{ fontStyle: 'italic' }}>
             the one.
           </em>
         </h2>
-        <p className="body-copy-light opacity-60 mt-6 max-w-md mx-auto mb-10">
+        <p className="body-copy-light opacity-50 mt-6 max-w-md mx-auto mb-10">
           Start a private conversation about your next home.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

@@ -368,7 +368,7 @@ function ScrollListItem({
         {/* Number */}
         <span
           className={`label-micro shrink-0 w-6 transition-colors duration-500 ${
-            active ? 'text-cobalt' : 'text-espresso/20'
+            active ? 'text-gold' : 'text-espresso/20'
           }`}
         >
           {String(index + 1).padStart(2, '0')}
@@ -378,7 +378,7 @@ function ScrollListItem({
           {/* Line treatment */}
           <div
             className={`h-px transition-all duration-700 ease-out mb-4 ${
-              active ? 'w-16 bg-cobalt' : 'w-0 bg-cobalt'
+              active ? 'w-16 bg-espresso' : 'w-0 bg-espresso'
             }`}
             aria-hidden="true"
           />

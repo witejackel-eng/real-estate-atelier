@@ -4,7 +4,7 @@ import { createMetadata } from '@/lib/seo';
 export const metadata = createMetadata({
   title: 'The Collection',
   description:
-    'A considered selection of residential properties across India\'s most compelling cities — villas, penthouses, apartments, duplexes, heritage homes, and weekend retreats.',
+    'A curated selection of premium residential properties across India. Filter by city, type, bedrooms, and price.',
   path: '/properties',
 });
 

@@ -255,7 +255,7 @@ export function PropertyDetailClient({
             <button
               type="button"
               onClick={() => openLightbox(0)}
-              className="relative w-full h-[60vh] sm:h-[65vh] lg:h-[70vh] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-inset"
+              className="relative w-full h-[60vh] sm:h-[65vh] lg:h-[70vh] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset"
               aria-label={`View ${galleryAltTexts[0]}`}
             >
               <Image
@@ -282,7 +282,7 @@ export function PropertyDetailClient({
                     <button
                       type="button"
                       onClick={() => openLightbox(1)}
-                      className="sm:col-span-2 relative aspect-[16/9] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-inset"
+                      className="sm:col-span-2 relative aspect-[16/9] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset"
                       aria-label={`View ${galleryAltTexts[1]}`}
                     >
                       <Image
@@ -299,7 +299,7 @@ export function PropertyDetailClient({
                     <button
                       type="button"
                       onClick={() => openLightbox(2)}
-                      className="relative aspect-[4/3] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-inset"
+                      className="relative aspect-[4/3] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset"
                       aria-label={`View ${galleryAltTexts[2]}`}
                     >
                       <Image
@@ -379,13 +379,13 @@ export function PropertyDetailClient({
                         : `Save ${property.title} to favorites`
                     }
                     onClick={toggleFavorite}
-                    className="min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full p-2 border border-espresso/12 hover:border-cobalt/40 transition-colors"
+                    className="min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full p-2 border border-espresso/12 hover:border-gold/40 transition-colors"
                   >
                     <Heart
                       size={20}
                       className={
                         isFavorited
-                          ? 'fill-cobalt stroke-cobalt'
+                          ? 'fill-gold stroke-gold'
                           : 'fill-none stroke-espresso/50'
                       }
                     />
@@ -461,7 +461,7 @@ export function PropertyDetailClient({
                               i < property.features.length - 1 && 'border-b border-espresso/8'
                             )}
                           >
-                            <span className="h-1 w-1 rounded-full bg-chartreuse shrink-0 mt-1.5" aria-hidden="true" />
+                            <span className="h-1 w-1 rounded-full bg-sand shrink-0 mt-1.5" aria-hidden="true" />
                             <span className="body-copy text-espresso">{feature}</span>
                           </li>
                         ))}
@@ -480,7 +480,7 @@ export function PropertyDetailClient({
                               i < property.amenities.length - 1 && 'border-b border-espresso/8'
                             )}
                           >
-                            <span className="h-1 w-1 rounded-full bg-cobalt shrink-0 mt-1.5" aria-hidden="true" />
+                            <span className="h-1 w-1 rounded-full bg-espresso shrink-0 mt-1.5" aria-hidden="true" />
                             <span className="body-copy text-espresso">{amenity}</span>
                           </li>
                         ))}
@@ -533,8 +533,8 @@ export function PropertyDetailClient({
               {/* Success state */}
               {submitStatus === 'success' ? (
                 <div className="text-center py-12">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full border border-chartreuse/40 mb-6">
-                    <span className="text-chartreuse text-2xl">✓</span>
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full border border-gold/40 mb-6">
+                    <span className="text-gold text-2xl">✓</span>
                   </div>
                   <h3 className="heading-property text-ivory mb-3">Thank you</h3>
                   <p className="body-copy-light text-ivory/60 max-w-[400px] mx-auto mb-6">
@@ -553,7 +553,7 @@ export function PropertyDetailClient({
                   {/* Name */}
                   <div>
                     <label htmlFor="inquiry-name" className="label-micro text-warm-grey block mb-2">
-                      Name <span aria-hidden="true" className="text-chartreuse">*</span>
+                      Name <span aria-hidden="true" className="text-gold">*</span>
                     </label>
                     <input
                       id="inquiry-name"
@@ -569,7 +569,7 @@ export function PropertyDetailClient({
                   {/* Email */}
                   <div>
                     <label htmlFor="inquiry-email" className="label-micro text-warm-grey block mb-2">
-                      Email <span aria-hidden="true" className="text-chartreuse">*</span>
+                      Email <span aria-hidden="true" className="text-gold">*</span>
                     </label>
                     <input
                       id="inquiry-email"
@@ -585,7 +585,7 @@ export function PropertyDetailClient({
                   {/* Phone */}
                   <div>
                     <label htmlFor="inquiry-phone" className="label-micro text-warm-grey block mb-2">
-                      Phone <span aria-hidden="true" className="text-chartreuse">*</span>
+                      Phone <span aria-hidden="true" className="text-gold">*</span>
                     </label>
                     <input
                       id="inquiry-phone"
@@ -629,7 +629,7 @@ export function PropertyDetailClient({
 
                   {/* Error message */}
                   {formError && (
-                    <div className="flex items-start gap-2 text-sm text-chartreuse" role="alert">
+                    <div className="flex items-start gap-2 text-sm text-gold" role="alert">
                       <span className="shrink-0 mt-0.5">⚠</span>
                       <span className="body-copy-light">{formError}</span>
                     </div>
@@ -650,6 +650,9 @@ export function PropertyDetailClient({
                       <span>Submit Enquiry</span>
                     )}
                   </button>
+                  <p className="label-micro text-ivory/25 mt-4">
+                    This is a demonstration website. No data is transmitted.
+                  </p>
                 </form>
               )}
             </div>
@@ -686,7 +689,7 @@ export function PropertyDetailClient({
                         </div>
 
                         {/* Title */}
-                        <h3 className="heading-property text-espresso mb-1 group-hover:text-cobalt transition-colors">
+                        <h3 className="heading-property text-espresso mb-1 group-hover:text-gold transition-colors">
                           {p.title}
                         </h3>
 

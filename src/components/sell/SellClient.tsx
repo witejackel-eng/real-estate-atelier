@@ -239,7 +239,7 @@ export function SellClient() {
                 <RevealDiv key={step.number} delay={0.1 + i * 0.06}>
                   <li className="relative pl-14 md:pl-20">
                     <div
-                      className="absolute left-[18px] md:left-[26px] top-1.5 w-[11px] h-[11px] rounded-full border-2 border-cobalt/40 bg-ivory"
+                      className="absolute left-[18px] md:left-[26px] top-1.5 w-[11px] h-[11px] rounded-full border-2 border-gold/40 bg-ivory"
                       aria-hidden="true"
                     />
                     <span className="label-micro text-warm-grey">{step.number}</span>
@@ -273,6 +273,9 @@ export function SellClient() {
             </h2>
           </RevealDiv>
           <RevealDiv delay={0.12}>
+            <p className="body-copy-light opacity-40 text-sm max-w-md mb-8">
+              No public listing without approval. No open-house pressure. No inflated promises.
+            </p>
             <p className="body-copy-light opacity-70 mb-10">
               Fill in the details below and we&apos;ll get back to you with a preliminary assessment.
             </p>
@@ -414,6 +417,9 @@ export function SellClient() {
                 </a>
                 . This is a demonstration website — submissions are logged locally.
               </p>
+              <p className="label-micro text-ivory/25 mt-4">
+                This is a demonstration. No data is transmitted.
+              </p>
             </form>
           )}
         </div>
@@ -444,7 +450,7 @@ export function SellClient() {
                       {faq.question}
                     </span>
                     <span
-                      className="label-micro text-chartreuse mt-1 shrink-0 transition-transform duration-200 group-open:rotate-45"
+                      className="label-micro text-offwhite/60 mt-1 shrink-0 transition-transform duration-200 group-open:rotate-45"
                       aria-hidden="true"
                     >
                       +
@@ -502,7 +508,7 @@ function FieldGroup({
     <div className="flex flex-col gap-2">
       <label className="label-micro text-ivory/60">
         {label}
-        {required && <span className="text-chartreuse ml-1">*</span>}
+        {required && <span className="text-gold ml-1">*</span>}
       </label>
       {children}
     </div>

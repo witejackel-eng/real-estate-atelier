@@ -210,13 +210,13 @@ export function ContactClient() {
                 <div className="space-y-3 mb-8">
                   <Link
                     href="/properties"
-                    className="block body-copy text-cobalt hover:text-cobalt/70 transition-colors cursor-view"
+                    className="block body-copy text-gold hover:text-gold/70 transition-colors cursor-view"
                   >
                     Browse properties &rarr;
                   </Link>
                   <Link
                     href="/sell"
-                    className="block body-copy text-cobalt hover:text-cobalt/70 transition-colors cursor-view"
+                    className="block body-copy text-gold hover:text-gold/70 transition-colors cursor-view"
                   >
                     Selling your home &rarr;
                   </Link>
@@ -283,9 +283,9 @@ export function ContactClient() {
                           required
                           className={`input-light ${
                             focused === 'name'
-                              ? 'border-cobalt'
+                              ? 'border-gold'
                               : fields.name.touched && fields.name.error
-                                ? 'border-red-400'
+                                ? 'field-error'
                                 : ''
                           }`}
                           placeholder="Your full name"
@@ -306,9 +306,9 @@ export function ContactClient() {
                           required
                           className={`input-light ${
                             focused === 'email'
-                              ? 'border-cobalt'
+                              ? 'border-gold'
                               : fields.email.touched && fields.email.error
-                                ? 'border-red-400'
+                                ? 'field-error'
                                 : ''
                           }`}
                           placeholder="you@example.com"
@@ -329,9 +329,9 @@ export function ContactClient() {
                           required
                           className={`input-light ${
                             focused === 'phone'
-                              ? 'border-cobalt'
+                              ? 'border-gold'
                               : fields.phone.touched && fields.phone.error
-                                ? 'border-red-400'
+                                ? 'field-error'
                                 : ''
                           }`}
                           placeholder="+91 98765 43210"
@@ -365,7 +365,7 @@ export function ContactClient() {
                         name="message"
                         rows={5}
                         className={`input-light resize-y ${
-                          focused === 'message' ? 'border-cobalt' : ''
+                          focused === 'message' ? 'border-gold' : ''
                         }`}
                         placeholder="Tell us how we can help..."
                         onBlur={handleBlur}
@@ -401,6 +401,9 @@ export function ContactClient() {
                       </a>
                       . We will not share your details with third parties.
                     </p>
+                    <p className="label-micro text-espresso/30 mt-4">
+                      This is a demonstration website. No data is transmitted.
+                    </p>
                   </form>
                 )}
               </RevealDiv>
@@ -430,7 +433,7 @@ function FieldGroup({
     <div className="flex flex-col gap-2">
       <label className="label-mono text-espresso/50">
         {label}
-        {required && <span className="text-cobalt ml-1">*</span>}
+        {required && <span className="text-gold ml-1">*</span>}
       </label>
       {children}
       {error && (
