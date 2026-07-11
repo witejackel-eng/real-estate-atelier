@@ -1,136 +1,89 @@
-'use client';
-
-import React from 'react';
 import Link from 'next/link';
-import { Container } from '@/components/shared/Container';
 
-const footerLinks = {
-  explore: [
-    { label: 'All Properties', href: '/properties' },
-    { label: 'Neighborhoods', href: '/neighborhoods' },
-    { label: 'Sell With Us', href: '/sell' },
-    { label: 'About Us', href: '/about' },
-  ],
-  services: [
-    { label: 'Buy a Home', href: '/properties' },
-    { label: 'Sell a Property', href: '/sell' },
-    { label: 'Property Valuation', href: '/sell' },
-    { label: 'Contact an Advisor', href: '/contact' },
-  ],
-  legal: [
-    { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms of Service', href: '/terms' },
-    { label: 'Image Credits', href: '/images/image-credits.json' },
-  ],
-};
+const exploreLinks = [
+  { label: 'Properties', href: '/properties' },
+  { label: 'Neighborhoods', href: '/neighborhoods' },
+  { label: 'About', href: '/about' },
+];
 
-function LiveTime() {
-  const [time, setTime] = React.useState('');
-  React.useEffect(() => {
-    const update = () => {
-      setTime(
-        new Date().toLocaleTimeString('en-IN', {
-          timeZone: 'Asia/Kolkata',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: true,
-        })
-      );
-    };
-    update();
-    const id = setInterval(update, 1000);
-    return () => clearInterval(id);
-  }, []);
-  return <span>{time} IST</span>;
+const servicesLinks = [
+  { label: 'Sell Your Home', href: '/sell' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const legalLinks = [
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms of Service', href: '/terms' },
+];
+
+function FooterLinkGroup({
+  heading,
+  links,
+}: {
+  heading: string;
+  links: readonly { label: string; href: string }[];
+}) {
+  return (
+    <div>
+      <h4 className="font-mono text-xs uppercase tracking-wider text-gold mb-4">
+        {heading}
+      </h4>
+      <ul>
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className="block py-1 text-sm text-offwhite/60 hover:text-offwhite transition-colors"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export function Footer() {
   return (
     <footer className="bg-espresso text-offwhite/80 mt-auto">
-      <Container>
-        <div className="py-16 md:py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
-            <div className="lg:col-span-2">
-              <Link href="/" className="font-display text-2xl text-offwhite tracking-tight">
-                Casa Aurelia
-              </Link>
-              <p className="font-body text-sm text-offwhite/50 mt-4 max-w-sm leading-relaxed">
-                A premium real estate studio for curated homes, private viewings, and calm
-                buying decisions across India&apos;s finest addresses.
-              </p>
-              <div className="flex gap-6 mt-6">
-                <span className="font-mono text-xs text-gold/70 tracking-wider">Instagram</span>
-                <span className="font-mono text-xs text-gold/70 tracking-wider">LinkedIn</span>
-                <span className="font-mono text-xs text-gold/70 tracking-wider">Twitter</span>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-[0.15em] text-gold mb-4">Explore</h4>
-              <ul className="space-y-3">
-                {footerLinks.explore.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="font-body text-sm text-offwhite/50 hover:text-offwhite transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-[0.15em] text-gold mb-4">Services</h4>
-              <ul className="space-y-3">
-                {footerLinks.services.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="font-body text-sm text-offwhite/50 hover:text-offwhite transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-[0.15em] text-gold mb-4">Legal</h4>
-              <ul className="space-y-3">
-                {footerLinks.legal.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="font-body text-sm text-offwhite/50 hover:text-offwhite transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-offwhite/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-              <p className="font-mono text-xs text-offwhite/30">
-                &copy; {new Date().getFullYear()} Casa Aurelia. All rights reserved.
-              </p>
-              <span className="hidden sm:inline text-offwhite/10">|</span>
-              <p className="font-mono text-xs text-offwhite/30">
-                New Delhi, India &middot; hello@casaaurelia.com &middot; +91 90000 00000
-              </p>
-            </div>
-            <p className="font-mono text-xs text-offwhite/30">
-              <LiveTime />
+      <div className="max-w-[1360px] mx-auto px-5 sm:px-6 lg:px-16 border-t border-offwhite/10">
+        {/* 4-column grid */}
+        <div className="py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
+          {/* Column 1: Brand */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <Link
+              href="/"
+              className="font-display text-lg text-offwhite"
+            >
+              Casa Aurelia
+            </Link>
+            <p className="mt-3 text-sm text-offwhite/50 leading-relaxed max-w-xs">
+              Curated residential properties across India&apos;s most
+              sought-after cities.
             </p>
           </div>
+
+          {/* Column 2: Explore */}
+          <FooterLinkGroup heading="Explore" links={exploreLinks} />
+
+          {/* Column 3: Services */}
+          <FooterLinkGroup heading="Services" links={servicesLinks} />
+
+          {/* Column 4: Legal */}
+          <FooterLinkGroup heading="Legal" links={legalLinks} />
         </div>
-      </Container>
+
+        {/* Bottom bar */}
+        <div className="border-t border-offwhite/10 py-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <p className="text-xs text-offwhite/40">
+            &copy; {new Date().getFullYear()} Casa Aurelia. All rights reserved.
+          </p>
+          <p className="text-xs text-offwhite/40">
+            Demo property platform — for demonstration purposes only.
+          </p>
+        </div>
+      </div>
     </footer>
   );
 }

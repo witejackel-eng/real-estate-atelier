@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
 import { PropertiesClient } from '@/components/properties/PropertiesClient';
+import { createMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Properties — Casa Aurelia',
-  description:
-    'Browse our curated collection of premium properties across India. Filter by city, type, bedrooms, and price to find your perfect home.',
-  openGraph: {
-    title: 'Properties — Casa Aurelia',
-    description:
-      'Browse our curated collection of premium properties across India.',
-  },
-};
+export const metadata = createMetadata({
+  title: 'Properties',
+  description: 'Browse our curated collection of premium residential properties across India — villas, penthouses, apartments, and heritage homes.',
+  path: '/properties',
+});
 
-export default function PropertiesPage() {
-  return <PropertiesClient />;
+export default async function PropertiesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  return <PropertiesClient initialSearchParams={params} />;
 }

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SmoothScroll } from "@/components/shared/SmoothScroll";
-import { Preloader } from "@/components/shared/Preloader";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -28,8 +26,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://casaaurelia.com'),
   title: {
-    default: "Casa Aurelia — Curated Premium Real Estate",
-    template: "%s — Casa Aurelia",
+    default: "Casa Aurelia | Curated Premium Real Estate",
+    template: "%s | Casa Aurelia",
   },
   description: "A premium real estate studio for curated homes, private viewings, property selling, and calm buying decisions.",
   keywords: ["luxury real estate", "premium homes India", "villas", "penthouses", "property advisory"],
@@ -55,15 +53,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable} ${geistMono.variable}`}>
-      <body className="font-body antialiased bg-ivory text-espresso">
-        <Preloader />
-        <SmoothScroll>
-          <Header />
-          <main id="main-content">
-            {children}
-          </main>
-          <Footer />
-        </SmoothScroll>
+      <body className="font-body antialiased bg-ivory text-espresso min-h-screen flex flex-col">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-espresso focus:text-offwhite focus:text-sm focus:font-mono focus:tracking-wider focus:uppercase focus:rounded-sm">
+          Skip to content
+        </a>
+        <Header />
+        <main id="main-content">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
