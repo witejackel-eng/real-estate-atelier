@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useInView } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 interface RevealProps {
@@ -11,12 +11,12 @@ interface RevealProps {
   direction?: 'up' | 'down' | 'left' | 'right' | 'none';
 }
 
-const directionOffset = {
-  up: { y: 12, x: 0 },
-  down: { y: -12, x: 0 },
-  left: { x: 12, y: 0 },
-  right: { x: -12, y: 0 },
-  none: { x: 0, y: 0 },
+const directionTransform = {
+  up: 'translateY(12px)',
+  down: 'translateY(-12px)',
+  left: 'translateX(12px)',
+  right: 'translateX(-12px)',
+  none: 'none',
 };
 
 export function Reveal({
@@ -26,28 +26,36 @@ export function Reveal({
   direction = 'up',
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const isInView = useInView(ref, { once: true, margin: '-60px' });
 
-  const offset = directionOffset[direction];
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  // Content is ALWAYS visible (opacity: 1). Motion is progressive enhancement.
+  // Before mount: render plain div (matches server HTML exactly)
+  if (!mounted) {
+    return (
+      <div ref={ref} className={cn(className)}>
+        {children}
+      </div>
+    );
+  }
+
+  // After mount: apply CSS transitions (client-only, no hydration risk)
+  const shouldAnimate = !isInView;
+
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={{ opacity: 1, ...offset }}
-      animate={
-        isInView
-          ? { opacity: 1, x: 0, y: 0 }
-          : { opacity: 1, ...offset }
-      }
-      transition={{
-        duration: 0.7,
-        delay,
-        ease: [0.22, 1, 0.36, 1],
-      }}
       className={cn(className)}
+      style={{
+        opacity: shouldAnimate ? 0 : 1,
+        transform: shouldAnimate ? directionTransform[direction] : 'none',
+        transition: `opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

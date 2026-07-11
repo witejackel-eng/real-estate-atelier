@@ -13,6 +13,7 @@ import { getFeaturedProperties, type Property } from '@/data/properties';
 const FAVORITES_KEY = 'casaaurelia_favorites';
 
 function readFavorites(): string[] {
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(FAVORITES_KEY);
     return raw ? JSON.parse(raw) : [];
@@ -24,6 +25,7 @@ function readFavorites(): string[] {
 const emptyFavorites: string[] = [];
 
 function subscribeToFavorites(callback: () => void) {
+  if (typeof window === 'undefined') return () => {};
   window.addEventListener('storage', callback);
   return () => window.removeEventListener('storage', callback);
 }
