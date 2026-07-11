@@ -1,6 +1,5 @@
 'use client';
 
-import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -27,10 +26,26 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { rootMargin: '-60px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   // Before mount: render plain div (matches server HTML exactly)
@@ -43,7 +58,7 @@ export function Reveal({
   }
 
   // After mount: apply CSS transitions (client-only, no hydration risk)
-  const shouldAnimate = !isInView;
+  const shouldAnimate = !inView;
 
   return (
     <div

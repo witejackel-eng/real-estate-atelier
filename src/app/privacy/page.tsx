@@ -107,7 +107,7 @@ export default function PrivacyPage() {
 
             <section className="pt-6 border-t border-espresso/5">
               <p className="font-mono text-xs text-espresso/40">
-                Last updated: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                Last updated: July 2026
               </p>
             </section>
           </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useSyncExternalStore } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, ArrowRight } from 'lucide-react';
@@ -11,32 +11,6 @@ import { Reveal } from '@/components/shared/Reveal';
 import { getFeaturedProperties, type Property } from '@/data/properties';
 
 const FAVORITES_KEY = 'casaaurelia_favorites';
-
-function readFavorites(): string[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(FAVORITES_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-const emptyFavorites: string[] = [];
-
-function subscribeToFavorites(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
-}
-
-function useFavorites() {
-  return useSyncExternalStore(
-    subscribeToFavorites,
-    readFavorites,
-    () => emptyFavorites
-  );
-}
 
 function PropertyCard({ property, isFav, onToggle }: {
   property: Property;
@@ -106,19 +80,35 @@ function PropertyCard({ property, isFav, onToggle }: {
 }
 
 export function FeaturedProperties() {
-  const favorites = useFavorites();
+  // Use useState + useEffect instead of useSyncExternalStore to avoid hydration issues
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(FAVORITES_KEY);
+      if (raw) setFavorites(JSON.parse(raw));
+    } catch { /* ignore */ }
+
+    const onStorage = () => {
+      try {
+        const raw = localStorage.getItem(FAVORITES_KEY);
+        setFavorites(raw ? JSON.parse(raw) : []);
+      } catch { /* ignore */ }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   const toggleFavorite = useCallback((slug: string) => {
-    const current = readFavorites();
-    const next = current.includes(slug)
-      ? current.filter((s) => s !== slug)
-      : [...current, slug];
-    try {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
-      window.dispatchEvent(new StorageEvent('storage', { key: FAVORITES_KEY }));
-    } catch {
-      // Storage full or unavailable
-    }
+    setFavorites((prev) => {
+      const next = prev.includes(slug)
+        ? prev.filter((s) => s !== slug)
+        : [...prev, slug];
+      try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+      } catch { /* storage unavailable */ }
+      return next;
+    });
   }, []);
 
   const properties = getFeaturedProperties().slice(0, 6);
