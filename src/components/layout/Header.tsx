@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -25,156 +25,183 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isHome = pathname === '/';
 
+  /* ── Scroll detection ── */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Body scroll lock
+  /* ── Body scroll lock when menu is open ── */
   useEffect(() => {
     if (menuOpen) {
+      const prev = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      return () => {
+        document.body.style.overflow = prev;
+      };
     }
-    return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
-  // Escape to close
+  /* ── Escape key closes menu ── */
   useEffect(() => {
+    if (!menuOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && menuOpen) setMenuOpen(false);
+      if (e.key === 'Escape') setMenuOpen(false);
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  // Focus trap
-  const menuRef = useCallback((node: HTMLDivElement | null) => {
-    if (!node || !menuOpen) return;
-    const focusable = node.querySelectorAll<HTMLElement>(
+  /* ── Focus into menu when opened ── */
+  useEffect(() => {
+    if (!menuOpen || !menuRef.current) return;
+    const focusable = menuRef.current.querySelectorAll<HTMLElement>(
       'a[href], button, [tabindex]:not([tabindex="-1"])'
     );
-    if (focusable.length > 0) focusable[0].focus();
+    if (focusable.length > 0) {
+      requestAnimationFrame(() => focusable[0].focus());
+    }
   }, [menuOpen]);
+
+  /* ── Focus trap: Tab / Shift+Tab cycles within menu ── */
+  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab' || !menuRef.current) return;
+
+    const focusable = Array.from(
+      menuRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button, [tabindex]:not([tabindex="-1"])'
+      )
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, []);
 
   const isTransparent = isHome && !scrolled && !menuOpen;
   const pageLabel = pageLabels[pathname] || '';
 
+  /* ── Text color based on transparent/opaque state ── */
+  const textPrimary = isTransparent ? 'var(--color-white)' : 'var(--color-ink)';
+  const textMuted = isTransparent ? 'rgba(244,240,232,0.6)' : 'var(--color-muted)';
+  const textSubtle = isTransparent ? 'rgba(244,240,232,0.5)' : 'var(--color-muted)';
+
   return (
     <>
+      {/* ═══ Fixed Header Bar ═══ */}
       <header
-        className="fixed top-0 left-0 right-0 z-[150] transition-colors duration-300"
-        style={{
-          background: isTransparent ? 'transparent' : 'rgba(242, 238, 229, 0.92)',
-          backdropFilter: isTransparent ? 'none' : 'blur(12px)',
-          WebkitBackdropFilter: isTransparent ? 'none' : 'blur(12px)',
-        }}
+        className={`fixed top-0 left-0 right-0 transition-colors duration-300 ${
+          isTransparent
+            ? 'bg-transparent'
+            : 'bg-paper/95 backdrop-blur-md'
+        }`}
+        style={{ zIndex: 150 }}
       >
-        <div className="container-site flex items-center justify-between h-16 lg:h-20">
-          {/* Left: Logo + Atelier label */}
-          <div className="flex items-center">
+        <div
+          className="container-site flex items-center justify-between"
+          style={{ height: 'var(--header-h)' }}
+        >
+          {/* ── Left: Logo ── */}
+          <div className="flex items-center gap-2">
             <Link
               href="/"
-              className="font-display text-lg lg:text-xl tracking-tight cursor-view"
-              style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-espresso)' }}
+              className="font-display text-lg lg:text-xl tracking-tight transition-colors duration-300"
+              style={{ color: textPrimary }}
             >
               Casa Aurelia
             </Link>
             <span
-              className="hidden sm:inline label-micro ml-2 opacity-40"
-              style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-warm-grey)' }}
+              className="hidden lg:inline label-micro opacity-40 transition-colors duration-300"
+              style={{ color: isTransparent ? 'var(--color-white)' : 'var(--color-muted)' }}
             >
               Atelier 01
             </span>
           </div>
 
-          {/* Center: Page label (desktop) */}
+          {/* ── Center: Page Label (lg+) ── */}
           <div className="hidden lg:block absolute left-1/2 -translate-x-1/2">
             <span
-              className="label-interface"
-              style={{ color: isTransparent ? 'rgba(242,238,229,0.6)' : 'var(--color-warm-grey)' }}
+              className="label-interface transition-colors duration-300"
+              style={{ color: textMuted }}
             >
               {pageLabel}
             </span>
           </div>
 
-          {/* Right: Desktop */}
+          {/* ── Right: Desktop Controls (lg+) ── */}
           <div className="hidden lg:flex items-center gap-8">
             <button
               onClick={() => setMenuOpen(true)}
-              className="label-interface cursor-view"
-              style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-espresso)' }}
+              className="label-interface transition-colors duration-300"
+              style={{ color: textPrimary }}
               aria-label="Open menu"
             >
               Menu
             </button>
-            <Link
-              href="/sell"
-              className="btn-outline-dark text-[10px] px-3 py-1.5 cursor-view"
-            >
+            <Link href="/sell" className="btn-outline-dark">
               List Your Home
             </Link>
           </div>
 
-          {/* Right: Mobile hamburger */}
+          {/* ── Right: Mobile Hamburger (<lg) ── */}
           <button
-            className="lg:hidden flex flex-col gap-1.5 p-3 cursor-view"
+            className="lg:hidden flex flex-col justify-center items-end gap-[5px] w-10 h-10"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
-            style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-espresso)' }}
           >
-            <span className="block w-7 h-px bg-current" />
-            <span className="block w-5 h-px bg-current ml-auto" />
+            <span
+              className="block w-7 h-px transition-colors duration-300"
+              style={{ backgroundColor: textPrimary }}
+            />
+            <span
+              className="block w-5 h-px transition-colors duration-300"
+              style={{ backgroundColor: textPrimary }}
+            />
           </button>
         </div>
       </header>
 
-      {/* Full-screen menu */}
+      {/* ═══ Full-Screen Menu Overlay ═══ */}
       <div
         ref={menuRef}
         className={`menu-backdrop ${menuOpen ? 'open' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') setMenuOpen(false);
-          if (e.key === 'Tab') {
-            const focusable = e.currentTarget.querySelectorAll<HTMLElement>(
-              'a[href], button, [tabindex]:not([tabindex="-1"])'
-            );
-            if (focusable.length === 0) return;
-            const first = focusable[0];
-            const last = focusable[focusable.length - 1];
-            if (e.shiftKey && document.activeElement === first) {
-              e.preventDefault();
-              last.focus();
-            } else if (!e.shiftKey && document.activeElement === last) {
-              e.preventDefault();
-              first.focus();
-            }
-          }
-        }}
+        onKeyDown={handleMenuKeyDown}
       >
-        <div className="container-site h-full flex flex-col justify-between py-24 lg:py-32">
-          {/* Close */}
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="self-end label-interface text-ivory/60 hover:text-ivory transition-colors cursor-view"
-            aria-label="Close menu"
-          >
-            Close
-          </button>
+        <div className="container-site h-full flex flex-col justify-between py-12 lg:py-16">
+          {/* ── Close Button ── */}
+          <div className="flex justify-end">
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="label-interface text-white/50 hover:text-white transition-colors duration-300"
+              aria-label="Close menu"
+            >
+              Close
+            </button>
+          </div>
 
-          {/* Navigation links */}
-          <nav className="flex-1 flex flex-col justify-center">
-            <ul className="space-y-0">
+          {/* ── Numbered Navigation ── */}
+          <nav className="flex-1 flex flex-col justify-center" aria-label="Main navigation">
+            <ul className="space-y-0" role="list">
               {navItems.map((item, i) => {
                 const isActive = pathname === item.href;
+                const isHovered = hoveredItem === i;
                 return (
                   <li key={item.href}>
                     <Link
@@ -182,12 +209,14 @@ export function Header() {
                       onClick={() => setMenuOpen(false)}
                       onMouseEnter={() => setHoveredItem(i)}
                       onMouseLeave={() => setHoveredItem(null)}
-                      className="group flex items-baseline gap-6 lg:gap-10 py-4 lg:py-6 cursor-view"
+                      className="group flex items-baseline gap-4 sm:gap-6 lg:gap-10 py-3.5 sm:py-4 lg:py-6"
                     >
                       <span
-                        className="label-micro transition-colors duration-300"
+                        className="label-micro shrink-0 transition-colors duration-300"
                         style={{
-                          color: hoveredItem === i || isActive ? 'var(--color-gold)' : 'rgba(242,238,229,0.3)',
+                          color: isHovered || isActive
+                            ? 'var(--color-brass)'
+                            : 'rgba(244,240,232,0.25)',
                         }}
                       >
                         {item.num}
@@ -195,14 +224,18 @@ export function Header() {
                       <span
                         className="font-display text-3xl lg:text-6xl transition-colors duration-300"
                         style={{
-                          color: hoveredItem === i || isActive ? 'var(--color-ivory)' : 'rgba(242,238,229,0.5)',
+                          color: isHovered || isActive
+                            ? 'var(--color-white)'
+                            : 'rgba(244,240,232,0.45)',
                         }}
                       >
                         {item.label}
                       </span>
                       {isActive && (
                         <span
-                          className="hidden lg:block w-2 h-2 rounded-full bg-sand ml-4"
+                          className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 lg:mt-3"
+                          style={{ backgroundColor: 'var(--color-brass)' }}
+                          aria-hidden="true"
                         />
                       )}
                     </Link>
@@ -212,19 +245,18 @@ export function Header() {
             </ul>
           </nav>
 
-          {/* Bottom info */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pt-10 border-t border-ivory/10">
+          {/* ── Bottom: CTA + Tagline ── */}
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pt-8 lg:pt-10">
             <Link
               href="/sell"
               onClick={() => setMenuOpen(false)}
-              className="btn-primary w-fit cursor-view"
+              className="btn-primary w-fit"
             >
               List Your Home
             </Link>
-            <div className="label-micro text-ivory/30">
-              <p>Private residential advisory</p>
-              <p className="mt-1">Across India</p>
-            </div>
+            <p className="label-micro text-white/25">
+              Private residential advisory&nbsp;&nbsp;/&nbsp;&nbsp;Across India
+            </p>
           </div>
         </div>
       </div>

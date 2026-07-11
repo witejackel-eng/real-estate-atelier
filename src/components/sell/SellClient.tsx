@@ -1,55 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Loader2 } from 'lucide-react';
 import { cities, propertyTypes } from '@/data/properties';
-
-/* ────────────────────────────────────────────
-   Inline RevealDiv
-   ──────────────────────────────────────────── */
-function RevealDiv({
-  children,
-  className = '',
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(el);
-        }
-      },
-      { rootMargin: '-40px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'none' : 'translateY(16px)',
-        transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
+import { Reveal } from '@/components/shared/Reveal';
 
 /* ────────────────────────────────────────────
    Data
@@ -73,27 +29,32 @@ const steps = [
   {
     number: '01',
     title: 'Understand',
-    description: 'We assess your property\'s market position through comparable analysis and an honest conversation about your expectations.',
+    description:
+      "We assess your property's market position through comparable analysis and an honest conversation about your expectations.",
   },
   {
     number: '02',
     title: 'Prepare',
-    description: 'Professional photography, strategic staging advice, and copywriting that presents your property accurately.',
+    description:
+      'Professional photography, strategic staging advice, and copywriting that presents your property accurately.',
   },
   {
     number: '03',
     title: 'Market',
-    description: 'Targeted exposure to qualified buyers through our platform and network. We coordinate and attend every viewing.',
+    description:
+      'Targeted exposure to qualified buyers through our platform and network. We coordinate and attend every viewing.',
   },
   {
     number: '04',
     title: 'Negotiate',
-    description: 'Structured offer management, negotiation support, and coordination through to registration and handover.',
+    description:
+      'Structured offer management, negotiation support, and coordination through to registration and handover.',
   },
   {
     number: '05',
     title: 'Close',
-    description: 'We stay involved until the keys change hands. No handoffs, no disappearing acts.',
+    description:
+      'We stay involved until the keys change hands. No handoffs, no disappearing acts.',
   },
 ];
 
@@ -106,17 +67,17 @@ const faqs = [
   {
     question: 'How long does it typically take to sell a property?',
     answer:
-      'It varies significantly based on the property type, location, pricing, and market conditions. We provide an honest assessment of expected timelines during the valuation process rather than making promises we can\'t keep.',
+      "It varies significantly based on the property type, location, pricing, and market conditions. We provide an honest assessment of expected timelines during the valuation process rather than making promises we can't keep.",
   },
   {
     question: 'What are the costs involved in selling through Casa Aurelia?',
     answer:
-      'We discuss fees transparently during our initial conversation. There are no hidden charges. You\'ll know exactly what our engagement involves and what it costs before we begin working together.',
+      "We discuss fees transparently during our initial conversation. There are no hidden charges. You'll know exactly what our engagement involves and what it costs before we begin working together.",
   },
   {
     question: 'What should I do to prepare my property before the valuation?',
     answer:
-      'A well-maintained, decluttered property photographs and presents best. We\'ll provide specific staging guidance based on your property\'s characteristics during the preparation phase — there\'s no need to invest in renovations before speaking with us.',
+      "A well-maintained, decluttered property photographs and presents best. We'll provide specific staging guidance based on your property's characteristics during the preparation phase — there's no need to invest in renovations before speaking with us.",
   },
 ];
 
@@ -124,14 +85,16 @@ const faqs = [
    Component
    ──────────────────────────────────────────── */
 export function SellClient() {
-  const [formState, setFormState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [formState, setFormState] = useState<
+    'idle' | 'loading' | 'success' | 'error'
+  >('idle');
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
 
-    // Honeypot check
-    const honey = (form.elements.namedItem('_honey') as HTMLInputElement)?.value;
+    const honey = (form.elements.namedItem('_honey') as HTMLInputElement)
+      ?.value;
     if (honey) return;
 
     setFormState('loading');
@@ -162,95 +125,118 @@ export function SellClient() {
   return (
     <>
       {/* ── Hero ─────────────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number">N°002</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h1 className="display-page text-espresso mt-4 mb-8">
-              Your home deserves better than a listing.
-            </h1>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <p className="body-copy text-warm-grey max-w-xl mb-8">
-              We work with a limited number of sellers at a time, giving each property the
-              attention it deserves — from honest pricing to professional presentation and
-              qualified buyer matching.
-            </p>
-          </RevealDiv>
-          <RevealDiv delay={0.24}>
-            <a href="#valuation-form" className="btn-primary">
-              Request a Valuation
-            </a>
-          </RevealDiv>
+      <section className="section-py">
+        <div className="container-site">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Text — 7 cols */}
+            <div className="lg:col-span-7">
+              <Reveal>
+                <span className="section-number">N°002</span>
+              </Reveal>
+              <Reveal delay={80}>
+                <h1 className="display-page text-ink mt-4 mb-8">
+                  Your home deserves better than a listing.
+                </h1>
+              </Reveal>
+              <Reveal delay={160}>
+                <p className="body-copy text-muted max-w-xl mb-10">
+                  We work with a limited number of sellers at a time, giving
+                  each property the attention it deserves — from honest pricing
+                  to professional presentation and qualified buyer matching.
+                </p>
+              </Reveal>
+              <Reveal delay={240}>
+                <a href="#valuation-form" className="btn-primary">
+                  Request a Valuation
+                </a>
+              </Reveal>
+            </div>
+
+            {/* Image — 5 cols */}
+            <Reveal delay={200} className="lg:col-span-5">
+              <div className="relative aspect-[3/4] w-full overflow-hidden">
+                <Image
+                  src="/images/sell-hero.jpg"
+                  alt="Elegant home interior"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  priority
+                />
+              </div>
+            </Reveal>
+          </div>
         </div>
+        <hr className="rule-soft mt-16 lg:mt-24" />
       </section>
 
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
-
       {/* ── Why Presentation Matters ──────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
+      <section className="section-py">
         <div className="container-editorial">
-          <RevealDiv>
+          <Reveal>
             <span className="section-number">Presentation</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h2 className="heading-property text-espresso mt-4 mb-12">
+          </Reveal>
+          <Reveal delay={80}>
+            <h2 className="heading-property text-ink mt-4 mb-12">
               Why presentation matters
             </h2>
-          </RevealDiv>
-          <div className="space-y-10">
+          </Reveal>
+
+          <div className="space-y-0">
             {presentationPoints.map((point, i) => (
-              <RevealDiv key={point.title} delay={0.12 + i * 0.08}>
+              <Reveal key={point.title} delay={120 + i * 80}>
                 <article>
-                  <h3 className="font-display text-lg md:text-xl text-espresso mb-2">
-                    {point.title}
-                  </h3>
-                  <p className="body-copy text-warm-grey max-w-lg">
-                    {point.body}
-                  </p>
+                  <h3 className="heading-sub text-ink mb-2">{point.title}</h3>
+                  <p className="body-copy-muted max-w-lg">{point.body}</p>
                 </article>
-              </RevealDiv>
+                {i < presentationPoints.length - 1 && (
+                  <hr className="rule-soft my-10" />
+                )}
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
+      <hr className="rule mx-auto max-w-[1600px]" />
 
-      {/* ── Seller Process ───────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
+      {/* ── Selling Process ───────────────────── */}
+      <section className="section-py">
         <div className="container-editorial">
-          <RevealDiv>
+          <Reveal>
             <span className="section-number">Process</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h2 className="heading-property text-espresso mt-4 mb-12">
+          </Reveal>
+          <Reveal delay={80}>
+            <h2 className="heading-property text-ink mt-4 mb-14">
               How we sell your property
             </h2>
-          </RevealDiv>
+          </Reveal>
 
-          {/* Vertical process */}
           <div className="relative">
-            <div className="absolute left-[23px] md:left-[31px] top-0 bottom-0 w-px bg-espresso/10" aria-hidden="true" />
-            <ol className="space-y-12 md:space-y-14">
+            {/* Vertical line */}
+            <div
+              className="absolute left-[23px] md:left-[31px] top-2 bottom-2 w-px bg-ink/10"
+              aria-hidden="true"
+            />
+
+            <ol className="space-y-14 md:space-y-16">
               {steps.map((step, i) => (
-                <RevealDiv key={step.number} delay={0.1 + i * 0.06}>
-                  <li className="relative pl-14 md:pl-20">
+                <Reveal key={step.number} delay={100 + i * 60}>
+                  <li className="relative pl-16 md:pl-20">
+                    {/* Dot */}
                     <div
-                      className="absolute left-[18px] md:left-[26px] top-1.5 w-[11px] h-[11px] rounded-full border-2 border-gold/40 bg-ivory"
+                      className="absolute left-[18px] md:left-[26px] top-2 w-[11px] h-[11px] rounded-full border-2 border-brass/40 bg-paper"
                       aria-hidden="true"
                     />
-                    <span className="label-micro text-warm-grey">{step.number}</span>
-                    <h3 className="font-display text-lg md:text-xl text-espresso mt-1 mb-2">
-                      {step.title}
-                    </h3>
-                    <p className="body-copy text-warm-grey max-w-md">
+                    <span className="label-micro text-muted block mb-2">
+                      {step.number}
+                    </span>
+                    <h3 className="heading-sub text-ink mb-2">{step.title}</h3>
+                    <p className="body-copy-muted max-w-md">
                       {step.description}
                     </p>
                   </li>
-                </RevealDiv>
+                </Reveal>
               ))}
             </ol>
           </div>
@@ -260,197 +246,223 @@ export function SellClient() {
       {/* ── Valuation Form (Dark Section) ────── */}
       <section
         id="valuation-form"
-        className="py-20 md:py-28 lg:py-36 bg-espresso"
+        className="section-py bg-ink"
         aria-label="Valuation request form"
       >
-        <div className="container-form">
-          <RevealDiv>
-            <span className="section-number text-warm-grey">Valuation</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h2 className="heading-property text-ivory mt-4 mb-3">
-              Tell us about your property
-            </h2>
-          </RevealDiv>
-          <RevealDiv delay={0.12}>
-            <p className="body-copy-light opacity-40 text-sm max-w-md mb-8">
-              No public listing without approval. No open-house pressure. No inflated promises.
-            </p>
-            <p className="body-copy-light opacity-70 mb-10">
-              Fill in the details below and we&apos;ll get back to you with a preliminary assessment.
-            </p>
-          </RevealDiv>
-
-          {formState === 'success' ? (
-            <RevealDiv>
-              <div className="text-center py-16">
-                <p className="font-display text-xl text-ivory mb-2">
-                  Thank you for your inquiry
+        <div className="container-site">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            {/* Left — 5 cols */}
+            <div className="lg:col-span-5 flex flex-col justify-center">
+              <Reveal>
+                <span className="section-number text-muted">Valuation</span>
+              </Reveal>
+              <Reveal delay={80}>
+                <h2 className="heading-property text-white mt-4 mb-4">
+                  Tell us about your property
+                </h2>
+              </Reveal>
+              <Reveal delay={120}>
+                <p className="body-copy-light opacity-60 mb-6">
+                  No public listing without approval. No open-house pressure. No
+                  inflated promises.
                 </p>
-                <p className="text-sm text-ivory/50">
-                  We&apos;ll review your details and respond soon.
+              </Reveal>
+              <Reveal delay={160}>
+                <p className="body-copy-light opacity-40 text-sm mb-8">
+                  Your information is handled in accordance with our{' '}
+                  <a
+                    href="/privacy"
+                    className="underline hover:opacity-80 transition-opacity"
+                  >
+                    Privacy Policy
+                  </a>
+                  . We will not share your details with third parties.
                 </p>
-                <button
-                  type="button"
-                  className="btn-outline mt-8"
-                  onClick={() => setFormState('idle')}
-                >
-                  Submit another
-                </button>
-              </div>
-            </RevealDiv>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-              {/* Honeypot */}
-              <div className="absolute -left-[9999px]" aria-hidden="true">
-                <label htmlFor="_honey">Leave blank</label>
-                <input
-                  type="text"
-                  id="_honey"
-                  name="_honey"
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-              </div>
+              </Reveal>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <FieldGroup label="Name" required>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="input-premium"
-                    placeholder="Your full name"
-                  />
-                </FieldGroup>
-
-                <FieldGroup label="Email" required>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    className="input-premium"
-                    placeholder="you@example.com"
-                  />
-                </FieldGroup>
-
-                <FieldGroup label="Phone" required>
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    className="input-premium"
-                    placeholder="+91 98765 43210"
-                  />
-                </FieldGroup>
-
-                <FieldGroup label="Property City" required>
-                  <select name="city" required className="input-premium">
-                    <option value="" disabled>
-                      Select city
-                    </option>
-                    {cities.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
-                  </select>
-                </FieldGroup>
-
-                <FieldGroup label="Property Type">
-                  <select name="propertyType" className="input-premium">
-                    <option value="" disabled>
-                      Select type
-                    </option>
-                    {propertyTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </FieldGroup>
-
-                <FieldGroup label="Approximate Value">
-                  <input
-                    type="text"
-                    name="approximateValue"
-                    className="input-premium"
-                    placeholder="e.g. ₹5 Cr"
-                  />
-                </FieldGroup>
-              </div>
-
-              <FieldGroup label="Message">
-                <textarea
-                  name="message"
-                  rows={4}
-                  className="input-premium resize-y"
-                  placeholder="Anything else you'd like us to know..."
-                />
-              </FieldGroup>
-
-              {formState === 'error' && (
-                <p className="text-sm text-red-400" role="alert">
-                  Something went wrong. Please try again or contact us directly.
-                </p>
-              )}
-
-              <button
-                type="submit"
-                className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
-                disabled={formState === 'loading'}
-              >
-                {formState === 'loading' ? (
-                  <>
-                    <Loader2 size={14} className="animate-spin" aria-hidden="true" />
-                    Submitting
-                  </>
+            {/* Right — 7 cols: form */}
+            <div className="lg:col-span-7">
+              <Reveal delay={100}>
+                {formState === 'success' ? (
+                  <div className="text-center py-20">
+                    <p className="heading-sub text-white mb-2">
+                      Thank you for your inquiry
+                    </p>
+                    <p className="body-copy-light opacity-50">
+                      We&apos;ll review your details and respond soon.
+                    </p>
+                    <button
+                      type="button"
+                      className="btn-outline mt-8"
+                      onClick={() => setFormState('idle')}
+                    >
+                      Submit another
+                    </button>
+                  </div>
                 ) : (
-                  'Request Valuation'
-                )}
-              </button>
+                  <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                    {/* Honeypot */}
+                    <div
+                      className="absolute -left-[9999px]"
+                      aria-hidden="true"
+                    >
+                      <label htmlFor="_honey_sell">Leave blank</label>
+                      <input
+                        type="text"
+                        id="_honey_sell"
+                        name="_honey"
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
 
-              <p className="text-xs text-ivory/30 mt-4">
-                Your information is handled in accordance with our{' '}
-                <a href="/privacy" className="underline hover:text-ivory/50 transition-colors">
-                  Privacy Policy
-                </a>
-                . This is a demonstration website — submissions are logged locally.
-              </p>
-              <p className="label-micro text-ivory/25 mt-4">
-                This is a demonstration. No data is transmitted.
-              </p>
-            </form>
-          )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <FieldGroup label="Name" required dark>
+                        <input
+                          type="text"
+                          name="name"
+                          required
+                          className="input-premium"
+                          placeholder="Your full name"
+                        />
+                      </FieldGroup>
+
+                      <FieldGroup label="Email" required dark>
+                        <input
+                          type="email"
+                          name="email"
+                          required
+                          className="input-premium"
+                          placeholder="you@example.com"
+                        />
+                      </FieldGroup>
+
+                      <FieldGroup label="Phone" required dark>
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          className="input-premium"
+                          placeholder="+91 98765 43210"
+                        />
+                      </FieldGroup>
+
+                      <FieldGroup label="Property City" required dark>
+                        <select
+                          name="city"
+                          required
+                          className="input-premium"
+                          defaultValue=""
+                        >
+                          <option value="" disabled>
+                            Select city
+                          </option>
+                          {cities.map((city) => (
+                            <option key={city} value={city}>
+                              {city}
+                            </option>
+                          ))}
+                        </select>
+                      </FieldGroup>
+
+                      <FieldGroup label="Property Type" dark>
+                        <select
+                          name="propertyType"
+                          className="input-premium"
+                          defaultValue=""
+                        >
+                          <option value="" disabled>
+                            Select type
+                          </option>
+                          {propertyTypes.map((type) => (
+                            <option key={type} value={type}>
+                              {type}
+                            </option>
+                          ))}
+                        </select>
+                      </FieldGroup>
+
+                      <FieldGroup label="Approximate Value" dark>
+                        <input
+                          type="text"
+                          name="approximateValue"
+                          className="input-premium"
+                          placeholder="e.g. ₹5 Cr"
+                        />
+                      </FieldGroup>
+                    </div>
+
+                    <FieldGroup label="Message" dark>
+                      <textarea
+                        name="message"
+                        rows={4}
+                        className="input-premium resize-y"
+                        placeholder="Anything else you'd like us to know..."
+                      />
+                    </FieldGroup>
+
+                    {formState === 'error' && (
+                      <p className="text-sm text-[#A45F3D]" role="alert">
+                        Something went wrong. Please try again or contact us
+                        directly.
+                      </p>
+                    )}
+
+                    <button
+                      type="submit"
+                      className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+                      disabled={formState === 'loading'}
+                    >
+                      {formState === 'loading' ? (
+                        <>
+                          <Loader2
+                            size={14}
+                            className="animate-spin"
+                            aria-hidden="true"
+                          />
+                          Submitting
+                        </>
+                      ) : (
+                        'Request Valuation'
+                      )}
+                    </button>
+
+                    <p className="label-micro text-white/25 mt-4 leading-relaxed">
+                      This is a demonstration website. No data is transmitted.
+                    </p>
+                  </form>
+                )}
+              </Reveal>
+            </div>
+          </div>
         </div>
       </section>
 
-      <hr className="editorial-rule-light mx-auto max-w-[1600px] bg-espresso" />
-
       {/* ── FAQ ──────────────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36 bg-espresso" aria-label="Frequently asked questions">
+      <section
+        className="section-py bg-ink"
+        aria-label="Frequently asked questions"
+      >
         <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number text-warm-grey">FAQ</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h2 className="heading-property text-ivory mt-4 mb-12">
+          <Reveal>
+            <span className="section-number text-muted">FAQ</span>
+          </Reveal>
+          <Reveal delay={80}>
+            <h2 className="heading-property text-white mt-4 mb-12">
               Common questions
             </h2>
-          </RevealDiv>
-          <RevealDiv delay={0.12}>
+          </Reveal>
+          <Reveal delay={120}>
             <div className="space-y-0">
               {faqs.map((faq) => (
-                <details
-                  key={faq.question}
-                  className="group border-b border-ivory/8"
-                >
-                  <summary className="cursor-pointer py-5 flex items-start justify-between gap-4 list-none select-none">
-                    <span className="font-display text-base md:text-lg text-ivory/90 group-open:text-ivory">
+                <details key={faq.question} className="group">
+                  <summary className="cursor-pointer py-5 flex items-start justify-between gap-4 list-none select-none border-b border-paper/10">
+                    <span className="heading-sub text-paper/90 group-open:text-paper">
                       {faq.question}
                     </span>
                     <span
-                      className="label-micro text-offwhite/60 mt-1 shrink-0 transition-transform duration-200 group-open:rotate-45"
+                      className="text-white/40 mt-1 shrink-0 text-lg leading-none transition-transform duration-200 group-open:rotate-45"
                       aria-hidden="true"
                     >
                       +
@@ -462,30 +474,29 @@ export function SellClient() {
                 </details>
               ))}
             </div>
-          </RevealDiv>
+          </Reveal>
         </div>
       </section>
 
-      <hr className="editorial-rule-light mx-auto max-w-[1600px] bg-espresso" />
-
-      {/* ── Final CTA ────────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36 bg-espresso">
+      {/* ── Closing CTA ────────────────────────── */}
+      <section className="section-py bg-ink">
         <div className="container-editorial text-center">
-          <RevealDiv>
-            <h2 className="heading-property text-ivory mb-4">
+          <Reveal>
+            <h2 className="heading-property text-white mb-4">
               Prefer a conversation?
             </h2>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
+          </Reveal>
+          <Reveal delay={80}>
             <p className="body-copy-light opacity-60 mb-8 max-w-md mx-auto">
-              If you&apos;d rather talk before filling out a form, that works too.
+              If you&apos;d rather talk before filling out a form, that works
+              too.
             </p>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
+          </Reveal>
+          <Reveal delay={160}>
             <Link href="/contact" className="btn-outline">
               Contact Us
             </Link>
-          </RevealDiv>
+          </Reveal>
         </div>
       </section>
     </>
@@ -498,17 +509,21 @@ export function SellClient() {
 function FieldGroup({
   label,
   required = false,
+  dark = false,
   children,
 }: {
   label: string;
   required?: boolean;
+  dark?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label className="label-micro text-ivory/60">
+      <label
+        className={`label-micro ${dark ? 'text-white/60' : 'text-muted'}`}
+      >
         {label}
-        {required && <span className="text-gold ml-1">*</span>}
+        {required && <span className="text-brass ml-1">*</span>}
       </label>
       {children}
     </div>

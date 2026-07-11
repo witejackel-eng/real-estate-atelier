@@ -1,406 +1,383 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Reveal } from '@/components/shared/Reveal';
 import { cities } from '@/data/properties';
-
-/* ────────────────────────────────────────────
-   Inline RevealDiv (IntersectionObserver)
-   ──────────────────────────────────────────── */
-function RevealDiv({
-  children,
-  className = '',
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(el);
-        }
-      },
-      { rootMargin: '-40px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'none' : 'translateY(16px)',
-        transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
 
 /* ────────────────────────────────────────────
    Data
    ──────────────────────────────────────────── */
-const whatWeDo = [
-  {
-    title: 'Curate residential properties',
-    description:
-      'We visit, photograph, and evaluate every property before it appears on our platform. Selection is based on design quality, location, and lasting value — not volume.',
-  },
-  {
-    title: 'Help owners sell thoughtfully',
-    description:
-      'We work with sellers to present their property accurately and attract qualified buyers. From pricing to photography to closing, the process is structured and transparent.',
-  },
-  {
-    title: 'Provide private advice',
-    description:
-      'Whether you are buying your first premium property or navigating a complex sale, we offer guidance tailored to your situation — not a generic script.',
-  },
-];
-
-const selectionSteps = [
+const whatWeDoItems = [
   {
     number: '01',
-    label: 'Visit',
+    title: 'Curate',
     description:
-      'We walk through the property ourselves. No relying on third-party photos or descriptions.',
+      'We visit, assess, and select properties that meet clear standards of quality, location, and value. Most properties we see do not make it onto this platform.',
   },
   {
     number: '02',
-    label: 'Assess',
+    title: 'Sell',
     description:
-      'Design quality, location merit, and structural integrity are evaluated against clear criteria.',
+      'We present each property with honest photography, accurate descriptions, and realistic pricing. No exaggeration, no pressure, no artificial urgency.',
   },
   {
     number: '03',
-    label: 'Verify',
+    title: 'Advise',
     description:
-      'Legal status, documentation, and ownership are checked before we proceed.',
+      'We offer straightforward guidance based on market knowledge and your specific needs. If a property is not right for you, we will tell you.',
+  },
+];
+
+const processSteps = [
+  {
+    number: '01',
+    title: 'Visit',
+    description:
+      'Every property is visited in person. We assess condition, location, light, layout, and context before making any decision about representation.',
+  },
+  {
+    number: '02',
+    title: 'Assess',
+    description:
+      'We analyze the property against comparable sales, current market conditions, and our own standards for quality and value.',
+  },
+  {
+    number: '03',
+    title: 'Verify',
+    description:
+      'Title documents, approvals, encumbrances, and legal standing are checked thoroughly before any property is listed on our platform.',
   },
   {
     number: '04',
-    label: 'Present',
+    title: 'Present',
     description:
-      'Professional photography and honest copywriting — no inflated claims.',
+      'Professional photography, measured floor plans, and factual descriptions. The presentation reflects the property as it actually is.',
   },
   {
     number: '05',
-    label: 'Introduce',
+    title: 'Introduce',
     description:
-      'The property is presented to buyers who match its profile. Quietly, deliberately.',
+      'We match properties with serious, qualified buyers and coordinate viewings, negotiations, and the transaction through to completion.',
   },
 ];
 
 /* ────────────────────────────────────────────
-   Component
+   Scroll-Triggered List Item
    ──────────────────────────────────────────── */
-export function AboutClient() {
-  return (
-    <>
-      {/* ── Hero ─────────────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number">N°004</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h1 className="display-page text-espresso mt-4 mb-8">
-              A deliberate real-estate practice.
-            </h1>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <p className="body-copy text-warm-grey max-w-xl">
-              Casa Aurelia is not a brokerage operating at scale. We are a small, intentional
-              practice that works with a limited number of clients and properties at any given
-              time.
-            </p>
-          </RevealDiv>
-        </div>
-      </section>
-
-      {/* ── Full-width Image ──────────────────── */}
-      <section className="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden">
-        <div className="absolute inset-0 md:pl-[12vw]">
-          <Image
-            src="/images/about-studio.jpg"
-            alt="A bright, thoughtfully arranged interior space with natural materials and clean lines"
-            fill
-            className="object-cover"
-            sizes="100vw"
-          />
-        </div>
-      </section>
-
-      {/* ── Philosophy ───────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-site">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
-            <div className="lg:col-span-7">
-              <RevealDiv>
-                <span className="section-number">Philosophy</span>
-              </RevealDiv>
-              <RevealDiv delay={0.08}>
-                <p className="display-section text-espresso mt-6 leading-[1.05]">
-                  Fewer listings. More attention. Clear advice. Straightforward communication.
-                </p>
-              </RevealDiv>
-            </div>
-            <div className="lg:col-span-5">
-              <RevealDiv delay={0.16}>
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <Image
-                    src="/images/about-studio.jpg"
-                    alt="Interior detail showing natural materials and considered design"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                  />
-                </div>
-              </RevealDiv>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
-
-      {/* ── What We Do (Scroll-Triggered List) ── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number">What We Do</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h2 className="display-section text-espresso mt-4 mb-12">
-              Three things, done carefully.
-            </h2>
-          </RevealDiv>
-          <ScrollList items={whatWeDo} />
-        </div>
-      </section>
-
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
-
-      {/* ── Selection Process (Vertical Timeline) ── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number">Selection</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <h2 className="heading-property text-espresso mt-4 mb-12">
-              How properties make it onto the platform
-            </h2>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <p className="body-copy text-warm-grey mb-16">
-              Every listing begins with a visit. Properties that don&apos;t meet our standards
-              simply don&apos;t get listed.
-            </p>
-          </RevealDiv>
-
-          {/* Vertical timeline */}
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-[23px] md:left-[31px] top-0 bottom-0 w-px bg-espresso/10" aria-hidden="true" />
-
-            <ol className="space-y-12 md:space-y-16">
-              {selectionSteps.map((step, i) => (
-                <RevealDiv key={step.number} delay={i * 0.06}>
-                  <li className="relative pl-14 md:pl-20">
-                    {/* Dot on the line */}
-                    <div
-                      className="absolute left-[18px] md:left-[26px] top-1.5 w-[11px] h-[11px] rounded-full border-2 border-espresso/30 bg-ivory"
-                      aria-hidden="true"
-                    />
-                    <span className="label-micro text-warm-grey">{step.number}</span>
-                    <h3 className="font-display text-xl md:text-2xl text-espresso mt-1 mb-2">
-                      {step.label}
-                    </h3>
-                    <p className="body-copy text-warm-grey max-w-md">
-                      {step.description}
-                    </p>
-                  </li>
-                </RevealDiv>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Approach (Dark Section) ──────────── */}
-      <section className="py-20 md:py-28 lg:py-36 bg-espresso">
-        <div className="container-editorial">
-          <RevealDiv>
-            <span className="section-number text-warm-grey">Approach</span>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <p className="display-section text-ivory mt-6 leading-[1.05]">
-              Direct. Transparent. Unhurried.
-            </p>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <p className="body-copy-light mt-8 max-w-lg">
-              There are no high-pressure tactics here. If a property isn&apos;t right for you,
-              we&apos;ll say so. If we think your expectations need recalibrating,
-              we&apos;ll have that conversation honestly. Our job is to help you make a good
-              decision — not to close a deal at any cost.
-            </p>
-          </RevealDiv>
-        </div>
-      </section>
-
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
-
-      {/* ── Locations / Regions ──────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-site">
-          <div className="container-editorial">
-            <RevealDiv>
-              <span className="section-number">Regions</span>
-            </RevealDiv>
-            <RevealDiv delay={0.08}>
-              <h2 className="heading-property text-espresso mt-4 mb-12">
-                Where we work
-              </h2>
-            </RevealDiv>
-          </div>
-          <RevealDiv delay={0.16}>
-            <div className="flex flex-wrap gap-x-8 gap-y-3 md:gap-x-12 md:gap-y-4">
-              {cities.map((city, i) => (
-                <Link
-                  key={city}
-                  href={`/properties?city=${encodeURIComponent(city)}`}
-                  className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-espresso/20 hover:text-espresso transition-colors duration-300 cursor-view"
-                  style={{ transitionDelay: `${i * 30}ms` }}
-                >
-                  {city}
-                </Link>
-              ))}
-            </div>
-          </RevealDiv>
-        </div>
-      </section>
-
-      <hr className="editorial-rule mx-auto max-w-[1600px]" />
-
-      {/* ── Closing CTA ──────────────────────── */}
-      <section className="py-20 md:py-28 lg:py-36">
-        <div className="container-editorial">
-          <RevealDiv>
-            <h2 className="heading-property text-espresso mb-4">
-              Want to talk?
-            </h2>
-          </RevealDiv>
-          <RevealDiv delay={0.08}>
-            <p className="body-copy text-warm-grey mb-8 max-w-md">
-              We&apos;re always open to a good conversation — about a specific property,
-              the market, or how we might be able to help.
-            </p>
-          </RevealDiv>
-          <RevealDiv delay={0.16}>
-            <Link href="/contact" className="btn-primary">
-              Get in Touch
-            </Link>
-          </RevealDiv>
-        </div>
-      </section>
-    </>
-  );
-}
-
-/* ────────────────────────────────────────────
-   Scroll-Triggered Interactive List
-   ──────────────────────────────────────────── */
-function ScrollList({ items }: { items: { title: string; description: string }[] }) {
-  return (
-    <div className="space-y-2">
-      {items.map((item, i) => (
-        <ScrollListItem key={item.title} item={item} index={i} />
-      ))}
-    </div>
-  );
-}
-
 function ScrollListItem({
   item,
   index,
+  isActive,
 }: {
-  item: { title: string; description: string };
+  item: (typeof whatWeDoItems)[number];
   index: number;
+  isActive: boolean;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setActive(entry.isIntersecting);
-      },
-      { rootMargin: '-30% 0px -60% 0px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div
-      ref={ref}
-      className="py-6 border-b border-espresso/8 transition-all duration-500"
+      className="border-b border-ink/[0.06] py-8 md:py-10 transition-colors duration-500"
+      style={{ transitionDelay: `${index * 0.05}s` }}
     >
-      <div className="flex items-start gap-6">
-        {/* Number */}
+      <div className="flex items-start gap-6 md:gap-10">
         <span
-          className={`label-micro shrink-0 w-6 transition-colors duration-500 ${
-            active ? 'text-gold' : 'text-espresso/20'
+          className={`label-micro shrink-0 mt-1 transition-colors duration-500 ${
+            isActive ? 'text-brass' : 'text-muted'
           }`}
         >
-          {String(index + 1).padStart(2, '0')}
+          {item.number}
         </span>
-
         <div className="flex-1 min-w-0">
-          {/* Line treatment */}
-          <div
-            className={`h-px transition-all duration-700 ease-out mb-4 ${
-              active ? 'w-16 bg-espresso' : 'w-0 bg-espresso'
-            }`}
-            aria-hidden="true"
-          />
-
-          <h3 className="font-display text-lg md:text-xl text-espresso mb-2">
-            {item.title}
-          </h3>
-
+          <h3 className="heading-sub text-ink">{item.title}</h3>
           <p
-            className={`body-copy text-warm-grey max-w-md transition-all duration-500 overflow-hidden ${
-              active ? 'max-h-40 opacity-100 mt-0' : 'max-h-0 opacity-0 mt-0'
+            className={`body-copy-muted mt-2 max-w-md transition-all duration-500 ${
+              isActive
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-2'
             }`}
-            style={{
-              transitionProperty: 'max-height, opacity',
-              transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-              transitionDuration: '0.5s',
-            }}
           >
             {item.description}
           </p>
         </div>
       </div>
     </div>
+  );
+}
+
+/* ────────────────────────────────────────────
+   About Client
+   ──────────────────────────────────────────── */
+export function AboutClient() {
+  const listRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        const idx = Number(entry.target.getAttribute('data-index'));
+        if (!isNaN(idx)) setActiveIndex(idx);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = listRef.current;
+    if (!container) return;
+
+    const items = container.querySelectorAll<HTMLElement>('[data-index]');
+    const observer = new IntersectionObserver(handleIntersect, {
+      root: null,
+      threshold: 0.6,
+    });
+
+    items.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, [handleIntersect]);
+
+  return (
+    <>
+      {/* ── Hero ─────────────────────────────── */}
+      <section className="section-py">
+        <div className="container-editorial">
+          <Reveal>
+            <span className="section-number">N°004</span>
+          </Reveal>
+          <Reveal delay={80}>
+            <h1 className="display-page text-ink mt-4 mb-8">
+              A deliberate real-estate practice.
+            </h1>
+          </Reveal>
+          <Reveal delay={160}>
+            <p className="body-copy text-muted max-w-xl">
+              We are a small, intentional practice. We carry fewer listings
+              so that each one receives the attention it requires — careful
+              assessment, honest presentation, and serious buyer matching.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <hr className="rule" />
+
+      {/* ── Full-Width Image ─────────────────── */}
+      <section className="h-[50vh] md:h-[60vh] lg:h-[70vh] relative overflow-hidden md:pl-[12vw]">
+        <div className="absolute inset-0 md:right-0 md:top-0 md:bottom-0 md:left-0">
+          <Image
+            src="/images/about-studio.jpg"
+            alt="Casa Aurelia studio workspace"
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+        </div>
+      </section>
+
+      {/* ── Philosophy ───────────────────────── */}
+      <section className="section-py">
+        <div className="container-site">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+            {/* Text column */}
+            <div className="lg:col-span-7">
+              <Reveal>
+                <span className="section-number">Philosophy</span>
+              </Reveal>
+              <Reveal delay={80}>
+                <h2 className="display-section text-ink mt-4 mb-8">
+                  Fewer listings.
+                  <br />
+                  More attention.
+                  <br />
+                  Clear advice.
+                  <br />
+                  Straightforward communication.
+                </h2>
+              </Reveal>
+              <Reveal delay={160}>
+                <p className="body-copy text-muted max-w-lg mb-6">
+                  We believe that real estate at its best is a service built on
+                  trust, not volume. When you work with us, you work with the
+                  same people from the first conversation to the final handover.
+                  There are no handoffs, no junior associates, no call centres.
+                </p>
+              </Reveal>
+              <Reveal delay={200}>
+                <p className="body-copy text-muted max-w-lg">
+                  Our role is simple: to understand what you need, to present
+                  properties that genuinely match those needs, and to provide
+                  clear, honest guidance at every step. If something is not
+                  right, we say so. If the market does not support your
+                  expectations, we explain why.
+                </p>
+              </Reveal>
+            </div>
+
+            {/* Image column */}
+            <div className="lg:col-span-5">
+              <Reveal delay={200}>
+                <div className="relative aspect-[4/5] overflow-hidden img-reveal">
+                  <Image
+                    src="/images/about-studio.jpg"
+                    alt="Casa Aurelia studio detail"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                  />
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr className="rule-soft max-w-[1440px] mx-auto" />
+
+      {/* ── What We Do (Scroll-Triggered List) ─ */}
+      <section className="section-py">
+        <div className="container-editorial">
+          <Reveal>
+            <span className="section-number">What We Do</span>
+          </Reveal>
+          <Reveal delay={80}>
+            <h2 className="display-section text-ink mt-4 mb-12">
+              Three things, done carefully.
+            </h2>
+          </Reveal>
+
+          <div ref={listRef}>
+            {whatWeDoItems.map((item, i) => (
+              <div key={item.number} data-index={i}>
+                <Reveal delay={100 + i * 60}>
+                  <ScrollListItem
+                    item={item}
+                    index={i}
+                    isActive={activeIndex === i}
+                  />
+                </Reveal>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <hr className="rule-soft max-w-[760px] mx-auto" />
+
+      {/* ── Selection Process (Timeline) ──────── */}
+      <section className="section-py">
+        <div className="container-editorial">
+          <Reveal>
+            <span className="section-number">Process</span>
+          </Reveal>
+          <Reveal delay={80}>
+            <h2 className="heading-sub text-ink mt-4 mb-12">
+              How we select a property
+            </h2>
+          </Reveal>
+
+          {/* Vertical timeline */}
+          <div className="relative">
+            <div
+              className="absolute left-[23px] md:left-[31px] top-0 bottom-0 w-px bg-ink/10"
+              aria-hidden="true"
+            />
+            <ol className="space-y-12 md:space-y-14">
+              {processSteps.map((step, i) => (
+                <Reveal key={step.number} delay={100 + i * 60}>
+                  <li className="relative pl-14 md:pl-20">
+                    <div
+                      className="absolute left-[18px] md:left-[26px] top-1.5 w-[11px] h-[11px] rounded-full border-2 border-brass/40 bg-paper"
+                      aria-hidden="true"
+                    />
+                    <span className="label-micro text-muted">{step.number}</span>
+                    <h3 className="font-display text-lg md:text-xl text-ink mt-1 mb-2">
+                      {step.title}
+                    </h3>
+                    <p className="body-copy text-muted max-w-md">
+                      {step.description}
+                    </p>
+                  </li>
+                </Reveal>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <hr className="rule-soft max-w-[760px] mx-auto" />
+
+      {/* ── Approach (Dark) ──────────────────── */}
+      <section className="section-py bg-ink">
+        <div className="container-editorial">
+          <Reveal>
+            <span className="section-number text-muted">Approach</span>
+          </Reveal>
+          <Reveal delay={80}>
+            <h2 className="display-section text-paper mt-4 mb-8">
+              Direct. Transparent. Unhurried.
+            </h2>
+          </Reveal>
+          <Reveal delay={160}>
+            <p className="body-copy-light opacity-60 max-w-lg mb-6">
+              We do not chase volume. We do not create artificial urgency.
+              Every interaction with Casa Aurelia is intended to be clear,
+              respectful of your time, and focused on outcomes rather than
+              activity.
+            </p>
+          </Reveal>
+          <Reveal delay={200}>
+            <p className="body-copy-light opacity-60 max-w-lg">
+              Our clients are people who value substance over spectacle — who
+              would rather have one honest conversation than ten glossy
+              presentations. If that describes how you prefer to work, we
+              should talk.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <hr className="rule-light max-w-[1440px] mx-auto bg-ink" />
+
+      {/* ── Regions ──────────────────────────── */}
+      <section className="section-py bg-ink">
+        <div className="container-site">
+          <Reveal>
+            <h2 className="heading-sub text-paper mb-12">Where we work</h2>
+          </Reveal>
+          <div className="flex flex-wrap gap-x-4 gap-y-2 md:gap-x-6 md:gap-y-3">
+            {cities.map((city, i) => (
+              <Reveal key={city} delay={60 + i * 40}>
+                <Link
+                  href={`/properties?city=${encodeURIComponent(city)}`}
+                  className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display text-white/20 hover:text-white transition-colors duration-300 leading-none"
+                >
+                  {city}
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Closing CTA ──────────────────────── */}
+      <section className="section-py bg-ink">
+        <div className="container-editorial">
+          <Reveal>
+            <h2 className="heading-sub text-paper mb-4">Want to talk?</h2>
+          </Reveal>
+          <Reveal delay={80}>
+            <p className="body-copy-light opacity-60 mb-8 max-w-md">
+              Whether you are buying, selling, or simply exploring — we are
+              happy to have a conversation without pressure or commitment.
+            </p>
+          </Reveal>
+          <Reveal delay={160}>
+            <Link href="/contact" className="btn-primary">
+              Get in Touch
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+    </>
   );
 }

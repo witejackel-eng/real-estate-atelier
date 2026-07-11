@@ -1,12 +1,11 @@
-import { createMetadata } from '@/lib/seo';
-import { SellClient } from '@/components/sell/SellClient';
+import { SellClient } from "@/components/sell/SellClient";
+import type { Metadata } from "next";
 
-export const metadata = createMetadata({
-  title: 'Sell with Us',
+export const metadata: Metadata = {
+  title: "Sell Your Home",
   description:
-    'Sell your home with considered presentation, qualified introductions, and private viewings. Request a free property valuation.',
-  path: '/sell',
-});
+    "Professional property presentation and qualified buyer matching. Honest pricing, no open-house pressure.",
+};
 
 export default function SellPage() {
   return <SellClient />;

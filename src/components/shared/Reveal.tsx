@@ -1,28 +1,21 @@
-'use client';
+"use client";
 
-import { useRef, useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { useRef, useState, useEffect, type CSSProperties, type ReactNode } from "react";
 
 interface RevealProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   delay?: number;
-  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+  translateY?: number;
 }
-
-const directionTransform = {
-  up: 'translateY(12px)',
-  down: 'translateY(-12px)',
-  left: 'translateX(12px)',
-  right: 'translateX(-12px)',
-  none: 'none',
-};
 
 export function Reveal({
   children,
   className,
+  style,
   delay = 0,
-  direction = 'up',
+  translateY = 20,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -30,10 +23,8 @@ export function Reveal({
 
   useEffect(() => {
     queueMicrotask(() => setMounted(true));
-
     const el = ref.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -41,33 +32,30 @@ export function Reveal({
           observer.unobserve(el);
         }
       },
-      { rootMargin: '-60px' }
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
     );
-
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  // Before mount: render plain div (matches server HTML exactly)
   if (!mounted) {
     return (
-      <div ref={ref} className={cn(className)}>
+      <div ref={ref} className={className} style={style}>
         {children}
       </div>
     );
   }
 
-  // After mount: apply CSS transitions (client-only, no hydration risk)
-  const shouldAnimate = !inView;
-
+  const hidden = !inView;
   return (
     <div
       ref={ref}
-      className={cn(className)}
+      className={className}
       style={{
-        opacity: shouldAnimate ? 0 : 1,
-        transform: shouldAnimate ? directionTransform[direction] : 'none',
-        transition: `opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s`,
+        opacity: hidden ? 0 : 1,
+        transform: hidden ? `translateY(${translateY}px)` : "translateY(0)",
+        transition: `opacity var(--duration-reveal) var(--ease-out-expo) ${delay}ms, transform var(--duration-reveal) var(--ease-out-expo) ${delay}ms`,
+        ...style,
       }}
     >
       {children}

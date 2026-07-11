@@ -1,89 +1,123 @@
-import { Container } from '@/components/shared/Container';
-import { SectionLabel } from '@/components/shared/SectionLabel';
-import { createMetadata } from '@/lib/seo';
+import type { Metadata } from 'next';
 
-export const metadata = createMetadata({
-  title: 'Terms of Use',
-  description: 'Terms of Use for Casa Aurelia.',
-  path: '/terms',
-});
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+  description: 'Terms of Service for Casa Aurelia.',
+};
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen py-24 sm:py-32 pt-28 sm:pt-36">
-      <Container>
-        <div className="max-w-3xl mx-auto">
-          <SectionLabel>Legal</SectionLabel>
-          <h1 className="font-display text-4xl sm:text-5xl text-espresso mt-2 mb-10 tracking-tight">
-            Terms of Use
-          </h1>
+    <main className="section-py">
+      <div className="container-editorial">
+        <h1 className="display-page text-ink mb-12">Terms of Service</h1>
 
-          <div className="space-y-8">
-            <section>
-              <h2 className="font-display text-xl text-espresso mb-3">Demo Nature of This Website</h2>
-              <p className="font-body text-sm text-espresso/70 leading-relaxed">
-                This website (&quot;Casa Aurelia&quot;) is a demonstration project created for portfolio and
-                educational purposes. It does not represent a real real estate brokerage, advisory firm,
-                or any other type of business entity. All property listings, contact
-                information, and services described on this website are fictional.
-              </p>
-            </section>
+        <div className="space-y-10">
+          {/* Demo Disclaimer */}
+          <section>
+            <p className="body-copy-muted mb-4">
+              This website is a demonstration project created for portfolio
+              and educational purposes. It does not represent a real real
+              estate brokerage, advisory firm, or any other type of
+              business entity. All property listings, contact information,
+              and services described on this website are fictional.
+            </p>
+          </section>
 
-            <section>
-              <h2 className="font-display text-xl text-espresso mb-3">No Real Brokerage Service</h2>
-              <p className="font-body text-sm text-espresso/70 leading-relaxed">
-                Casa Aurelia does not provide any real estate brokerage, advisory, valuation, or property
-                management services. Any forms, calculators, or interactive features on this website are
-                for demonstration purposes only and should not be relied upon for making property
-                decisions.
-              </p>
-            </section>
+          <hr className="rule-soft" />
 
-            <section>
-              <h2 className="font-display text-xl text-espresso mb-3">Intellectual Property</h2>
-              <p className="font-body text-sm text-espresso/70 leading-relaxed">
-                The design, layout, and code of this website are original work created for demonstration
-                purposes. Property images used on this site are either generated, licensed for
-                demonstration use, or used under fair use principles.
-              </p>
-            </section>
+          {/* Acceptance */}
+          <section>
+            <h2 className="heading-sub text-ink mb-3">Acceptance</h2>
+            <p className="body-copy-muted">
+              By accessing and using this website, you acknowledge that
+              you have read these terms and agree to be bound by them.
+              If you do not agree with any part of these terms, you
+              should not use this website. These terms apply to all
+              visitors, users, and others who access the site.
+            </p>
+          </section>
 
-            <section>
-              <h2 className="font-display text-xl text-espresso mb-3">Limitation of Liability</h2>
-              <p className="font-body text-sm text-espresso/70 leading-relaxed">
-                To the fullest extent permitted by applicable law, the creators of this demo website
-                shall not be liable for any direct, indirect, incidental, consequential, or special
-                damages arising from the use of, or inability to use, this website. All information
-                presented is fictional and should not be used as a basis for any real-world decisions.
-              </p>
-            </section>
+          <hr className="rule-soft" />
 
-            <section>
-              <h2 className="font-display text-xl text-espresso mb-3">User Conduct</h2>
-              <p className="font-body text-sm text-espresso/70 leading-relaxed">
-                By using this website, you agree to use it only for lawful purposes. You may not attempt
-                to gain unauthorized access to any part of the website, use it in any way that could
-                damage, disable, or impair the website, or use any automated means to access the
-                website&apos;s content.
-              </p>
-            </section>
+          {/* Demo Nature */}
+          <section>
+            <h2 className="heading-sub text-ink mb-3">Demo Nature</h2>
+            <p className="body-copy-muted">
+              Casa Aurelia does not provide any real estate brokerage,
+              advisory, valuation, or property management services.
+              Any forms, calculators, or interactive features on this
+              website are for demonstration purposes only and should
+              not be relied upon for making property decisions. All
+              property data, pricing, and descriptions are fictional.
+            </p>
+          </section>
 
-            <section>
-              <h2 className="font-display text-xl text-espresso mb-3">Governing Law</h2>
-              <p className="font-body text-sm text-espresso/70 leading-relaxed">
-                These terms are governed by the laws of India. Any disputes arising from the use of this
-                website would be subject to the exclusive jurisdiction of the courts in New Delhi, India.
-              </p>
-            </section>
+          <hr className="rule-soft" />
 
-            <section className="pt-6 border-t border-espresso/5">
-              <p className="font-mono text-xs text-espresso/40">
-                Last updated: July 2026
-              </p>
-            </section>
-          </div>
+          {/* Intellectual Property */}
+          <section>
+            <h2 className="heading-sub text-ink mb-3">Intellectual Property</h2>
+            <p className="body-copy-muted">
+              The design, layout, and code of this website are original
+              work created for demonstration purposes. Property images
+              used on this site are either generated, licensed for
+              demonstration use, or used under fair use principles.
+              You may not reproduce, distribute, or create derivative
+              works from the content of this site without prior
+              written permission.
+            </p>
+          </section>
+
+          <hr className="rule-soft" />
+
+          {/* Limitation of Liability */}
+          <section>
+            <h2 className="heading-sub text-ink mb-3">Limitation of Liability</h2>
+            <p className="body-copy-muted">
+              To the fullest extent permitted by applicable law, the
+              creators of this demo website shall not be liable for any
+              direct, indirect, incidental, consequential, or special
+              damages arising from the use of, or inability to use,
+              this website. All information presented is fictional and
+              should not be used as a basis for any real-world decisions.
+            </p>
+          </section>
+
+          <hr className="rule-soft" />
+
+          {/* Changes */}
+          <section>
+            <h2 className="heading-sub text-ink mb-3">Changes to These Terms</h2>
+            <p className="body-copy-muted">
+              We reserve the right to modify these terms at any time.
+              Changes will be posted on this page with an updated
+              revision date. Your continued use of the website after
+              any changes constitutes acceptance of the revised terms.
+            </p>
+          </section>
+
+          <hr className="rule-soft" />
+
+          {/* Contact */}
+          <section>
+            <h2 className="heading-sub text-ink mb-3">Contact</h2>
+            <p className="body-copy-muted">
+              If you have any questions about these terms, you may
+              contact us at{' '}
+              <span className="text-brass">hello@casaaurelia.com</span>.
+              Please note this email address is fictional and part
+              of the demonstration.
+            </p>
+          </section>
+
+          {/* Footer */}
+          <section className="pt-6 border-t border-ink/5">
+            <p className="label-micro text-muted">
+              Last updated: July 2026
+            </p>
+          </section>
         </div>
-      </Container>
-    </div>
+      </div>
+    </main>
   );
 }

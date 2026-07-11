@@ -1,12 +1,10 @@
-import { createMetadata } from '@/lib/seo';
-import { NeighborhoodsClient } from '@/components/neighborhoods/NeighborhoodsClient';
+import { NeighborhoodsClient } from "@/components/neighborhoods/NeighborhoodsClient";
+import type { Metadata } from "next";
 
-export const metadata = createMetadata({
-  title: 'Neighborhoods',
-  description:
-    'Explore India\'s most desirable residential neighborhoods — Delhi NCR, Mumbai, Goa, Bangalore, Pune, Hyderabad, Jaipur, and Alibaug.',
-  path: '/neighborhoods',
-});
+export const metadata: Metadata = {
+  title: "Neighbourhoods",
+  description: "Explore curated neighborhoods across India. Each city has a distinct character and property market.",
+};
 
 export default function NeighborhoodsPage() {
   return <NeighborhoodsClient />;

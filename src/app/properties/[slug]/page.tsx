@@ -1,81 +1,29 @@
-import { notFound } from 'next/navigation';
-import { properties, getPropertyBySlug, getSimilarProperties } from '@/data/properties';
-import { PropertyDetailClient } from '@/components/properties/PropertyDetailClient';
-import { createMetadata, SITE_URL } from '@/lib/seo';
+import { notFound } from "next/navigation";
+import { properties, getPropertyBySlug, getSimilarProperties } from "@/data/properties";
+import { PropertyDetailClient } from "@/components/properties/PropertyDetailClient";
+import type { Metadata } from "next";
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
-
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return properties.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const property = getPropertyBySlug(slug);
-  if (!property) {
-    return { title: 'Property Not Found' };
-  }
-  return createMetadata({
-    title: `${property.title}, ${property.location}`,
+  if (!property) return {};
+  return {
+    title: property.title,
     description: property.shortDescription,
-    path: `/properties/${property.slug}`,
-    image: property.heroImage,
-  });
+    openGraph: { title: property.title, description: property.shortDescription, images: [property.heroImage] },
+  };
 }
 
-export default async function PropertyDetailPage({ params }: Props) {
+export default async function PropertyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const property = getPropertyBySlug(slug);
-
-  if (!property) {
-    notFound();
-  }
-
-  const propertyIndex = properties.findIndex((p) => p.slug === slug);
-
-  const similarRaw = getSimilarProperties(slug, 4);
-  const similarProperties = similarRaw.length >= 3 ? similarRaw.slice(0, 3) : similarRaw;
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'RealEstateListing',
-    name: property.title,
-    description: property.shortDescription,
-    url: `${SITE_URL}/properties/${property.slug}`,
-    image: `${SITE_URL}${property.heroImage}`,
-    offers: {
-      '@type': 'Offer',
-      price: property.priceNumber,
-      priceCurrency: 'INR',
-    },
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: property.location,
-      addressRegion: property.city,
-      addressCountry: 'IN',
-    },
-    numberOfRooms: property.bedrooms,
-    numberOfBathroomsTotal: property.bathrooms,
-    floorSize: {
-      '@type': 'QuantitativeValue',
-      value: parseInt(property.area.replace(/[^0-9]/g, '')),
-      unitCode: 'FTK',
-    },
-  };
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <PropertyDetailClient
-        property={property}
-        propertyIndex={propertyIndex}
-        similarProperties={similarProperties}
-      />
-    </>
-  );
+  if (!property) notFound();
+  const allProperties = properties;
+  const propertyIndex = allProperties.findIndex((p) => p.slug === slug);
+  const similar = getSimilarProperties(slug, 3);
+  return <PropertyDetailClient property={property} propertyIndex={propertyIndex} similarProperties={similar} />;
 }

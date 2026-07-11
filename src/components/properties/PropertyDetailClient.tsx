@@ -1,805 +1,751 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef, type FormEvent, type KeyboardEvent } from 'react';
+import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  Heart,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  ArrowDown,
-} from 'lucide-react';
+import useEmblaCarousel from 'embla-carousel-react';
+import { Heart, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import type { Property } from '@/data/properties';
-import { cn } from '@/lib/utils';
 import { Reveal } from '@/components/shared/Reveal';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
-
-interface PropertyDetailClientProps {
+/* ═══════════════════════════════════════════════════
+   TYPES
+   ═══════════════════════════════════════════════════ */
+interface Props {
   property: Property;
   propertyIndex: number;
   similarProperties: Property[];
 }
 
-interface InquiryFormState {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-  honey: string;
+/* ═══════════════════════════════════════════════════
+   FAVORITES HELPERS
+   ═══════════════════════════════════════════════════ */
+function saveFavorites(slugs: string[]) {
+  localStorage.setItem('casa-aurelia-favorites', JSON.stringify(slugs));
+  window.dispatchEvent(new Event('casa-fav'));
 }
 
-type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
+const emptyFavArr: string[] = [];
 
-/* ------------------------------------------------------------------ */
-/*  Component                                                          */
-/* ------------------------------------------------------------------ */
+function subscribeFavorites(cb: () => void) {
+  window.addEventListener('casa-fav', cb);
+  return () => window.removeEventListener('casa-fav', cb);
+}
 
+function getFavSnapshot(): string[] {
+  try { return JSON.parse(localStorage.getItem('casa-aurelia-favorites') || '[]'); } catch { return []; }
+}
+
+/* ═══════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════ */
 export function PropertyDetailClient({
   property,
   propertyIndex,
   similarProperties,
-}: PropertyDetailClientProps) {
-  /* ---- Gallery state ---- */
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
-  const galleryImages = [property.heroImage, ...property.gallery];
-
-  const openLightbox = useCallback((index: number) => {
-    setLightboxIndex(index);
-    setLightboxOpen(true);
-  }, []);
-
-  const lightboxPrev = useCallback(() => {
-    setLightboxIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length);
-  }, [galleryImages.length]);
-
-  const lightboxNext = useCallback(() => {
-    setLightboxIndex((i) => (i + 1) % galleryImages.length);
-  }, [galleryImages.length]);
-
-  const handleLightboxKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'ArrowLeft') lightboxPrev();
-      if (e.key === 'ArrowRight') lightboxNext();
-      if (e.key === 'Escape') setLightboxOpen(false);
-    },
-    [lightboxPrev, lightboxNext]
-  );
-
-  /* ---- Favorite state (localStorage) ---- */
-  const [isFavorited, setIsFavorited] = useState(false);
-
-  useEffect(() => {
-    const readFavorites = () => {
-      try {
-        const raw = localStorage.getItem('casa-aurelia-favorites');
-        const favorites: string[] = raw ? JSON.parse(raw) : [];
-        setIsFavorited(favorites.includes(property.slug));
-      } catch {
-        /* ignore */
-      }
-    };
-    queueMicrotask(readFavorites);
-  }, [property.slug]);
+}: Props) {
+  const allFavorites = useSyncExternalStore(subscribeFavorites, getFavSnapshot, () => emptyFavArr);
+  const isFavorited = allFavorites.includes(property.slug);
+  const [showMobileCTA, setShowMobileCTA] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
 
   const toggleFavorite = useCallback(() => {
-    setIsFavorited((prev) => {
-      const next = !prev;
-      try {
-        const raw = localStorage.getItem('casa-aurelia-favorites');
-        const favorites: string[] = raw ? JSON.parse(raw) : [];
-        if (next) {
-          if (!favorites.includes(property.slug)) favorites.push(property.slug);
-        } else {
-          const idx = favorites.indexOf(property.slug);
-          if (idx > -1) favorites.splice(idx, 1);
-        }
-        localStorage.setItem('casa-aurelia-favorites', JSON.stringify(favorites));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
+    const favs = getFavSnapshot();
+    const next = favs.includes(property.slug)
+      ? favs.filter((s) => s !== property.slug)
+      : [...favs, property.slug];
+    saveFavorites(next);
   }, [property.slug]);
 
-  /* ---- Inquiry form state ---- */
-  const [form, setForm] = useState<InquiryFormState>({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-    honey: '',
-  });
-  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
-  const [formError, setFormError] = useState('');
-  const inquiryRef = useRef<HTMLDivElement>(null);
-
-  const updateField = (field: keyof InquiryFormState, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    if (submitStatus === 'error') {
-      setSubmitStatus('idle');
-      setFormError('');
-    }
-  };
-
-  const handleInquirySubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setFormError('');
-
-    if (!form.name.trim()) {
-      setFormError('Name is required.');
-      return;
-    }
-    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      setFormError('A valid email is required.');
-      return;
-    }
-    if (!form.phone.trim() || !/^\+?[\d\s-]{7,15}$/.test(form.phone.trim())) {
-      setFormError('A valid phone number is required.');
-      return;
-    }
-
-    setSubmitStatus('submitting');
-
-    try {
-      const res = await fetch('/api/inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          formType: 'property-inquiry',
-          propertyTitle: property.title,
-          name: form.name.trim(),
-          email: form.email.trim(),
-          phone: form.phone.trim(),
-          message: form.message.trim(),
-          _honey: form.honey,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        setSubmitStatus('success');
-        setForm({ name: '', email: '', phone: '', message: '', honey: '' });
-      } else {
-        setFormError(data.error || 'Something went wrong. Please try again.');
-        setSubmitStatus('error');
-      }
-    } catch {
-      setFormError('Network error. Please check your connection and try again.');
-      setSubmitStatus('error');
-    }
-  };
-
-  /* ---- Mobile CTA scroll ---- */
-  const scrollToInquiry = () => {
-    inquiryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  /* ---- Mobile sticky bar visibility (hide near footer) ---- */
-  const [showMobileBar, setShowMobileBar] = useState(true);
+  /* Show mobile CTA after scrolling past hero */
   useEffect(() => {
-    const footer = document.querySelector('footer');
-    if (!footer) return;
+    const el = heroRef.current;
+    if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setShowMobileBar(!entry.isIntersecting),
+      ([entry]) => setShowMobileCTA(!entry.isIntersecting),
       { threshold: 0 }
     );
-    observer.observe(footer);
+    observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  /* ---- Gallery alt texts ---- */
-  const galleryAltTexts = [
-    `${property.title} — Main view`,
-    ...property.gallery.map((_, i) => `${property.title} — Photo ${i + 2}`),
-  ];
-
-  /* ---- Section number ---- */
-  const sectionNum = String(propertyIndex + 1).padStart(3, '0');
-
-  /* ---- Metadata items ---- */
-  const metaItems = [
-    { label: 'Type', value: property.type },
-    { label: 'Bedrooms', value: `${property.bedrooms}` },
-    { label: 'Bathrooms', value: `${property.bathrooms}` },
-    { label: 'Area', value: property.area },
-    { label: 'Possession', value: property.possession },
-  ];
+  const images = [property.heroImage, ...property.gallery];
+  const propNum = String(propertyIndex + 1).padStart(2, '0');
 
   return (
-    <>
-      <div className="pb-24 md:pb-0">
+    <main>
+      {/* ═══ Gallery ═══ */}
+      <div ref={heroRef}>
+        <Gallery images={images} title={property.title} />
+      </div>
 
-        {/* ============================================================ */}
-        {/*  Breadcrumbs                                                  */}
-        {/* ============================================================ */}
-        <nav aria-label="Breadcrumb" className="container-site pt-6 pb-5">
-          <ol className="flex items-center gap-2 label-micro text-warm-grey">
-            <li>
-              <Link href="/" className="hover:text-espresso transition-colors">
-                Home
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <Link href="/properties" className="hover:text-espresso transition-colors">
-                Properties
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <span className="text-espresso truncate max-w-[180px] sm:max-w-[260px] inline-block align-bottom" aria-current="page">
-                {property.title}
-              </span>
-            </li>
-          </ol>
-        </nav>
-
-        {/* ============================================================ */}
-        {/*  Gallery                                                      */}
-        {/* ============================================================ */}
-        <Reveal>
-          <section aria-label="Property gallery">
-            {/* Hero image — full width, 60-70vh */}
-            <button
-              type="button"
-              onClick={() => openLightbox(0)}
-              className="relative w-full h-[60vh] sm:h-[65vh] lg:h-[70vh] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset"
-              aria-label={`View ${galleryAltTexts[0]}`}
-            >
-              <Image
-                src={galleryImages[0]}
-                alt={galleryAltTexts[0]}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority
-              />
-              <div className="absolute bottom-4 right-4 label-micro text-ivory/70 bg-espresso/40 backdrop-blur-sm px-3 py-1.5 rounded-sm">
-                {galleryImages.length > 1
-                  ? `1 / ${galleryImages.length}`
-                  : '1 / 1'}
-              </div>
-            </button>
-
-            {/* Remaining images — mixed-size editorial grid */}
-            {galleryImages.length > 1 && (
-              <div className="container-site mt-2">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {/* 2nd image: large (2/3 width) */}
-                  {galleryImages[1] && (
-                    <button
-                      type="button"
-                      onClick={() => openLightbox(1)}
-                      className="sm:col-span-2 relative aspect-[16/9] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset"
-                      aria-label={`View ${galleryAltTexts[1]}`}
-                    >
-                      <Image
-                        src={galleryImages[1]}
-                        alt={galleryAltTexts[1]}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 66vw"
-                      />
-                    </button>
-                  )}
-                  {/* 3rd image: small (1/3 width) */}
-                  {galleryImages[2] && (
-                    <button
-                      type="button"
-                      onClick={() => openLightbox(2)}
-                      className="relative aspect-[4/3] overflow-hidden cursor-view focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset"
-                      aria-label={`View ${galleryAltTexts[2]}`}
-                    >
-                      <Image
-                        src={galleryImages[2]}
-                        alt={galleryAltTexts[2]}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 33vw"
-                      />
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-          </section>
-        </Reveal>
-
-        {/* ============================================================ */}
-        {/*  Property Introduction                                         */}
-        {/* ============================================================ */}
-        <section className="container-site py-16 sm:py-24 lg:py-32">
-          <Reveal>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-              {/* Left: Title, description, CTA */}
-              <div className="lg:col-span-8 xl:col-span-9">
-                {/* Section number */}
-                <p className="section-number mb-4">N°{sectionNum}</p>
-
-                {/* Title */}
-                <h1 className="heading-property text-espresso mb-3">
-                  {property.title}
-                </h1>
-
-                {/* Location */}
-                <p className="label-micro text-warm-grey mb-6">
+      {/* ═══ Property Introduction ═══ */}
+      <section className="section-py">
+        <div className="container-site">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+            {/* Left — 7 cols */}
+            <div className="lg:col-span-7">
+              <Reveal>
+                <p className="section-number mb-4">N&deg;{propNum}</p>
+              </Reveal>
+              <Reveal delay={80}>
+                <h1 className="heading-property mb-3">{property.title}</h1>
+              </Reveal>
+              <Reveal delay={120}>
+                <p className="label-micro text-muted mb-6">
                   {property.location}
                 </p>
+              </Reveal>
+              <Reveal delay={160}>
+                <p className="body-copy">{property.shortDescription}</p>
+              </Reveal>
+            </div>
 
-                {/* Price */}
-                <p className="font-mono text-2xl sm:text-3xl lg:text-4xl text-espresso tracking-tight mb-8">
-                  {property.price}
-                </p>
-
-                {/* Metadata grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0 border-t border-b border-espresso/12 mb-8">
-                  {metaItems.map((item) => (
-                    <div
-                      key={item.label}
-                      className="py-4 px-0 sm:px-4 sm:border-r sm:border-espresso/8 first:sm:border-l-0 last:sm:border-r-0"
-                    >
-                      <p className="label-micro text-warm-grey mb-1">{item.label}</p>
-                      <p className="body-copy text-espresso">{item.value}</p>
-                    </div>
-                  ))}
+            {/* Right — 5 cols: metadata table */}
+            <div className="lg:col-span-5">
+              <Reveal delay={100}>
+                <div className="space-y-0">
+                  {/* Price */}
+                  <div className="flex justify-between items-baseline py-3 border-b border-ink/[0.06]">
+                    <span className="label-micro text-muted">Price</span>
+                    <span className="display-section text-xl md:text-2xl">
+                      {property.price}
+                    </span>
+                  </div>
+                  {/* Type */}
+                  <div className="flex justify-between items-baseline py-3 border-b border-ink/[0.06]">
+                    <span className="label-micro text-muted">Type</span>
+                    <span className="body-copy">{property.type}</span>
+                  </div>
+                  {/* Bedrooms */}
+                  <div className="flex justify-between items-baseline py-3 border-b border-ink/[0.06]">
+                    <span className="label-micro text-muted">Bedrooms</span>
+                    <span className="body-copy">{property.bedrooms}</span>
+                  </div>
+                  {/* Bathrooms */}
+                  <div className="flex justify-between items-baseline py-3 border-b border-ink/[0.06]">
+                    <span className="label-micro text-muted">Bathrooms</span>
+                    <span className="body-copy">{property.bathrooms}</span>
+                  </div>
+                  {/* Area */}
+                  <div className="flex justify-between items-baseline py-3 border-b border-ink/[0.06]">
+                    <span className="label-micro text-muted">Area</span>
+                    <span className="body-copy">{property.area}</span>
+                  </div>
+                  {/* Possession */}
+                  <div className="flex justify-between items-baseline py-3 border-b border-ink/[0.06]">
+                    <span className="label-micro text-muted">Possession</span>
+                    <span className="body-copy">{property.possession}</span>
+                  </div>
                 </div>
+              </Reveal>
 
-                {/* Short description */}
-                <p className="body-copy text-espresso/80 max-w-[640px] mb-10">
-                  {property.shortDescription}
-                </p>
-
-                {/* CTA row: Enquire + Favorite */}
-                <div className="flex items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={scrollToInquiry}
-                    className="btn-primary"
+              {/* CTA buttons */}
+              <Reveal delay={180}>
+                <div className="flex flex-col sm:flex-row gap-3 mt-8">
+                  <a
+                    href="#enquiry"
+                    className="btn-primary text-center no-underline"
                   >
-                    <span>Enquire</span>
-                    <ArrowDown size={14} aria-hidden="true" />
-                  </button>
+                    Enquire about this property
+                  </a>
                   <button
+                    onClick={toggleFavorite}
+                    className={`btn-outline-dark gap-2 ${
+                      isFavorited ? 'border-brass text-brass' : ''
+                    }`}
                     type="button"
                     aria-label={
                       isFavorited
                         ? `Remove ${property.title} from favorites`
                         : `Save ${property.title} to favorites`
                     }
-                    onClick={toggleFavorite}
-                    className="min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full p-2 border border-espresso/12 hover:border-gold/40 transition-colors"
                   >
                     <Heart
-                      size={20}
+                      size={14}
                       className={
                         isFavorited
-                          ? 'fill-gold stroke-gold'
-                          : 'fill-none stroke-espresso/50'
+                          ? 'fill-brass stroke-brass'
+                          : 'fill-none stroke-ink'
                       }
                     />
+                    {isFavorited ? 'Saved' : 'Save'}
                   </button>
                 </div>
-              </div>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Description ═══ */}
+      <section className="pb-[clamp(3rem,6vw,6rem)]">
+        <div className="container-editorial">
+          <Reveal>
+            <div>
+              <hr className="rule mb-8" />
+              <p className="body-copy">{property.description}</p>
             </div>
           </Reveal>
-        </section>
+        </div>
+      </section>
 
-        {/* ============================================================ */}
-        {/*  Description                                                   */}
-        {/* ============================================================ */}
-        <hr className="editorial-rule container-site" />
-        <section className="py-16 sm:py-20 lg:py-24">
-          <Reveal>
-            <div className="container-editorial">
-              <p className="section-number mb-4">Description</p>
-              <div className="body-copy text-espresso/80 space-y-5">
-                {property.description.split(/\n\n+/).map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* ============================================================ */}
-        {/*  Specifications Table                                          */}
-        {/* ============================================================ */}
-        <hr className="editorial-rule container-site" />
-        <section className="py-16 sm:py-20 lg:py-24">
-          <Reveal>
-            <div className="container-site">
-              <p className="section-number mb-4">Specifications</p>
-              <h2 className="heading-property text-espresso mb-10">Features & Amenities</h2>
-
-              {/* Specifications grid */}
-              <div className="max-w-[900px]">
-                {/* Key specs table */}
-                <div className="border-t border-espresso/12 mb-12">
-                  {metaItems.map((item, i) => (
-                    <div
-                      key={item.label}
-                      className={cn(
-                        'grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] items-baseline py-3.5',
-                        i < metaItems.length - 1 && 'border-b border-espresso/8'
-                      )}
-                    >
-                      <p className="label-mono text-warm-grey">{item.label}</p>
-                      <p className="body-copy text-espresso">{item.value}</p>
+      {/* ═══ Features & Amenities ═══ */}
+      <section className="pb-[clamp(4rem,8vw,8rem)]">
+        <div className="container-site">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+            {/* Features */}
+            <Reveal>
+              <div>
+                <p className="section-number mb-3">N&deg;{propNum}A</p>
+                <h2 className="heading-sub mb-6">Features</h2>
+                <div>
+                  {property.features.map((f, i) => (
+                    <div key={f}>
+                      {i > 0 && <hr className="rule-light" />}
+                      <p className="body-copy py-3">{f}</p>
                     </div>
                   ))}
-                  {property.parking && (
-                    <div className="grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] items-baseline py-3.5 border-b border-espresso/8">
-                      <p className="label-mono text-warm-grey">Parking</p>
-                      <p className="body-copy text-espresso">{property.parking}</p>
-                    </div>
-                  )}
                 </div>
+              </div>
+            </Reveal>
 
-                {/* Features & Amenities in 2-column grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12">
-                  {property.features.length > 0 && (
-                    <div>
-                      <p className="label-micro text-warm-grey mb-4">Key Features</p>
-                      <ul className="space-y-0">
-                        {property.features.map((feature, i) => (
-                          <li
-                            key={feature}
-                            className={cn(
-                              'flex items-baseline gap-3 py-2.5',
-                              i < property.features.length - 1 && 'border-b border-espresso/8'
-                            )}
-                          >
-                            <span className="h-1 w-1 rounded-full bg-sand shrink-0 mt-1.5" aria-hidden="true" />
-                            <span className="body-copy text-espresso">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
+            {/* Amenities */}
+            <Reveal delay={100}>
+              <div>
+                <p className="section-number mb-3">N&deg;{propNum}B</p>
+                <h2 className="heading-sub mb-6">Amenities</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-0">
+                  {property.amenities.map((a, i) => (
+                    <div key={a} className={i > 0 ? 'pt-3 border-t border-ink/[0.06]' : 'pt-3'}>
+                      <p className="body-copy text-sm">{a}</p>
                     </div>
-                  )}
-                  {property.amenities.length > 0 && (
-                    <div>
-                      <p className="label-micro text-warm-grey mb-4">Amenities</p>
-                      <ul className="space-y-0">
-                        {property.amenities.map((amenity, i) => (
-                          <li
-                            key={amenity}
-                            className={cn(
-                              'flex items-baseline gap-3 py-2.5',
-                              i < property.amenities.length - 1 && 'border-b border-espresso/8'
-                            )}
-                          >
-                            <span className="h-1 w-1 rounded-full bg-espresso shrink-0 mt-1.5" aria-hidden="true" />
-                            <span className="body-copy text-espresso">{amenity}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  ))}
                 </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Neighborhood ═══ */}
+      <section className="pb-[clamp(4rem,8vw,8rem)]">
+        <div className="container-site">
+          <Reveal>
+            <div>
+              <p className="section-number mb-3">N&deg;{propNum}C</p>
+              <h2 className="heading-property mb-6">The Neighborhood</h2>
+              <div className="max-w-3xl">
+                <p className="body-copy">{property.neighborhood}</p>
               </div>
             </div>
           </Reveal>
-        </section>
+        </div>
+      </section>
 
-        {/* ============================================================ */}
-        {/*  Neighborhood                                                  */}
-        {/* ============================================================ */}
-        {property.neighborhood && (
-          <>
-            <hr className="editorial-rule container-site" />
-            <section className="py-16 sm:py-20 lg:py-24">
-              <Reveal>
-                <div className="container-editorial">
-                  <p className="section-number mb-4">Location</p>
-                  <h2 className="heading-property text-espresso mb-6">Neighborhood</h2>
-                  <p className="body-copy text-espresso/80">{property.neighborhood}</p>
-                </div>
-              </Reveal>
-            </section>
-          </>
-        )}
-
-        {/* ============================================================ */}
-        {/*  Enquiry Section (Dark)                                        */}
-        {/* ============================================================ */}
-        <section
-          ref={inquiryRef}
-          className="bg-espresso py-16 sm:py-20 lg:py-24"
-        >
-          <Reveal>
-            <div className="container-form">
-              <div className="text-center mb-10">
-                <p className="label-micro text-warm-grey mb-3">Get in touch</p>
-                <h2 className="display-page text-ivory mb-2" style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}>
-                  Interested in this property?
+      {/* ═══ Enquiry Section ═══ */}
+      <section
+        id="enquiry"
+        className="section-py"
+        style={{ backgroundColor: 'var(--color-ink)' }}
+      >
+        <div className="container-site">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+            {/* Left — copy */}
+            <Reveal>
+              <div className="flex flex-col justify-center">
+                <p className="section-number mb-4" style={{ color: 'var(--color-muted)' }}>
+                  Enquire
+                </p>
+                <h2 className="display-section text-white mb-6">
+                  Enquire about {property.title}
                 </h2>
-                <p className="body-copy-light text-ivory/60 max-w-[480px] mx-auto">
-                  Leave your details and we will reach out to arrange a private viewing or share more information.
+                <p className="body-copy-light mb-4">
+                  Our advisory team will reach out within 24 hours with detailed
+                  information, floor plans, and scheduling options for a private
+                  viewing.
+                </p>
+                <p className="label-micro" style={{ color: 'rgba(244,240,232,0.25)' }}>
+                  Your information is kept strictly confidential.
                 </p>
               </div>
+            </Reveal>
 
-              {/* Success state */}
-              {submitStatus === 'success' ? (
-                <div className="text-center py-12">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full border border-gold/40 mb-6">
-                    <span className="text-gold text-2xl">✓</span>
-                  </div>
-                  <h3 className="heading-property text-ivory mb-3">Thank you</h3>
-                  <p className="body-copy-light text-ivory/60 max-w-[400px] mx-auto mb-6">
-                    We have received your enquiry. We will be in touch.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setSubmitStatus('idle')}
-                    className="btn-outline"
-                  >
-                    Send another enquiry
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleInquirySubmit} noValidate className="space-y-5">
-                  {/* Name */}
-                  <div>
-                    <label htmlFor="inquiry-name" className="label-micro text-warm-grey block mb-2">
-                      Name <span aria-hidden="true" className="text-gold">*</span>
-                    </label>
-                    <input
-                      id="inquiry-name"
-                      type="text"
-                      required
-                      value={form.name}
-                      onChange={(e) => updateField('name', e.target.value)}
-                      className="input-premium"
-                      placeholder="Your full name"
-                    />
-                  </div>
+            {/* Right — form */}
+            <Reveal delay={120}>
+              <EnquiryForm propertySlug={property.slug} />
+            </Reveal>
+          </div>
 
-                  {/* Email */}
-                  <div>
-                    <label htmlFor="inquiry-email" className="label-micro text-warm-grey block mb-2">
-                      Email <span aria-hidden="true" className="text-gold">*</span>
-                    </label>
-                    <input
-                      id="inquiry-email"
-                      type="email"
-                      required
-                      value={form.email}
-                      onChange={(e) => updateField('email', e.target.value)}
-                      className="input-premium"
-                      placeholder="you@example.com"
-                    />
-                  </div>
-
-                  {/* Phone */}
-                  <div>
-                    <label htmlFor="inquiry-phone" className="label-micro text-warm-grey block mb-2">
-                      Phone <span aria-hidden="true" className="text-gold">*</span>
-                    </label>
-                    <input
-                      id="inquiry-phone"
-                      type="tel"
-                      required
-                      value={form.phone}
-                      onChange={(e) => updateField('phone', e.target.value)}
-                      className="input-premium"
-                      placeholder="+91 98765 43210"
-                    />
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label htmlFor="inquiry-message" className="label-micro text-warm-grey block mb-2">
-                      Message
-                    </label>
-                    <textarea
-                      id="inquiry-message"
-                      rows={4}
-                      value={form.message}
-                      onChange={(e) => updateField('message', e.target.value)}
-                      className="input-premium resize-none"
-                      placeholder="Any specific requirements or questions..."
-                    />
-                  </div>
-
-                  {/* Honeypot — hidden from real users */}
-                  <div className="absolute -left-[9999px]" aria-hidden="true">
-                    <label htmlFor="inquiry-honey">Do not fill this</label>
-                    <input
-                      id="inquiry-honey"
-                      type="text"
-                      name="_honey"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      value={form.honey}
-                      onChange={(e) => updateField('honey', e.target.value)}
-                    />
-                  </div>
-
-                  {/* Error message */}
-                  {formError && (
-                    <div className="flex items-start gap-2 text-sm text-gold" role="alert">
-                      <span className="shrink-0 mt-0.5">⚠</span>
-                      <span className="body-copy-light">{formError}</span>
-                    </div>
-                  )}
-
-                  {/* Submit */}
-                  <button
-                    type="submit"
-                    disabled={submitStatus === 'submitting'}
-                    className="btn-primary w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-                  >
-                    {submitStatus === 'submitting' ? (
-                      <span className="flex items-center gap-2">
-                        <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-espresso/20 border-t-espresso" />
-                        <span>Sending...</span>
-                      </span>
-                    ) : (
-                      <span>Submit Enquiry</span>
-                    )}
-                  </button>
-                  <p className="label-micro text-ivory/25 mt-4">
-                    This is a demonstration website. No data is transmitted.
-                  </p>
-                </form>
-              )}
-            </div>
+          {/* Demo disclaimer */}
+          <Reveal delay={200}>
+            <p
+              className="label-micro text-center mt-12"
+              style={{ color: 'rgba(244,240,232,0.2)' }}
+            >
+              This is a demonstration website. No real data is collected or stored.
+            </p>
           </Reveal>
+        </div>
+      </section>
+
+      {/* ═══ Similar Properties ═══ */}
+      {similarProperties.length > 0 && (
+        <section className="section-py">
+          <div className="container-site">
+            <Reveal>
+              <p className="section-number mb-3">Explore</p>
+            </Reveal>
+            <Reveal delay={60}>
+              <h2 className="heading-sub mb-10">Similar Properties</h2>
+            </Reveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {similarProperties.map((sp, i) => (
+                <Reveal key={sp.slug} delay={i * 80}>
+                  <Link
+                    href={`/properties/${sp.slug}`}
+                    className="group block card-line-anim border-b border-ink/[0.06] pb-5"
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-sm mb-4">
+                      <Image
+                        src={sp.heroImage}
+                        alt={sp.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <h3 className="heading-property mb-1">{sp.title}</h3>
+                    <p className="label-micro text-muted mb-3">{sp.location}</p>
+                    <p className="font-mono font-medium text-sm">{sp.price}</p>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+          </div>
         </section>
+      )}
 
-        {/* ============================================================ */}
-        {/*  Similar Properties                                            */}
-        {/* ============================================================ */}
-        {similarProperties.length > 0 && (
-          <>
-            <hr className="editorial-rule container-site" />
-            <section className="py-16 sm:py-20 lg:py-24">
-              <Reveal>
-                <div className="container-site">
-                  <p className="section-number mb-4">Explore More</p>
-                  <h2 className="heading-property text-espresso mb-10">Similar Properties</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-                    {similarProperties.map((p) => (
-                      <Link
-                        key={p.id}
-                        href={`/properties/${p.slug}`}
-                        className="group block card-line-anim pb-4"
-                      >
-                        {/* Image */}
-                        <div className="relative aspect-[4/3] overflow-hidden mb-5">
-                          <Image
-                            src={p.heroImage}
-                            alt={p.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          />
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="heading-property text-espresso mb-1 group-hover:text-gold transition-colors">
-                          {p.title}
-                        </h3>
-
-                        {/* Location */}
-                        <p className="label-micro text-warm-grey mb-2">{p.location}</p>
-
-                        {/* Price */}
-                        <p className="font-mono text-lg text-espresso">{p.price}</p>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </Reveal>
-            </section>
-          </>
-        )}
-      </div>
-
-      {/* ============================================================ */}
-      {/*  Lightbox Dialog                                               */}
-      {/* ============================================================ */}
-      <Dialog open={lightboxOpen} onOpenChange={(open) => setLightboxOpen(open)}>
-        <DialogContent
-          className="max-w-[98vw] sm:max-w-[94vw] lg:max-w-[90vw] p-0 bg-espresso/95 border-none overflow-hidden rounded-none"
-          showCloseButton={false}
-          onKeyDown={handleLightboxKeyDown}
-          aria-label="Image gallery"
-        >
-          <DialogTitle className="sr-only">
-            {property.title} — Photo {lightboxIndex + 1} of {galleryImages.length}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            Use left and right arrow keys to navigate through the gallery. Press Escape to close.
-          </DialogDescription>
-
-          {/* Close button */}
-          <button
-            type="button"
-            onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 right-4 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-ivory/10 backdrop-blur-sm text-ivory hover:bg-ivory/20 transition-colors"
-            aria-label="Close gallery"
-          >
-            <X size={20} />
-          </button>
-
-          {/* Counter */}
-          <div className="absolute top-5 left-5 z-10 label-micro text-ivory/60">
-            {lightboxIndex + 1} / {galleryImages.length}
-          </div>
-
-          {/* Image container */}
-          <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] flex items-center justify-center">
-            <Image
-              src={galleryImages[lightboxIndex]}
-              alt={galleryAltTexts[lightboxIndex]}
-              fill
-              className="object-contain"
-              sizes="95vw"
-              priority
-            />
-          </div>
-
-          {/* Prev / Next buttons */}
-          {galleryImages.length > 1 && (
-            <>
-              <button
-                type="button"
-                onClick={lightboxPrev}
-                className="absolute left-3 top-1/2 -translate-y-1/2 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-ivory/10 backdrop-blur-sm text-ivory hover:bg-ivory/20 transition-colors"
-                aria-label="Previous image"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              <button
-                type="button"
-                onClick={lightboxNext}
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-ivory/10 backdrop-blur-sm text-ivory hover:bg-ivory/20 transition-colors"
-                aria-label="Next image"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* ============================================================ */}
-      {/*  Mobile Sticky Action Bar                                      */}
-      {/* ============================================================ */}
+      {/* ═══ Mobile Sticky CTA ═══ */}
       <div
-        className={cn(
-          'fixed bottom-0 left-0 right-0 z-40 md:hidden transition-transform duration-300',
-          showMobileBar ? 'translate-y-0' : 'translate-y-full'
-        )}
-        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        className={`md:hidden fixed bottom-0 left-0 right-0 z-[140] transition-transform duration-300 ${
+          showMobileCTA ? 'translate-y-0' : 'translate-y-full'
+        }`}
+        style={{
+          backgroundColor: 'var(--color-ink)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
       >
-        <div className="bg-offwhite/95 backdrop-blur-md border-t border-espresso/10 px-5 py-3 flex items-center justify-between gap-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-          <div>
-            <p className="font-mono text-lg text-espresso leading-none">{property.price}</p>
-            <p className="label-micro text-warm-grey mt-1">{property.bedrooms} Bed · {property.area}</p>
-          </div>
-          <button
-            type="button"
-            onClick={scrollToInquiry}
-            className="btn-primary"
+        <div className="container-site py-3">
+          <a
+            href="#enquiry"
+            className="btn-primary w-full text-center no-underline block"
           >
             Enquire
-          </button>
+          </a>
         </div>
       </div>
+    </main>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   GALLERY (embla-carousel-react)
+   ═══════════════════════════════════════════════════ */
+function Gallery({ images, title }: { images: string[]; title: string }) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [thumbRef, thumbApi] = useEmblaCarousel({
+    containScroll: 'keepSnaps',
+    dragFree: true,
+  });
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  /* Sync selected index */
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on('select', onSelect);
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  /* Scroll to slide on thumbnail click */
+  const scrollTo = useCallback(
+    (index: number) => {
+      emblaApi?.scrollTo(index);
+      thumbApi?.scrollTo(index);
+    },
+    [emblaApi, thumbApi]
+  );
+
+  /* Keyboard nav */
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (lightboxOpen) return; // lightbox handles its own keys
+      if (e.key === 'ArrowLeft') scrollPrev();
+      if (e.key === 'ArrowRight') scrollNext();
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [scrollPrev, scrollNext, lightboxOpen]);
+
+  return (
+    <>
+      {/* Main carousel */}
+      <div className="pt-[var(--header-h)]">
+        <div ref={emblaRef} className="overflow-hidden">
+          <div className="flex">
+            {images.map((src, i) => (
+              <div key={i} className="flex-none w-full">
+                <button
+                  type="button"
+                  className="w-full block cursor-zoom-in focus-visible:outline-brass"
+                  aria-label={`View image ${i + 1} of ${images.length}`}
+                  onClick={() => {
+                    setSelectedIndex(i);
+                    setLightboxOpen(true);
+                  }}
+                >
+                  <div className="relative aspect-[16/10] w-full">
+                    <Image
+                      src={src}
+                      alt={`${title} - image ${i + 1}`}
+                      fill
+                      sizes="100vw"
+                      className="object-cover"
+                      priority={i === 0}
+                    />
+                  </div>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Carousel controls */}
+        <div className="container-site flex items-center justify-between py-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={scrollPrev}
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center border border-ink/[0.12] rounded-sm hover:bg-ink/[0.04] transition-colors"
+              aria-label="Previous image"
+              type="button"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              onClick={scrollNext}
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center border border-ink/[0.12] rounded-sm hover:bg-ink/[0.04] transition-colors"
+              aria-label="Next image"
+              type="button"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+          <p className="label-micro text-muted">
+            {selectedIndex + 1} / {images.length}
+          </p>
+        </div>
+
+        {/* Thumbnail strip */}
+        <div className="container-site pb-6">
+          <div ref={thumbRef} className="overflow-hidden">
+            <div className="flex gap-2">
+              {images.map((src, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => scrollTo(i)}
+                  className={`flex-none w-20 h-14 sm:w-24 sm:h-16 relative rounded-sm overflow-hidden border-2 transition-colors ${
+                    i === selectedIndex
+                      ? 'border-brass'
+                      : 'border-transparent opacity-60 hover:opacity-100'
+                  }`}
+                  aria-label={`Go to image ${i + 1}`}
+                >
+                  <Image
+                    src={src}
+                    alt={`${title} thumbnail ${i + 1}`}
+                    fill
+                    sizes="96px"
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ Lightbox ═══ */}
+      {lightboxOpen && (
+        <Lightbox
+          images={images}
+          title={title}
+          initialIndex={selectedIndex}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   LIGHTBOX (custom, no Radix)
+   ═══════════════════════════════════════════════════ */
+function Lightbox({
+  images,
+  title,
+  initialIndex,
+  onClose,
+}: {
+  images: string[];
+  title: string;
+  initialIndex: number;
+  onClose: () => void;
+}) {
+  const [index, setIndex] = useState(initialIndex);
+
+  const prev = useCallback(() => {
+    setIndex((i) => (i === 0 ? images.length - 1 : i - 1));
+  }, [images.length]);
+
+  const next = useCallback(() => {
+    setIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+  }, [images.length]);
+
+  /* Keyboard */
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    };
+    document.addEventListener('keydown', handleKey);
+    /* Lock scroll */
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose, prev, next]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[500] flex items-center justify-center"
+      style={{ backgroundColor: 'rgba(24,19,16,0.95)' }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Image lightbox"
+    >
+      {/* Close */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center text-white/50 hover:text-white transition-colors"
+        aria-label="Close lightbox"
+        type="button"
+      >
+        <X size={24} />
+      </button>
+
+      {/* Prev */}
+      <button
+        onClick={prev}
+        className="absolute left-4 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center text-white/40 hover:text-white transition-colors"
+        aria-label="Previous image"
+        type="button"
+      >
+        <ChevronLeft size={32} />
+      </button>
+
+      {/* Image */}
+      <div className="relative w-full h-full max-w-6xl max-h-[85vh] px-16">
+        <Image
+          src={images[index]}
+          alt={`${title} - image ${index + 1}`}
+          fill
+          sizes="100vw"
+          className="object-contain"
+          priority
+        />
+      </div>
+
+      {/* Next */}
+      <button
+        onClick={next}
+        className="absolute right-4 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center text-white/40 hover:text-white transition-colors"
+        aria-label="Next image"
+        type="button"
+      >
+        <ChevronRight size={32} />
+      </button>
+
+      {/* Counter */}
+      <p className="absolute bottom-6 left-1/2 -translate-x-1/2 label-micro text-white/40">
+        {index + 1} / {images.length}
+      </p>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   ENQUIRY FORM
+   ═══════════════════════════════════════════════════ */
+function EnquiryForm({ propertySlug }: { propertySlug: string }) {
+  const [formState, setFormState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setFormState('loading');
+      setErrorMsg('');
+
+      const form = e.currentTarget;
+      const data = new FormData(form);
+      const body: Record<string, string> = {
+        formType: 'property-inquiry',
+        propertySlug,
+        name: (data.get('name') as string) || '',
+        email: (data.get('email') as string) || '',
+        phone: (data.get('phone') as string) || '',
+        message: (data.get('message') as string) || '',
+        _honey: (data.get('_honey') as string) || '',
+      };
+
+      try {
+        const res = await fetch('/api/inquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          const json = await res.json().catch(() => ({}));
+          throw new Error(
+            (json as { error?: string }).error || 'Something went wrong.'
+          );
+        }
+
+        setFormState('success');
+        form.reset();
+      } catch (err) {
+        setErrorMsg(
+          err instanceof Error ? err.message : 'Something went wrong.'
+        );
+        setFormState('error');
+      }
+    },
+    [propertySlug]
+  );
+
+  if (formState === 'success') {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <div className="text-center">
+          <p className="display-section text-white mb-3">Thank you</p>
+          <p className="body-copy-light" style={{ color: 'rgba(244,240,232,0.6)' }}>
+            We have received your enquiry and will be in touch shortly.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Honeypot */}
+      <div aria-hidden="true" className="absolute opacity-0 h-0 w-0 overflow-hidden">
+        <label htmlFor="honey-field">Do not fill this</label>
+        <input
+          type="text"
+          id="honey-field"
+          name="_honey"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="enq-name" className="label-micro block mb-2" style={{ color: 'rgba(244,240,232,0.4)' }}>
+          Name
+        </label>
+        <input
+          type="text"
+          id="enq-name"
+          name="name"
+          required
+          minLength={2}
+          placeholder="Your full name"
+          className="input-premium"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="enq-email" className="label-micro block mb-2" style={{ color: 'rgba(244,240,232,0.4)' }}>
+          Email
+        </label>
+        <input
+          type="email"
+          id="enq-email"
+          name="email"
+          required
+          placeholder="you@example.com"
+          className="input-premium"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="enq-phone" className="label-micro block mb-2" style={{ color: 'rgba(244,240,232,0.4)' }}>
+          Phone
+        </label>
+        <input
+          type="tel"
+          id="enq-phone"
+          name="phone"
+          placeholder="+91 98765 43210"
+          className="input-premium"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="enq-message" className="label-micro block mb-2" style={{ color: 'rgba(244,240,232,0.4)' }}>
+          Message
+        </label>
+        <textarea
+          id="enq-message"
+          name="message"
+          rows={4}
+          placeholder="Tell us what you are looking for..."
+          className="input-premium resize-none"
+        />
+      </div>
+
+      {formState === 'error' && errorMsg && (
+        <p className="text-sm" style={{ color: '#E8916D' }}>
+          {errorMsg}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={formState === 'loading'}
+        className="btn-primary w-full"
+      >
+        {formState === 'loading' ? 'Sending...' : 'Send Enquiry'}
+      </button>
+    </form>
   );
 }
