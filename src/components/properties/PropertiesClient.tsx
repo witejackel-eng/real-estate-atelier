@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { Container } from '@/components/shared/Container';
 import { Button } from '@/components/shared/Button';
 import { PropertyCard } from '@/components/properties/PropertyCard';
-import { getAllProperties, cities, propertyTypes, type Property } from '@/data/properties';
+import { getAllProperties, cities, propertyTypes, type Property, type PropertyType } from '@/data/properties';
 
 interface PropertiesClientProps {
   initialSearchParams?: { [key: string]: string | string[] | undefined };
@@ -94,7 +94,7 @@ function parseFiltersFromParams(params: Record<string, string | string[] | undef
   };
 
   const city = cities.includes(get('city')) ? get('city') : '';
-  const type = propertyTypes.includes(get('type')) ? get('type') : '';
+  const type = propertyTypes.includes(get('type') as PropertyType) ? (get('type') as PropertyType) : '';
   const bedsRaw = get('beds');
   const beds = bedsRaw ? parseInt(bedsRaw, 10) : 0;
   const q = get('q');
@@ -296,7 +296,7 @@ export function PropertiesClient({ initialSearchParams }: PropertiesClientProps)
   }, []);
 
   return (
-    <main>
+    <>
       {/* Page Header */}
       <div className="pt-32 pb-8">
         <Container variant="main">
@@ -479,6 +479,8 @@ export function PropertiesClient({ initialSearchParams }: PropertiesClientProps)
       </Container>
 
       {/* Mobile Filter Drawer */}
+      {/* Spacer for bottom padding on mobile */}
+      <div className="h-8 lg:hidden" aria-hidden="true" />
       {drawerOpen && (
         <div
           className="fixed inset-0 z-50"
@@ -637,6 +639,6 @@ export function PropertiesClient({ initialSearchParams }: PropertiesClientProps)
           </div>
         </div>
       )}
-    </main>
+    </>
   );
 }

@@ -44,15 +44,11 @@ function PropertyCard({ property, isFav, onToggle }: {
   return (
     <Reveal>
       <div className="relative">
-        {/* Favorite button — outside the Link, positioned over image */}
+        {/* Favorite button — sibling of the link */}
         <button
           type="button"
           aria-label={`Save ${property.title} to favorites`}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onToggle(property.slug);
-          }}
+          onClick={() => onToggle(property.slug)}
           className={
             isFav
               ? 'absolute top-3 right-3 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full p-2'
@@ -78,16 +74,16 @@ function PropertyCard({ property, isFav, onToggle }: {
                 src={property.heroImage}
                 alt={property.title}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
             </div>
             <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="font-display text-lg mb-1 group-hover:text-gold transition-colors">
+              <div className="min-w-0">
+                <h3 className="font-display text-lg mb-1 group-hover:text-gold transition-colors truncate">
                   {property.title}
                 </h3>
-                <p className="text-sm text-espresso/60">{property.location}</p>
+                <p className="text-sm text-espresso/60 truncate">{property.location}</p>
               </div>
               <p className="font-mono text-sm text-espresso whitespace-nowrap">
                 {property.price}
@@ -95,9 +91,9 @@ function PropertyCard({ property, isFav, onToggle }: {
             </div>
             <div className="flex items-center gap-3 mt-2 text-xs text-espresso/50 font-mono">
               <span>{property.bedrooms} Bed</span>
-              <span className="text-espresso/20">·</span>
+              <span className="text-espresso/20" aria-hidden="true">·</span>
               <span>{property.area}</span>
-              <span className="text-espresso/20">·</span>
+              <span className="text-espresso/20" aria-hidden="true">·</span>
               <span>{property.type}</span>
             </div>
           </article>

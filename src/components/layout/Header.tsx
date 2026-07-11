@@ -21,12 +21,13 @@ export function Header() {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const isHome = pathname === '/';
 
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuLinkRefs = useRef<(HTMLAnchorElement | HTMLButtonElement)[]>([]);
 
-  // ── Scroll detection ──────────────────────────────────────────────
+  // Scroll detection
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -36,10 +37,9 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ── Close menu helpers ────────────────────────────────────────────
+  // Close mobile menu
   const closeMobileMenu = useCallback(() => {
     setIsMobileOpen(false);
-    // Return focus to hamburger
     setTimeout(() => hamburgerRef.current?.focus(), 0);
   }, []);
 
@@ -51,7 +51,7 @@ export function Header() {
     [router, closeMobileMenu]
   );
 
-  // ── Body scroll lock ──────────────────────────────────────────────
+  // Body scroll lock when mobile menu is open
   useEffect(() => {
     if (isMobileOpen) {
       const prev = document.body.style.overflow;
@@ -62,11 +62,10 @@ export function Header() {
     }
   }, [isMobileOpen]);
 
-  // ── Focus trap ────────────────────────────────────────────────────
+  // Focus trap for mobile menu
   useEffect(() => {
     if (!isMobileOpen) return;
 
-    // Focus the first link after opening
     const timer = setTimeout(() => {
       menuLinkRefs.current[0]?.focus();
     }, 50);
@@ -107,7 +106,7 @@ export function Header() {
     };
   }, [isMobileOpen, closeMobileMenu]);
 
-  // ── Active link helper ────────────────────────────────────────────
+  // Active link detection
   const isActive = useCallback(
     (href: string) => {
       if (href === '/') return pathname === '/';
@@ -118,21 +117,22 @@ export function Header() {
 
   return (
     <>
-      {/* ── Desktop / Mobile Header Bar ─────────────────────────── */}
+      {/* Desktop / Mobile Header Bar */}
       <header
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-200',
-          isScrolled
+          isScrolled || !isHome
             ? 'bg-ivory/95 backdrop-blur-sm border-b border-espresso/8 shadow-sm'
-            : 'bg-transparent text-espresso'
+            : 'bg-ivory/70 backdrop-blur-md'
         )}
       >
-        <div className="max-w-[1360px] mx-auto px-5 sm:px-6 lg:px-16">
+        <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-8 lg:px-16">
           <div className="flex items-center justify-between h-[64px] lg:h-[72px]">
             {/* Brand */}
             <Link
               href="/"
               className="font-display text-lg tracking-wide text-espresso"
+              aria-label="Casa Aurelia — Home"
             >
               Casa Aurelia
             </Link>
@@ -182,7 +182,7 @@ export function Header() {
         </div>
       </header>
 
-      {/* ── Mobile Menu Overlay ─────────────────────────────────── */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
@@ -204,6 +204,7 @@ export function Header() {
                   href="/"
                   onClick={() => closeMobileMenu()}
                   className="font-display text-lg tracking-wide text-espresso"
+                  aria-label="Casa Aurelia — Home"
                 >
                   Casa Aurelia
                 </Link>
@@ -221,7 +222,7 @@ export function Header() {
               </div>
 
               {/* Navigation links */}
-              <nav aria-label="Main navigation">
+              <nav aria-label="Mobile navigation">
                 {navLinks.map((link, i) => (
                   <button
                     key={link.href}
@@ -246,7 +247,7 @@ export function Header() {
                 <button
                   type="button"
                   onClick={() => handleMobileNav('/sell')}
-                  className="w-full inline-flex items-center justify-center font-mono text-xs uppercase tracking-[0.15em] transition-colors duration-200 text-sm px-8 py-4 bg-espresso text-offwhite hover:bg-charcoal focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+                  className="w-full inline-flex items-center justify-center font-mono text-xs uppercase tracking-[0.15em] transition-colors duration-200 text-sm px-8 py-4 bg-espresso text-offwhite hover:bg-charcoal focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-sm"
                   ref={(el) => {
                     if (el) menuLinkRefs.current[navLinks.length + 1] = el;
                   }}

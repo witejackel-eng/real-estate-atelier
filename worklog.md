@@ -1,52 +1,33 @@
-# Worklog — Secondary Pages Creation
+# Worklog — Casa Aurelia Complete UX/Layout/Design/Conversion Rebuild
 
-## Task ID: 1
+## Task ID: rebuild-1
+## Agent: Main Agent
+## Task: Complete UX, Layout, Design and Conversion Rebuild per 25-section specification
 
-## Summary
-Created all 8 secondary pages for Casa Aurelia premium real estate website, plus 12 shared/layout/components needed as dependencies.
+### Work Log:
+- Phase 1: Audited all routes, components, data, CSS, dependencies, metadata, images
+- Phase 2: Fixed foundation — Reveal component (content visible by default, no opacity:0), Header (ivory/70 bg on homepage, solid on scroll, no transparency issues), PropertyCard (favorite button as sibling of Link, not nested), Container (added tablet breakpoint padding, narrow variant), Button (fixed TypeScript union type issues, added disabled states, rounded-sm), globals.css (added tablet breakpoint to containers, refined section spacing)
+- Phase 3: Homepage — Already had correct 7-section structure. Fixed FeaturedProperties to use sibling pattern for favorites. Removed duplicate Property Index. Verified no demo testimonials. Service section condensed to 3 pillars.
+- Phase 4: Property catalogue — Fixed nested `<main>` landmark in PropertiesClient. Fixed PropertyType import for TypeScript. URL-synchronized filter state, mobile filter drawer, filter chips, empty state — all already working.
+- Phase 5: Property detail — Created PropertyDetailClient with gallery (2/3+1/3 desktop grid, lightbox with keyboard nav), compact facts row, 8/4 layout with sticky inquiry card, EMI calculator (sensible defaults from property price), balanced similar properties grid, mobile sticky action bar
+- Phase 6: Created SellClient (4-step process, valuation form, FAQ), ContactClient (2-column layout, form with validation), AboutClient (editorial, no fake data), NeighborhoodsClient (data-driven, derived price ranges)
+- Phase 7: Created API inquiry route with honeypot, rate limiting, validation. All forms POST to /api/inquiry.
+- Phase 8: Fixed all metadata to use createMetadata (no duplicated titles). Fixed structured data URLs to use SITE_URL constant (absolute). Removed nested `<main>` landmarks. Fixed legal pages. Removed RevealText (unused). Fixed gallery hover scale typo.
+- Phase 9: TypeScript passes, ESLint passes, production build succeeds (23 routes, 0 errors).
 
-## Files Created
-
-### Shared Components (10 files)
-- `src/components/shared/Container.tsx` — Max-w-7xl wrapper
-- `src/components/shared/SectionLabel.tsx` — Slash label with mono styling
-- `src/components/shared/Reveal.tsx` — Framer Motion scroll reveal with direction support
-- `src/components/shared/AnimatedText.tsx` — Word-by-word text reveal animation
-- `src/components/shared/Button.tsx` — Primary/secondary button with href support
-- `src/components/shared/InquiryForm.tsx` — Property inquiry form with validation
-- `src/components/shared/BookViewingModal.tsx` — Booking modal with date/time picker
-- `src/components/shared/EMICalculator.tsx` — Loan EMI calculator with sliders
-- `src/components/shared/SmoothScroll.tsx` — Lenis smooth scroll wrapper
-- `src/components/shared/Preloader.tsx` — Animated preloader with brand reveal
-
-### Layout Components (2 files)
-- `src/components/layout/Header.tsx` — Sticky header with mobile nav + scroll detection
-- `src/components/layout/Footer.tsx` — Footer with navigation links and brand info
-
-### Pages (10 files — 8 pages + 2 dynamic)
-- `src/app/properties/page.tsx` — Server component with SEO metadata
-- `src/components/properties/PropertiesClient.tsx` — Filter/search grid with favorites (localStorage)
-- `src/app/properties/[slug]/page.tsx` — Server component with generateStaticParams + generateMetadata (async params)
-- `src/components/properties/PropertyDetailClient.tsx` — Full detail page: gallery, lightbox (keyboard nav), specs, features, amenities, neighborhood, EMI calculator, inquiry form, similar properties, mobile sticky CTA
-- `src/app/sell/page.tsx` — Server component with metadata
-- `src/components/sell/SellClient.tsx` — Process timeline, staging checklist, valuation form, FAQ accordion
-- `src/app/neighborhoods/page.tsx` — Server component with metadata
-- `src/components/neighborhoods/NeighborhoodsClient.tsx` — Editorial neighborhood cards, comparison grid
-- `src/app/about/page.tsx` — Server component with metadata
-- `src/components/about/AboutClient.tsx` — Brand story, philosophy, process, team (demo), values, CTA
-- `src/app/contact/page.tsx` — Server component with metadata
-- `src/components/contact/ContactClient.tsx` — Contact form, direct details, FAQ, CTA
-- `src/app/privacy/page.tsx` — Server component, privacy policy with demo disclaimer
-- `src/app/terms/page.tsx` — Server component, terms of use with demo disclaimer
-
-## Key Design Decisions
-- All pages with client interactivity use server component wrapper + client component pattern for proper SEO metadata
-- Next.js 16 `params` is a Promise — used `await params` in async generateMetadata and page components
-- Lightbox uses AnimatePresence with keyboard navigation (Escape, ArrowLeft, ArrowRight)
-- Property favorites persisted to localStorage under key `casaaurelia_favorites`
-- Forms use client-side validation with demo success messages (no real data transmission)
-- FAQ sections use native HTML details/summary elements
-- All pages use Reveal scroll animations and brand-consistent styling
-
-## Lint Status
-✅ ESLint passes with zero errors
+### Stage Summary:
+- Build: ✅ `npm run build` — 0 errors, 23 routes generated
+- Lint: ✅ `npm run lint` — 0 errors
+- All 9 original routes preserved and working
+- No fake testimonials, no fake statistics, no fake contact details in public content
+- Content visible by default (no opacity:0 dependency)
+- No nested interactive elements (favorite buttons are siblings of Links)
+- No nested `<main>` landmarks
+- Proper `<button>` elements for gallery interactions
+- Mobile filter drawer with focus trap, labels, and keyboard support
+- URL-synchronized filter state
+- Forms with real labels, honeypot, validation, server-side handling
+- Metadata uses central createMetadata helper (no duplicate brand names)
+- Structured data uses absolute URLs
+- Reduced motion supported
+- Skip-to-content link present
