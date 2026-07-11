@@ -52,7 +52,7 @@ export function Footer() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 lg:gap-8">
               {/* Explore */}
               <div>
-                <h3 className="label-micro text-ivory/40 mb-5">Explore</h3>
+                <h3 className="label-micro text-ivory/60 mb-5">Explore</h3>
                 <ul className="space-y-3">
                   {exploreLinks.map((link) => (
                     <li key={link.href}>
@@ -69,7 +69,7 @@ export function Footer() {
 
               {/* Services */}
               <div>
-                <h3 className="label-micro text-ivory/40 mb-5">Services</h3>
+                <h3 className="label-micro text-ivory/60 mb-5">Services</h3>
                 <ul className="space-y-3">
                   {serviceLinks.map((link) => (
                     <li key={link.href}>
@@ -86,7 +86,7 @@ export function Footer() {
 
               {/* Legal */}
               <div>
-                <h3 className="label-micro text-ivory/40 mb-5">Legal</h3>
+                <h3 className="label-micro text-ivory/60 mb-5">Legal</h3>
                 <ul className="space-y-3">
                   {legalLinks.map((link) => (
                     <li key={link.href}>
@@ -108,9 +108,9 @@ export function Footer() {
         <hr className="editorial-rule-light mb-8" />
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <p className="label-micro text-ivory/40">
-            &copy; {year} Casa Aurelia. All rights reserved.
+            © {year} Casa Aurelia. All rights reserved.
           </p>
-          <p className="label-micro text-ivory/30">
+          <p className="label-micro text-ivory/50">
             Demo property platform — for demonstration purposes only.
           </p>
         </div>

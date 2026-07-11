@@ -267,6 +267,7 @@ function PropertyCardInline({
         {onToggleFavorite && (
           <button
             type="button"
+            aria-pressed={isFavorited}
             aria-label={
               isFavorited
                 ? `Remove ${property.title} from favorites`
@@ -362,6 +363,7 @@ function PropertyCardInline({
       {onToggleFavorite && (
         <button
           type="button"
+          aria-pressed={isFavorited}
           aria-label={
             isFavorited
               ? `Remove ${property.title} from favorites`

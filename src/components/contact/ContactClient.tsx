@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent, type FocusEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Loader2, ArrowRight, Mail, Phone, Clock } from 'lucide-react';
+import { Loader2, ArrowRight, Mail, Phone, Clock, MapPin } from 'lucide-react';
 import { PageHero } from '@/components/shared/PageHero';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 
@@ -221,11 +221,23 @@ export function ContactClient() {
                     <div>
                       <p className="label-micro text-warm-grey mb-1">Phone</p>
                       <a
-                        href="tel:+919800000000"
+                        href="tel:+911145678900"
                         className="body-copy text-espresso hover:text-gold transition-colors"
                       >
-                        +91 98000 00000
+                        +91 11 4567 8900
                       </a>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="shrink-0 w-10 h-10 rounded-full bg-paper flex items-center justify-center text-espresso">
+                      <MapPin size={16} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="label-micro text-warm-grey mb-1">Office</p>
+                      <p className="body-copy text-espresso">
+                        Golf Links, New Delhi<br />
+                        India
+                      </p>
                     </div>
                   </li>
                   <li className="flex items-start gap-4">

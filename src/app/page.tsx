@@ -216,7 +216,7 @@ function HeroSection() {
 
   return (
     <section
-      className="relative min-h-screen flex flex-col justify-end overflow-hidden pt-20 lg:pt-24"
+      className="relative min-h-screen flex flex-col justify-end overflow-hidden pt-20 lg:pt-24 pb-12 md:pb-16 lg:pb-20"
       aria-label="Hero"
     >
       {/* Crosshair overlay */}
@@ -244,8 +244,8 @@ function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container-site pb-12 md:pb-16 lg:pb-20">
-        <div className="mb-6">
+      <div className="relative z-10 container-site pb-12 md:pb-16 lg:pb-20 pt-16 md:pt-20 lg:pt-24">
+        <div className="mb-8 md:mb-10">
           <h1 className="display-hero text-ivory">
             Live{' '}
             <em className="text-gold" style={{ fontStyle: 'italic' }}>
@@ -254,11 +254,11 @@ function HeroSection() {
           </h1>
         </div>
 
-        <p className="body-copy-light opacity-55 max-w-lg mb-8">
+        <p className="body-copy-light opacity-65 max-w-lg mb-10">
           Private residential advisory for considered homes across India.
         </p>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-12">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-16 md:mb-20">
           <Link href="/properties" className="btn-primary">
             Explore the collection
           </Link>
@@ -642,19 +642,19 @@ function FinalCTASection() {
         <span className="section-number block mb-6" style={{ color: 'rgba(247,241,232,0.3)' }}>
           N°006
         </span>
-        <h2 className="display-hero text-ivory">
+        <h2 className="display-section text-ivory">
           Let&apos;s find
           <br />
           <em className="text-gold" style={{ fontStyle: 'italic' }}>
             the one.
           </em>
         </h2>
-        <p className="body-copy-light opacity-50 mt-6 max-w-md mx-auto mb-10">
+        <p className="body-copy-light opacity-60 mt-6 max-w-md mx-auto mb-10">
           Start a private conversation about your next home.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link href="/contact" className="btn-primary">
-            Book a private consultation
+            Book a consultation
           </Link>
           <Link href="/properties" className="btn-outline">
             Browse properties

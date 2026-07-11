@@ -52,7 +52,9 @@ export function PropertyDetailClient({
   /* ---- Gallery state ---- */
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const galleryImages = [property.heroImage, ...property.gallery];
+  const galleryImages = property.gallery.length > 0
+    ? property.gallery
+    : [property.heroImage];
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index);
@@ -320,7 +322,7 @@ export function PropertyDetailClient({
         {/* ============================================================ */}
         {/*  Property Introduction                                         */}
         {/* ============================================================ */}
-        <section className="container-site py-16 sm:py-24 lg:py-32">
+        <section className="container-site py-16 sm:py-24 lg:py-32 relative z-10">
           <Reveal>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
               {/* Left: Title, description, CTA */}
@@ -373,6 +375,7 @@ export function PropertyDetailClient({
                   </button>
                   <button
                     type="button"
+                    aria-pressed={isFavorited}
                     aria-label={
                       isFavorited
                         ? `Remove ${property.title} from favorites`
